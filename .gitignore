@@ -1,0 +1,66 @@
+# 以 '#' 开头的行是注释行，Git 将会忽略这些行
+# 该文件是 .gitignore，用于告诉 Git 哪些文件或目录不应该被添加到 Git 仓库中
+
+# 忽略所有 .a 文件
+# *.a
+
+# 但是跟踪所有 lib.a，即使你在前面忽略了 .a 文件
+# !lib.a
+
+# 只忽略当前目录下的 TODO 文件，不包括 subdir/TODO
+# /TODO
+/iap_app.maprj
+/time_ctrl.maprj
+# 忽略所有在 build/ 目录下的文件
+# build/
+# MDK-ARM/Listings
+# MDK-ARM/Objects
+# 忽略所有在 doc/notes.txt，但不忽略 doc/server/arch.txt
+# doc/*.txt
+# !doc/server/arch.txt
+
+# 忽略所有 .pdf 文件在 doc/ 目录下
+# doc/**/*.pdf
+
+# 忽略所有 .tar.gz 文件
+# *.tar.gz
+
+# 忽略所有文件，名字以任何字符开头，后面跟着 .log
+# *.log
+
+# 忽略所有文件，名字以任何字符开头，后面跟着一个字符，然后是 .log
+# ?.log
+
+# 忽略所有文件，名字以任何字符开头，后面跟着 debug/，然后是任何字符
+# *debug*/
+
+# 忽略所有文件，名字以任何字符开头，后面跟着 a 或 b
+# *[ab]
+
+# 忽略所有文件，名字以任何字符开头，后面跟着 a 或 b 或 c
+# *[abc]
+
+# 忽略所有文件，名字以任何字符开头，后面跟着 0 到 9 之间的任何数字
+# *[0-9]
+# 忽略 Keil 5 用户界面配置文件
+*.uvguix
+
+# 忽略所有在 logs/ 目录下的文件
+# /logs/
+# 显式指定当前目录下的 .vscode 文件夹
+./.vscode/
+./rtx_project/
+
+# 显式指定当前目录下 project/MDK_V5 下的 listings 文件夹
+./MDK-ARM/Listings/
+
+# 显式指定当前目录下 project/MDK_V5 下的 objects 文件夹
+./MDK-ARM/Objects/*.d
+./MDK-ARM/Objects/*.o
+./MDK-ARM/DebugConfig/
+./MDK-ARM/RTE/
+# 但是跟踪所有在 logs/important/ 目录下的文件，即使你在前面忽略了 logs/ 目录
+# !/logs/important/
+/MDK-ARM/Listings
+/MDK-ARM/Objects
+/MDK-ARM/gateway.uvguix.TommyRIckWu
