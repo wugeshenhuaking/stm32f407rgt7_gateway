@@ -74,3 +74,7 @@ void     NT35510_FillRectGUI(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1,
 void     NT35510_DrawHColorLineGUI(uint16_t x, uint16_t y, uint16_t xsize, const uint16_t *pColor);
 
 #endif /* __LCD_NT35510_H */
+
+
+
+

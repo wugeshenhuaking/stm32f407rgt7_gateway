@@ -1,31 +1,56 @@
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
-        40          0          0          0         32          0   bsp_touch_port.o
-       404          0          0          0        161          0   fsmc.o
-       230          0          0          0          0          0   gpio.o
-      2994          0          0          0          0          0   gt9xxx.o
-      4624          0          0          0          0          0   lcd_nt35510.o
-       168          0          0          0          0          0   main.o
+       994          0        457          8         13          0   app_mqtt.o
+       230          0          0          0        106          0   bsp_timer.o
+       116          0          0          0         32          0   bsp_touch_port.o
+        48          0          0          0          0          0   def.o
+      4466          0        543          0        241          0   etharp.o
+       466          0        114          0          0          0   ethernet.o
+      1880          0         94         20      19408          0   ethernetif.o
+       552          0          0          0        164          0   fsmc.o
+       388          0          0          0          0          0   gpio.o
+      1040          0          0          1          0          0   gt9xxx.o
+       940          0        200          0          0          0   icmp.o
+        44          0          0          0          0          0   init.o
+         0          0          0          0         24          0   ip.o
+      1594          0        109          0          2          0   ip4.o
+      1078          0         71          0         16          0   ip4_addr.o
+      3844          0        473          0          6          0   ip4_frag.o
+       566          0          0          0          0          0   lan8742.o
+      4430          0          0          0          0          0   lcd_nt35510.o
+       610          0         50          0         81          0   lwip.o
+       274          0          0          0          0          0   main.o
+      2658          0        538          0       1631          0   mem.o
+       692          0        333          0      12003          0   memp.o
+      7442          0       1860          0          0          0   mqtt.o
+      1844          0        497          0          9          0   netif.o
+      4108          0       1056          0          1          0   pbuf.o
         36          0        392          0       1024          0   startup_stm32f407xx.o
-       204          0          0          8          4          0   stm32f4xx_hal.o
-       162          0          0          0          0          0   stm32f4xx_hal_cortex.o
-       434          0          0          0          0          0   stm32f4xx_hal_gpio.o
-        56          0          0          0          0          0   stm32f4xx_hal_msp.o
-      1482          0          0          0          0          0   stm32f4xx_hal_rcc.o
-        92          0          0          0          0          0   stm32f4xx_hal_sram.o
-       326          0          0          0          0          0   stm32f4xx_hal_uart.o
-        20          0          0          0          0          0   stm32f4xx_it.o
-       274          0          0          0          0          0   stm32f4xx_ll_fsmc.o
+       270          0          0          5          4          0   stm32f4xx_hal.o
+       414          0          0          0          0          0   stm32f4xx_hal_cortex.o
+      4352          0          0          0          0          0   stm32f4xx_hal_eth.o
+      1042          0          0          0          0          0   stm32f4xx_hal_gpio.o
+        74          0          0          0          0          0   stm32f4xx_hal_msp.o
+      2646          0          0          0          0          0   stm32f4xx_hal_rcc.o
+       128          0          0          0          0          0   stm32f4xx_hal_sram.o
+      1142          0          0          0          0          0   stm32f4xx_hal_uart.o
+        38          0          0          0          0          0   stm32f4xx_it.o
+       360          0          0          0          0          0   stm32f4xx_ll_fsmc.o
         18          0         24          4          0          0   system_stm32f4xx.o
-       178          0          0          0         72          0   usart.o
+      9060          0       1885          6         23          0   tcp.o
+     11472          0       1065          0         52          0   tcp_in.o
+      9380          0       1951          0          0          0   tcp_out.o
+       980          0        209          0         12          0   timeouts.o
+      1088          0        789          2          4          0   udp.o
+       208          0          0          0         72          0   usart.o
 Object Totals
 
 Memory Map of the image
 
 	Load Region LR_IROM1 
 
-		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000030FC, Max: 0x00100000, END)
+		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x00018758, Max: 0x00100000, END)
 
-		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x00000520, Max: 0x0001C000, END)
+		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x000088D8, Max: 0x0001C000, END)
 
 		Execution Region RW_IRAM2 (Exec base: 0x2001C000, Size: 0x00000000, Max: 0x00004000, END)
 

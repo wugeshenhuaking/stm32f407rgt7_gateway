@@ -201,3 +201,4 @@ uint8_t BSP_Touch_GetTouchNum(void)
 {
     return s_touch_state.touch_num;
 }
+

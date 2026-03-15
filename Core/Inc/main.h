@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LCD_BL_Pin GPIO_PIN_15
 #define LCD_BL_GPIO_Port GPIOB
+#define ETH_RESET_Pin GPIO_PIN_3
+#define ETH_RESET_GPIO_Port GPIOD
 #define LCD_RD_Pin GPIO_PIN_4
 #define LCD_RD_GPIO_Port GPIOD
 #define LCD_WR_Pin GPIO_PIN_5
