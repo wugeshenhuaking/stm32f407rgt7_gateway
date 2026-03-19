@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "can.h"
 #include "lwip.h"
 #include "usart.h"
 #include "gpio.h"
@@ -44,6 +45,9 @@
 // emWin header file
 #include "GUI.h"
 
+// BSP CAN header file
+#include "bsp_can_port.h"
+#include "bsp_can_test.h"
 
 /* USER CODE END Includes */
 
@@ -115,6 +119,8 @@ int main(void)
   MX_FSMC_Init();
   MX_USART1_UART_Init();
   MX_LWIP_Init();
+  MX_USART3_UART_Init();
+  MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
   // LCD Initialize
   NT35510_Init();
@@ -130,6 +136,10 @@ int main(void)
   // emWin Initialize
 //  MainTask();
 
+  // BSP CAN Initialize
+  BSP_CAN_Test_RunAll();
+  BSP_CAN_Init(BSP_CAN_MODE_NORMAL);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -139,7 +149,25 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    MX_LWIP_Process();
+//    MX_LWIP_Process();
+        /* 发送 */
+//    BSP_CAN_Msg_t tx = { .id=0x123, .len=8, .data={1,2,3,4,5,6,7,8} };
+//    BSP_CAN_Send(&tx);
+
+    /* 接收 — 用 BufferHasData 轮询，不阻塞 */
+    BSP_CAN_Msg_t rx;
+    while (BSP_CAN_BufferHasData())
+    {
+        if (BSP_CAN_RecvFromBuffer(&rx) == BSP_CAN_OK)
+        {
+            printf("RX id=0x%03X len=%d data=%02X %02X %02X %02X %02X %02X %02X %02X\r\n",
+                   (unsigned)rx.id, rx.len,
+                   rx.data[0], rx.data[1], rx.data[2], rx.data[3],
+                   rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
+        }
+    }
+
+    HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
