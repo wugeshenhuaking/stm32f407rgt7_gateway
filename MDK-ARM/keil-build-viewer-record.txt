@@ -21,7 +21,7 @@
        566          0          0          0          0          0   lan8742.o
       4430          0          0          0          0          0   lcd_nt35510.o
        356          0          0          0         76          0   lwip.o
-       402          0         67          0          0          0   main.o
+       404          0         67          0          0          0   main.o
       2580          0        538          0       1631          0   mem.o
        692          0        333          0      12003          0   memp.o
       1844          0        497          0          9          0   netif.o
@@ -52,7 +52,7 @@ Memory Map of the image
 
 	Load Region LR_IROM1 
 
-		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x0001663C, Max: 0x00100000, END)
+		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x00016640, Max: 0x00100000, END)
 
 		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x00008A38, Max: 0x0001C000, END)
 

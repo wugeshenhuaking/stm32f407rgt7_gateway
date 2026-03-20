@@ -150,7 +150,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 //    MX_LWIP_Process();
-        /* 发送 */
+    /* 发送 */
 //    BSP_CAN_Msg_t tx = { .id=0x123, .len=8, .data={1,2,3,4,5,6,7,8} };
 //    BSP_CAN_Send(&tx);
 
@@ -167,7 +167,7 @@ int main(void)
         }
     }
 
-    HAL_Delay(100);
+    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }

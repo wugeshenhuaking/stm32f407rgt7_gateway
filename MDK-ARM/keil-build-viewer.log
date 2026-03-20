@@ -35,7 +35,7 @@
 
 [region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x0001663C [memory type] 2 [memory ID] 4
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x00016640 [memory type] 2 [memory ID] 4
 
 	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00008A38 [memory type] 1 [memory ID] 2
 		[ZI block] addr: 0x20000038, size: 0x00008A00 (35328)
@@ -268,7 +268,7 @@
 ../Drivers/BSP/Components/lan8742/lan8742.c():                         |           0              |         566              |
 ..\BSP\BSP_LCD\lcd_nt35510.c():                                        |           0              |        4430              |
 ../LWIP/App/lwip.c():                                                  |          76              |         356              |
-../Core/Src/main.c():                                                  |           0              |         469  [-38]       |
+../Core/Src/main.c():                                                  |           0              |         471  [-36]       |
 ../Middlewares/Third_Party/LwIP/src/core/mem.c():                      |        1631              |        3118              |
 ../Middlewares/Third_Party/LwIP/src/core/memp.c():                     |       12003              |        1025              |
 ../Middlewares/Third_Party/LwIP/src/core/netif.c():                    |           9              |        2341              |
@@ -301,11 +301,11 @@ LR_IROM1
                 RW_IRAM1  [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ___________________________________| (  34.5 KB / 112.0 KB )  30.9%  
  
         FLASH 1           [0x08000000 | 0x00100000 (1048576)]
-                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö______________________________________________| (  89.5 KB /   1.0 MB )   8.7%  [-40]
+                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö______________________________________________| (  89.5 KB /   1.0 MB )   8.7%  [-36]
  
 [htm file path] D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\Objects\stm32f407zgt6-gataway.htm
 Maximum Stack Usage =        952 bytes + Unknown(Cycles, Untraceable Function Pointers)
  
 =============================================================================================================================
 
-run time: 0.161 s
+run time: 0.162 s
