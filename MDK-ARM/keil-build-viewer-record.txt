@@ -1,10 +1,22 @@
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
-      1006          0          0          0        284          0   bsp_can.o
+       760          0          0          0        284          0   bsp_can.o
        390          0          0          0          0          0   bsp_can_port.o
       1206          0       1112          0          0          0   bsp_can_test.o
        230          0          0          0        106          0   bsp_timer.o
        116          0          0          0         32          0   bsp_touch_port.o
        242          0          0          0         40          0   can.o
+      3186          0          0          0          0          0   canopen.o
+      1188          0        439          0         17          0   co_app_stm32.o
+      1958          0          0          0         56          0   co_driver_stm32.o
+      2244          0          0          0          0          0   co_emergency.o
+      1030          0          0          0          0          0   co_leds.o
+      1914          0         20          0          0          0   co_lssslave.o
+      1472          0          0          0          0          0   co_nmt_heartbeat.o
+      1696          0        104          0          0          0   co_odinterface.o
+      6530          0          0          0          0          0   co_pdo.o
+      5380          0          0          0          0          0   co_sdoserver.o
+      1572          0          0          0          0          0   co_sync.o
+      1214          0          0          0          0          0   co_time.o
         48          0          0          0          0          0   def.o
       4466          0        543          0        241          0   etharp.o
        466          0        114          0          0          0   ethernet.o
@@ -21,28 +33,32 @@
        566          0          0          0          0          0   lan8742.o
       4430          0          0          0          0          0   lcd_nt35510.o
        356          0          0          0         76          0   lwip.o
-       404          0         67          0          0          0   main.o
+       468          0         67          0         24          0   main.o
       2580          0        538          0       1631          0   mem.o
        692          0        333          0      12003          0   memp.o
       1844          0        497          0          9          0   netif.o
+         0          0       1724       1024          0          0   od.o
       3806          0       1056          0          1          0   pbuf.o
-        36          0        392          0       1024          0   startup_stm32f407xx.o
+        36          0        392          0       1536          0   startup_stm32f407xx.o
        270          0          0          5          4          0   stm32f4xx_hal.o
-      3412          0          0          0          0          0   stm32f4xx_hal_can.o
-       482          0          0          0          0          0   stm32f4xx_hal_cortex.o
+      3462          0          0          0          0          0   stm32f4xx_hal_can.o
+       600          0          0          0          0          0   stm32f4xx_hal_cortex.o
        304          0          0          0          0          0   stm32f4xx_hal_dma.o
       3916          0          0          0          0          0   stm32f4xx_hal_eth.o
       1042          0          0          0          0          0   stm32f4xx_hal_gpio.o
         74          0          0          0          0          0   stm32f4xx_hal_msp.o
       2646          0          0          0          0          0   stm32f4xx_hal_rcc.o
        128          0          0          0          0          0   stm32f4xx_hal_sram.o
+      1154          0          0          0          0          0   stm32f4xx_hal_tim.o
+       306          0          0          0          0          0   stm32f4xx_hal_tim_ex.o
       2868          0          0          0          0          0   stm32f4xx_hal_uart.o
-        70          0          0          0          0          0   stm32f4xx_it.o
+        90          0          0          0          0          0   stm32f4xx_it.o
        360          0          0          0          0          0   stm32f4xx_ll_fsmc.o
         18          0         24          4          0          0   system_stm32f4xx.o
       7362          0       1897          6         23          0   tcp.o
      11472          0       1065          0         52          0   tcp_in.o
       6368          0       1951          0          0          0   tcp_out.o
+       174          0          0          0         72          0   tim.o
        684          0        209          0         12          0   timeouts.o
       1088          0        789          2          4          0   udp.o
        418          0          0          0        144          0   usart.o
@@ -52,9 +68,9 @@ Memory Map of the image
 
 	Load Region LR_IROM1 
 
-		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x00016640, Max: 0x00100000, END)
+		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x0001EA20, Max: 0x00100000, END)
 
-		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x00008A38, Max: 0x0001C000, END)
+		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x000090E8, Max: 0x0001C000, END)
 
 		Execution Region RW_IRAM2 (Exec base: 0x2001C000, Size: 0x00000000, Max: 0x00004000, END)
 

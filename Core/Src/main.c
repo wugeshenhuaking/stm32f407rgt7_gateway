@@ -20,6 +20,7 @@
 #include "main.h"
 #include "can.h"
 #include "lwip.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 #include "fsmc.h"
@@ -49,11 +50,14 @@
 #include "bsp_can_port.h"
 #include "bsp_can_test.h"
 
+// CANopen header file
+#include "CO_app_STM32.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+CANopenNodeSTM32 canOpenNodeSTM32;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -121,6 +125,7 @@ int main(void)
   MX_LWIP_Init();
   MX_USART3_UART_Init();
   MX_CAN1_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   // LCD Initialize
   NT35510_Init();
@@ -139,6 +144,18 @@ int main(void)
   // BSP CAN Initialize
   BSP_CAN_Test_RunAll();
   BSP_CAN_Init(BSP_CAN_MODE_NORMAL);
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_TX_MAILBOX_EMPTY);
+
+  // CANopen init
+  canOpenNodeSTM32.CANHandle = &hcan1;
+  canOpenNodeSTM32.HWInitFunction = NULL;  // CAN已由CubeMX初始化
+  canOpenNodeSTM32.timerHandle = NULL;   // 1ms定时器,由systick接管。不需要传入定时器示例
+  canOpenNodeSTM32.desiredNodeID = 10;     // 设置节点ID
+  canOpenNodeSTM32.baudrate = 500;         // 500kbps
+  canopen_app_init(&canOpenNodeSTM32);
+//  HAL_TIM_Base_Start_IT(&htim6);           // 启动定时器
+
 
   /* USER CODE END 2 */
 
@@ -149,6 +166,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    // CANopen处理
+    canopen_app_process();
+
 //    MX_LWIP_Process();
     /* 发送 */
 //    BSP_CAN_Msg_t tx = { .id=0x123, .len=8, .data={1,2,3,4,5,6,7,8} };

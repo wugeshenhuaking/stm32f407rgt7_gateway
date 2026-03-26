@@ -35,10 +35,10 @@
 
 [region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x00016640 [memory type] 2 [memory ID] 4
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x0001EA20 [memory type] 2 [memory ID] 4
 
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00008A38 [memory type] 1 [memory ID] 2
-		[ZI block] addr: 0x20000038, size: 0x00008A00 (35328)
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x000090E8 [memory type] 1 [memory ID] 2
+		[ZI block] addr: 0x20000440, size: 0x00008CA8 (36008)
 
 	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [memory type] 1 [memory ID] 3
 
@@ -53,6 +53,18 @@
 [object name] bsp_timer.o                    [path] ..\BSP\BSP_Timer\bsp_timer.c
 [object name] bsp_touch_port.o               [path] ..\BSP\BSP_LCDTouch\bsp_touch_port.c
 [object name] can.o                          [path] ../Core/Src/can.c
+[object name] canopen.o                      [path] ..\3rdLib\CANopen\CANopenNode\CANopen.c
+[object name] co_app_stm32.o                 [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c
+[object name] co_driver_stm32.o              [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c
+[object name] co_emergency.o                 [path] ..\3rdLib\CANopen\CANopenNode\301\CO_Emergency.c
+[object name] co_leds.o                      [path] ..\3rdLib\CANopen\CANopenNode\303\CO_LEDs.c
+[object name] co_lssslave.o                  [path] ..\3rdLib\CANopen\CANopenNode\305\CO_LSSslave.c
+[object name] co_nmt_heartbeat.o             [path] ..\3rdLib\CANopen\CANopenNode\301\CO_NMT_Heartbeat.c
+[object name] co_odinterface.o               [path] ..\3rdLib\CANopen\CANopenNode\301\CO_ODinterface.c
+[object name] co_pdo.o                       [path] ..\3rdLib\CANopen\CANopenNode\301\CO_PDO.c
+[object name] co_sdoserver.o                 [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SDOserver.c
+[object name] co_sync.o                      [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SYNC.c
+[object name] co_time.o                      [path] ..\3rdLib\CANopen\CANopenNode\301\CO_TIME.c
 [object name] def.o                          [path] ../Middlewares/Third_Party/LwIP/src/core/def.c
 [object name] etharp.o                       [path] ../Middlewares/Third_Party/LwIP/src/core/ipv4/etharp.c
 [object name] ethernet.o                     [path] ../Middlewares/Third_Party/LwIP/src/netif/ethernet.c
@@ -73,6 +85,7 @@
 [object name] mem.o                          [path] ../Middlewares/Third_Party/LwIP/src/core/mem.c
 [object name] memp.o                         [path] ../Middlewares/Third_Party/LwIP/src/core/memp.c
 [object name] netif.o                        [path] ../Middlewares/Third_Party/LwIP/src/core/netif.c
+[object name] od.o                           [path] ..\3rdLib\CANopen\CANopenNode_STM32\OD.c
 [object name] pbuf.o                         [path] ../Middlewares/Third_Party/LwIP/src/core/pbuf.c
 [object name] startup_stm32f407xx.o          [path] startup_stm32f407xx.s
 [object name] stm32f4xx_hal.o                [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
@@ -84,6 +97,8 @@
 [object name] stm32f4xx_hal_msp.o            [path] ../Core/Src/stm32f4xx_hal_msp.c
 [object name] stm32f4xx_hal_rcc.o            [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
 [object name] stm32f4xx_hal_sram.o           [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
+[object name] stm32f4xx_hal_tim.o            [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+[object name] stm32f4xx_hal_tim_ex.o         [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
 [object name] stm32f4xx_hal_uart.o           [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
 [object name] stm32f4xx_it.o                 [path] ../Core/Src/stm32f4xx_it.c
 [object name] stm32f4xx_ll_fsmc.o            [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c
@@ -91,6 +106,7 @@
 [object name] tcp.o                          [path] ../Middlewares/Third_Party/LwIP/src/core/tcp.c
 [object name] tcp_in.o                       [path] ../Middlewares/Third_Party/LwIP/src/core/tcp_in.c
 [object name] tcp_out.o                      [path] ../Middlewares/Third_Party/LwIP/src/core/tcp_out.c
+[object name] tim.o                          [path] ../Core/Src/tim.c
 [object name] timeouts.o                     [path] ../Middlewares/Third_Party/LwIP/src/core/timeouts.c
 [object name] udp.o                          [path] ../Middlewares/Third_Party/LwIP/src/core/udp.c
 [object name] usart.o                        [path] ../Core/Src/usart.c
@@ -101,6 +117,7 @@
 [old name] gpio.c                         [type] 1   [path] ../Core/Src/gpio.c
 [old name] can.c                          [type] 1   [path] ../Core/Src/can.c
 [old name] fsmc.c                         [type] 1   [path] ../Core/Src/fsmc.c
+[old name] tim.c                          [type] 1   [path] ../Core/Src/tim.c
 [old name] usart.c                        [type] 1   [path] ../Core/Src/usart.c
 [old name] stm32f4xx_it.c                 [type] 1   [path] ../Core/Src/stm32f4xx_it.c
 [old name] stm32f4xx_hal_msp.c            [type] 1   [path] ../Core/Src/stm32f4xx_hal_msp.c
@@ -124,6 +141,8 @@
 [old name] stm32f4xx_hal_sram.c           [type] 1   [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
 [old name] stm32f4xx_hal_nand.c           [type] 1   [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c
 [old name] stm32f4xx_hal_pccard.c         [type] 1   [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c
+[old name] stm32f4xx_hal_tim.c            [type] 1   [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+[old name] stm32f4xx_hal_tim_ex.c         [type] 1   [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
 [old name] stm32f4xx_hal_uart.c           [type] 1   [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
 [old name] system_stm32f4xx.c             [type] 1   [path] ../Core/Src/system_stm32f4xx.c
 [old name] GUI_X.c                        [type] 1   [path] ..\3rdLib\emWin\GUI_X\GUI_X.c
@@ -237,21 +256,51 @@
 [old name] mld6.c                         [type] 1   [path] ../Middlewares/Third_Party/LwIP/src/core/ipv6/mld6.c
 [old name] nd6.c                          [type] 1   [path] ../Middlewares/Third_Party/LwIP/src/core/ipv6/nd6.c
 [old name] mqtt.c                         [type] 1   [path] ../Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c
+[old name] CANopen.c                      [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\CANopen.c
+[old name] CO_Emergency.c                 [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_Emergency.c
+[old name] CO_fifo.c                      [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_fifo.c
+[old name] CO_HBconsumer.c                [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_HBconsumer.c
+[old name] CO_NMT_Heartbeat.c             [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_NMT_Heartbeat.c
+[old name] CO_ODinterface.c               [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_ODinterface.c
+[old name] CO_PDO.c                       [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_PDO.c
+[old name] CO_SDOclient.c                 [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SDOclient.c
+[old name] CO_SDOserver.c                 [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SDOserver.c
+[old name] CO_SYNC.c                      [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SYNC.c
+[old name] CO_TIME.c                      [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\CO_TIME.c
+[old name] crc16-ccitt.c                  [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\301\crc16-ccitt.c
+[old name] CO_LEDs.c                      [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\303\CO_LEDs.c
+[old name] CO_LSSslave.c                  [type] 1   [path] ..\3rdLib\CANopen\CANopenNode\305\CO_LSSslave.c
+[old name] CO_app_STM32.c                 [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c
+[old name] CO_driver_STM32.c              [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c
+[old name] CO_storageBlank.c              [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_storageBlank.c
+[old name] OD.c                           [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\OD.c
 
 [record region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x00016664 [type] 2 [ID] 4
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00008A38 [type] 1 [ID] 2
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x0001EA20 [type] 2 [ID] 4
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x000090E8 [type] 1 [ID] 2
 	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [type] 1 [ID] 3
 ------------------------------------------------------------------------------------------------------------------------------
                                 FILE(s)                                |         RAM (byte)       |       FLASH (byte)       |
 ------------------------------------------------------------------------------------------------------------------------------
-..\BSP\BSP_CAN\bsp_can.c():                                            |         284              |        1006              |
+..\BSP\BSP_CAN\bsp_can.c():                                            |         284              |         760              |
 ..\BSP\BSP_CAN\bsp_can_port.c():                                       |           0              |         390              |
 ..\BSP\BSP_CAN\bsp_can_test.c():                                       |           0              |        2318              |
 ..\BSP\BSP_Timer\bsp_timer.c():                                        |         106              |         230              |
 ..\BSP\BSP_LCDTouch\bsp_touch_port.c():                                |          32              |         116              |
 ../Core/Src/can.c():                                                   |          40              |         242              |
+..\3rdLib\CANopen\CANopenNode\CANopen.c():                             |           0              |        3186              |
+..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c():                  |          17              |        1627              |
+..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c():               |          56              |        1958              |
+..\3rdLib\CANopen\CANopenNode\301\CO_Emergency.c():                    |           0              |        2244              |
+..\3rdLib\CANopen\CANopenNode\303\CO_LEDs.c():                         |           0              |        1030              |
+..\3rdLib\CANopen\CANopenNode\305\CO_LSSslave.c():                     |           0              |        1934              |
+..\3rdLib\CANopen\CANopenNode\301\CO_NMT_Heartbeat.c():                |           0              |        1472              |
+..\3rdLib\CANopen\CANopenNode\301\CO_ODinterface.c():                  |           0              |        1800              |
+..\3rdLib\CANopen\CANopenNode\301\CO_PDO.c():                          |           0              |        6530              |
+..\3rdLib\CANopen\CANopenNode\301\CO_SDOserver.c():                    |           0              |        5380              |
+..\3rdLib\CANopen\CANopenNode\301\CO_SYNC.c():                         |           0              |        1572              |
+..\3rdLib\CANopen\CANopenNode\301\CO_TIME.c():                         |           0              |        1214              |
 ../Middlewares/Third_Party/LwIP/src/core/def.c():                      |           0              |          48              |
 ../Middlewares/Third_Party/LwIP/src/core/ipv4/etharp.c():              |         241              |        5009              |
 ../Middlewares/Third_Party/LwIP/src/netif/ethernet.c():                |           0              |         580              |
@@ -268,28 +317,32 @@
 ../Drivers/BSP/Components/lan8742/lan8742.c():                         |           0              |         566              |
 ..\BSP\BSP_LCD\lcd_nt35510.c():                                        |           0              |        4430              |
 ../LWIP/App/lwip.c():                                                  |          76              |         356              |
-../Core/Src/main.c():                                                  |           0              |         471  [-36]       |
+../Core/Src/main.c():                                                  |          24              |         535              |
 ../Middlewares/Third_Party/LwIP/src/core/mem.c():                      |        1631              |        3118              |
 ../Middlewares/Third_Party/LwIP/src/core/memp.c():                     |       12003              |        1025              |
 ../Middlewares/Third_Party/LwIP/src/core/netif.c():                    |           9              |        2341              |
+..\3rdLib\CANopen\CANopenNode_STM32\OD.c():                            |        1024              |        2748              |
 ../Middlewares/Third_Party/LwIP/src/core/pbuf.c():                     |           1              |        4862              |
-startup_stm32f407xx.s():                                               |        1024              |         428              |
+startup_stm32f407xx.s():                                               |        1536              |         428              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c():                 |           9              |         275              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c():             |           0              |        3412              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c():          |           0              |         482              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c():             |           0              |        3462              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c():          |           0              |         600              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c():             |           0              |         304              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c():             |           0              |        3916              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c():            |           0              |        1042              |
 ../Core/Src/stm32f4xx_hal_msp.c():                                     |           0              |          74              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c():             |           0              |        2646              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c():            |           0              |         128              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():             |           0              |        1154              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c():          |           0              |         306              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c():            |           0              |        2868              |
-../Core/Src/stm32f4xx_it.c():                                          |           0              |          70              |
+../Core/Src/stm32f4xx_it.c():                                          |           0              |          90              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c():             |           0              |         360              |
 ../Core/Src/system_stm32f4xx.c():                                      |           4              |          46              |
 ../Middlewares/Third_Party/LwIP/src/core/tcp.c():                      |          29              |        9265              |
 ../Middlewares/Third_Party/LwIP/src/core/tcp_in.c():                   |          52              |       12537              |
 ../Middlewares/Third_Party/LwIP/src/core/tcp_out.c():                  |           0              |        8319              |
+../Core/Src/tim.c():                                                   |          72              |         174              |
 ../Middlewares/Third_Party/LwIP/src/core/timeouts.c():                 |          12              |         893              |
 ../Middlewares/Third_Party/LwIP/src/core/udp.c():                      |           6              |        1879              |
 ../Core/Src/usart.c():                                                 |         144              |         418              |
@@ -297,15 +350,15 @@ startup_stm32f407xx.s():                                               |        
 [memory print mode]: 0
 LR_IROM1
         RAM 1             [0x20000000 | 0x0001C000 (114688)]
-                [zi start] 1   [zi end] 15
-                RW_IRAM1  [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ___________________________________| (  34.5 KB / 112.0 KB )  30.9%  
+                [zi start] 1   [zi end] 16
+                RW_IRAM1  [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ__________________________________| (  36.2 KB / 112.0 KB )  32.3%  
  
         FLASH 1           [0x08000000 | 0x00100000 (1048576)]
-                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö______________________________________________| (  89.5 KB /   1.0 MB )   8.7%  [-36]
+                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö_____________________________________________| ( 122.5 KB /   1.0 MB )  12.0%  
  
 [htm file path] D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\Objects\stm32f407zgt6-gataway.htm
 Maximum Stack Usage =        952 bytes + Unknown(Cycles, Untraceable Function Pointers)
  
 =============================================================================================================================
 
-run time: 0.162 s
+run time: 0.254 s
