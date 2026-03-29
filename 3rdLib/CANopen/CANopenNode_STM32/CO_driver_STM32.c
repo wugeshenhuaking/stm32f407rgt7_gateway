@@ -656,6 +656,7 @@ HAL_FDCAN_TxBufferCompleteCallback(FDCAN_HandleTypeDef* hfdcan, uint32_t BufferI
  * \param[in]       hcan: pointer to an CAN_HandleTypeDef structure that contains
  *                      the configuration information for the specified CAN.
  */
+#if USE_CANOPEN==1
 void
 HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     prv_read_can_received_msg(hcan, CAN_RX_FIFO0, 0);
@@ -670,7 +671,7 @@ void
 HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     prv_read_can_received_msg(hcan, CAN_RX_FIFO1, 0);
 }
-
+#endif
 /**
  * \brief           TX buffer has been well transmitted callback
  * \param[in]       hcan: pointer to an CAN_HandleTypeDef structure that contains
@@ -713,6 +714,8 @@ CO_CANinterrupt_TX(CO_CANmodule_t* CANmodule, uint32_t MailboxNumber) {
     }
 }
 
+#if USE_CANOPEN==1
+
 void
 HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef* hcan) {
     CO_CANinterrupt_TX(CANModule_local, CAN_TX_MAILBOX0);
@@ -727,4 +730,6 @@ void
 HAL_CAN_TxMailbox2CompleteCallback(CAN_HandleTypeDef* hcan) {
     CO_CANinterrupt_TX(CANModule_local, CAN_TX_MAILBOX0);
 }
+#endif
+
 #endif

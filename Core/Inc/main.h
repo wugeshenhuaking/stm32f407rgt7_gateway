@@ -46,6 +46,10 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+#define ENABLE 1
+#define DISABLE 0
+
+#define USE_CANOPEN ENABLE
 
 /* USER CODE END EM */
 

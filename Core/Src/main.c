@@ -53,6 +53,10 @@
 // CANopen header file
 #include "CO_app_STM32.h"
 
+// app CAN init
+#include "app_CAN.h"
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -128,34 +132,34 @@ int main(void)
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   // LCD Initialize
-  NT35510_Init();
+//  NT35510_Init();
 //  NT35510_RunAllTests();
 
   // EX-SRAM Initialize
 //  SRAM_RunAllTests();
   
   // LCD-Touch Initialize
-  BSP_Touch_Init();
+//  BSP_Touch_Init();
 //  Touch_RunAllTests();
   
   // emWin Initialize
 //  MainTask();
 
   // BSP CAN Initialize
+  #if USE_CANOPEN==DISABLE 
+  #define BSP_CAN_TXRX_TEST
   BSP_CAN_Test_RunAll();
   BSP_CAN_Init(BSP_CAN_MODE_NORMAL);
-  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_TX_MAILBOX_EMPTY);
-
+  #else
   // CANopen init
   canOpenNodeSTM32.CANHandle = &hcan1;
-  canOpenNodeSTM32.HWInitFunction = NULL;  // CAN已由CubeMX初始化
-  canOpenNodeSTM32.timerHandle = NULL;   // 1ms定时器,由systick接管。不需要传入定时器示例
-  canOpenNodeSTM32.desiredNodeID = 10;     // 设置节点ID
+  canOpenNodeSTM32.HWInitFunction = MX_CAN1_Init;  // CAN已由CubeMX初始化
+  canOpenNodeSTM32.timerHandle = NULL;     // canopen心跳定时器,当前选择由systick接管。所以不需要传入定时器示例
+  canOpenNodeSTM32.desiredNodeID = 10;     // 设置当前设备节点ID
   canOpenNodeSTM32.baudrate = 500;         // 500kbps
   canopen_app_init(&canOpenNodeSTM32);
-//  HAL_TIM_Base_Start_IT(&htim6);           // 启动定时器
-
+  APP_CAN_Init();
+  #endif
 
   /* USER CODE END 2 */
 
@@ -166,13 +170,20 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // CANopen处理
+    #if USE_CANOPEN == ENABLE
+    // CANopen polling
     canopen_app_process();
+    APP_CAN_Process();
+    #endif
 
+    // LWIP polling
 //    MX_LWIP_Process();
+    
+    #ifdef BSP_CAN_TXRX_TEST
+    // BSP can polling test
     /* 发送 */
-//    BSP_CAN_Msg_t tx = { .id=0x123, .len=8, .data={1,2,3,4,5,6,7,8} };
-//    BSP_CAN_Send(&tx);
+    BSP_CAN_Msg_t tx = { .id=0x123, .len=8, .data={1,2,3,4,5,6,7,8} };
+    BSP_CAN_Send(&tx);
 
     /* 接收 — 用 BufferHasData 轮询，不阻塞 */
     BSP_CAN_Msg_t rx;
@@ -186,6 +197,7 @@ int main(void)
                    rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
         }
     }
+    #endif
 
     HAL_Delay(500);
   }

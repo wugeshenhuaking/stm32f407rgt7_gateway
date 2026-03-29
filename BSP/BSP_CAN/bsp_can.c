@@ -92,7 +92,6 @@ bsp_can_hw_err_t bsp_can_hw_configure(bsp_can_hw_mode_t mode)
     {
         return BSP_CAN_HW_ERR;
     }
-
     return BSP_CAN_HW_OK;
 }
 
@@ -213,7 +212,11 @@ bool bsp_can_hw_is_rx_pending(void)
  * Keep this as short as possible: read frame, push to ring buffer, return.
  * No printf, no heavy logic.
  * ========================================================================== */
+#if USE_CANOPEN == DISABLE
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
+#else
 void HAL_CAN_RxFifo0MsgPendingCallback_BSP(CAN_HandleTypeDef *hcan)
+#endif
 {
     if (hcan->Instance != CAN1) { return; }
 

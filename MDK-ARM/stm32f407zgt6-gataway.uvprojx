@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-fno-short-wchar -fshort-enums</MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F407xx</Define>
+              <Define>USE_HAL_DRIVER,STM32F407xx,CO_CONFIG_SDO_CLI=3,CO_CONFIG_FIFO=1</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../3rdLib/emWin/Config;../3rdLib/emWin/GUI_X;../3rdLib/emWin/emWinDemo;../3rdLib/emWin/include;../3rdLib/emWin/emWinTask;../3rdLib/emWin/emWinTask/Source;../BSP/BSP_LCD;../BSP/BSP_LCDTouch;../BSP/BSP_SRAM;../BSP/BSP_Timer;../LWIP/App;../LWIP/Target;../Middlewares/Third_Party/LwIP/src/include;../Middlewares/Third_Party/LwIP/system;../Drivers/BSP/Components/lan8742;../Middlewares/Third_Party/LwIP/src/include/netif/ppp;../Middlewares/Third_Party/LwIP/src/include/lwip;../Middlewares/Third_Party/LwIP/src/include/lwip/apps;../Middlewares/Third_Party/LwIP/src/include/lwip/priv;../Middlewares/Third_Party/LwIP/src/include/lwip/prot;../Middlewares/Third_Party/LwIP/src/include/netif;../Middlewares/Third_Party/LwIP/src/include/compat/posix;../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa;../Middlewares/Third_Party/LwIP/src/include/compat/posix/net;../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys;../Middlewares/Third_Party/LwIP/src/include/compat/stdc;../Middlewares/Third_Party/LwIP/system/arch;../BSP/BSP_ETH;../BSP/BSP_CAN;../3rdLib/CANopen/CANopenNode;../3rdLib/CANopen/CANopenNode_STM32</IncludePath>
             </VariousControls>
@@ -6260,6 +6260,21 @@
               <FileName>OD.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\3rdLib\CANopen\CANopenNode_STM32\OD.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_CAN</GroupName>
+          <Files>
+            <File>
+              <FileName>app_CAN.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\BSP_CAN\app_CAN.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_CAN.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\BSP_CAN\app_CAN.h</FilePath>
             </File>
           </Files>
         </Group>

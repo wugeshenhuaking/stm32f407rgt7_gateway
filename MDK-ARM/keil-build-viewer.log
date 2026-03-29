@@ -35,10 +35,10 @@
 
 [region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x0001EA20 [memory type] 2 [memory ID] 4
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x0001C734 [memory type] 2 [memory ID] 4
 
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x000090E8 [memory type] 1 [memory ID] 2
-		[ZI block] addr: 0x20000440, size: 0x00008CA8 (36008)
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x0000ADA8 [memory type] 1 [memory ID] 2
+		[ZI block] addr: 0x20000438, size: 0x0000A970 (43376)
 
 	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [memory type] 1 [memory ID] 3
 
@@ -47,21 +47,20 @@
 [object path max length] 66
 
 [object in map file]
-[object name] bsp_can.o                      [path] ..\BSP\BSP_CAN\bsp_can.c
-[object name] bsp_can_port.o                 [path] ..\BSP\BSP_CAN\bsp_can_port.c
-[object name] bsp_can_test.o                 [path] ..\BSP\BSP_CAN\bsp_can_test.c
+[object name] app_can.o                      [path] ..\BSP\BSP_CAN\app_CAN.c
 [object name] bsp_timer.o                    [path] ..\BSP\BSP_Timer\bsp_timer.c
-[object name] bsp_touch_port.o               [path] ..\BSP\BSP_LCDTouch\bsp_touch_port.c
 [object name] can.o                          [path] ../Core/Src/can.c
 [object name] canopen.o                      [path] ..\3rdLib\CANopen\CANopenNode\CANopen.c
 [object name] co_app_stm32.o                 [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c
 [object name] co_driver_stm32.o              [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c
 [object name] co_emergency.o                 [path] ..\3rdLib\CANopen\CANopenNode\301\CO_Emergency.c
+[object name] co_fifo.o                      [path] ..\3rdLib\CANopen\CANopenNode\301\CO_fifo.c
 [object name] co_leds.o                      [path] ..\3rdLib\CANopen\CANopenNode\303\CO_LEDs.c
 [object name] co_lssslave.o                  [path] ..\3rdLib\CANopen\CANopenNode\305\CO_LSSslave.c
 [object name] co_nmt_heartbeat.o             [path] ..\3rdLib\CANopen\CANopenNode\301\CO_NMT_Heartbeat.c
 [object name] co_odinterface.o               [path] ..\3rdLib\CANopen\CANopenNode\301\CO_ODinterface.c
 [object name] co_pdo.o                       [path] ..\3rdLib\CANopen\CANopenNode\301\CO_PDO.c
+[object name] co_sdoclient.o                 [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SDOclient.c
 [object name] co_sdoserver.o                 [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SDOserver.c
 [object name] co_sync.o                      [path] ..\3rdLib\CANopen\CANopenNode\301\CO_SYNC.c
 [object name] co_time.o                      [path] ..\3rdLib\CANopen\CANopenNode\301\CO_TIME.c
@@ -71,7 +70,6 @@
 [object name] ethernetif.o                   [path] ../LWIP/Target/ethernetif.c
 [object name] fsmc.o                         [path] ../Core/Src/fsmc.c
 [object name] gpio.o                         [path] ../Core/Src/gpio.c
-[object name] gt9xxx.o                       [path] ..\BSP\BSP_LCDTouch\gt9xxx.c
 [object name] icmp.o                         [path] ../Middlewares/Third_Party/LwIP/src/core/ipv4/icmp.c
 [object name] init.o                         [path] ../Middlewares/Third_Party/LwIP/src/core/init.c
 [object name] ip.o                           [path] ../Middlewares/Third_Party/LwIP/src/core/ip.c
@@ -79,7 +77,6 @@
 [object name] ip4_addr.o                     [path] ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_addr.c
 [object name] ip4_frag.o                     [path] ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_frag.c
 [object name] lan8742.o                      [path] ../Drivers/BSP/Components/lan8742/lan8742.c
-[object name] lcd_nt35510.o                  [path] ..\BSP\BSP_LCD\lcd_nt35510.c
 [object name] lwip.o                         [path] ../LWIP/App/lwip.c
 [object name] main.o                         [path] ../Core/Src/main.c
 [object name] mem.o                          [path] ../Middlewares/Third_Party/LwIP/src/core/mem.c
@@ -274,30 +271,30 @@
 [old name] CO_driver_STM32.c              [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c
 [old name] CO_storageBlank.c              [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\CO_storageBlank.c
 [old name] OD.c                           [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\OD.c
+[old name] app_CAN.c                      [type] 1   [path] ..\BSP\BSP_CAN\app_CAN.c
 
 [record region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x0001EA20 [type] 2 [ID] 4
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x000090E8 [type] 1 [ID] 2
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x0001C734 [type] 2 [ID] 4
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x0000ADA8 [type] 1 [ID] 2
 	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [type] 1 [ID] 3
 ------------------------------------------------------------------------------------------------------------------------------
                                 FILE(s)                                |         RAM (byte)       |       FLASH (byte)       |
 ------------------------------------------------------------------------------------------------------------------------------
-..\BSP\BSP_CAN\bsp_can.c():                                            |         284              |         760              |
-..\BSP\BSP_CAN\bsp_can_port.c():                                       |           0              |         390              |
-..\BSP\BSP_CAN\bsp_can_test.c():                                       |           0              |        2318              |
+..\BSP\BSP_CAN\app_CAN.c():                                            |           4              |          83              |
 ..\BSP\BSP_Timer\bsp_timer.c():                                        |         106              |         230              |
-..\BSP\BSP_LCDTouch\bsp_touch_port.c():                                |          32              |         116              |
-../Core/Src/can.c():                                                   |          40              |         242              |
-..\3rdLib\CANopen\CANopenNode\CANopen.c():                             |           0              |        3186              |
+../Core/Src/can.c():                                                   |          40              |         244              |
+..\3rdLib\CANopen\CANopenNode\CANopen.c():                             |           0              |        3372              |
 ..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c():                  |          17              |        1627              |
 ..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c():               |          56              |        1958              |
 ..\3rdLib\CANopen\CANopenNode\301\CO_Emergency.c():                    |           0              |        2244              |
+..\3rdLib\CANopen\CANopenNode\301\CO_fifo.c():                         |           0              |          58              |
 ..\3rdLib\CANopen\CANopenNode\303\CO_LEDs.c():                         |           0              |        1030              |
 ..\3rdLib\CANopen\CANopenNode\305\CO_LSSslave.c():                     |           0              |        1934              |
 ..\3rdLib\CANopen\CANopenNode\301\CO_NMT_Heartbeat.c():                |           0              |        1472              |
 ..\3rdLib\CANopen\CANopenNode\301\CO_ODinterface.c():                  |           0              |        1800              |
 ..\3rdLib\CANopen\CANopenNode\301\CO_PDO.c():                          |           0              |        6530              |
+..\3rdLib\CANopen\CANopenNode\301\CO_SDOclient.c():                    |           0              |         820              |
 ..\3rdLib\CANopen\CANopenNode\301\CO_SDOserver.c():                    |           0              |        5380              |
 ..\3rdLib\CANopen\CANopenNode\301\CO_SYNC.c():                         |           0              |        1572              |
 ..\3rdLib\CANopen\CANopenNode\301\CO_TIME.c():                         |           0              |        1214              |
@@ -307,7 +304,6 @@
 ../LWIP/Target/ethernetif.c():                                         |       19428              |        1768              |
 ../Core/Src/fsmc.c():                                                  |         164              |         552              |
 ../Core/Src/gpio.c():                                                  |           0              |         388              |
-..\BSP\BSP_LCDTouch\gt9xxx.c():                                        |           1              |        1041              |
 ../Middlewares/Third_Party/LwIP/src/core/ipv4/icmp.c():                |           0              |        1140              |
 ../Middlewares/Third_Party/LwIP/src/core/init.c():                     |           0              |          44              |
 ../Middlewares/Third_Party/LwIP/src/core/ip.c():                       |          24              |           0              |
@@ -315,34 +311,33 @@
 ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_addr.c():            |           0              |         136              |
 ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_frag.c():            |           6              |        4317              |
 ../Drivers/BSP/Components/lan8742/lan8742.c():                         |           0              |         566              |
-..\BSP\BSP_LCD\lcd_nt35510.c():                                        |           0              |        4430              |
 ../LWIP/App/lwip.c():                                                  |          76              |         356              |
-../Core/Src/main.c():                                                  |          24              |         535              |
+../Core/Src/main.c():                                                  |          24              |         346              |
 ../Middlewares/Third_Party/LwIP/src/core/mem.c():                      |        1631              |        3118              |
 ../Middlewares/Third_Party/LwIP/src/core/memp.c():                     |       12003              |        1025              |
 ../Middlewares/Third_Party/LwIP/src/core/netif.c():                    |           9              |        2341              |
 ..\3rdLib\CANopen\CANopenNode_STM32\OD.c():                            |        1024              |        2748              |
 ../Middlewares/Third_Party/LwIP/src/core/pbuf.c():                     |           1              |        4862              |
-startup_stm32f407xx.s():                                               |        1536              |         428              |
+startup_stm32f407xx.s():                                               |        9216              |         428              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c():                 |           9              |         275              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c():             |           0              |        3462              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c():             |           0              |        3316              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c():          |           0              |         600              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c():             |           0              |         304              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c():             |           0              |        3916              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c():            |           0              |        1042              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c():            |           0              |         996              |
 ../Core/Src/stm32f4xx_hal_msp.c():                                     |           0              |          74              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c():             |           0              |        2646              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c():            |           0              |         128              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():             |           0              |        1154              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c():          |           0              |         306              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():             |           0              |         576              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c():          |           0              |         290              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c():            |           0              |        2868              |
-../Core/Src/stm32f4xx_it.c():                                          |           0              |          90              |
+../Core/Src/stm32f4xx_it.c():                                          |           0              |          74              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c():             |           0              |         360              |
 ../Core/Src/system_stm32f4xx.c():                                      |           4              |          46              |
 ../Middlewares/Third_Party/LwIP/src/core/tcp.c():                      |          29              |        9265              |
 ../Middlewares/Third_Party/LwIP/src/core/tcp_in.c():                   |          52              |       12537              |
 ../Middlewares/Third_Party/LwIP/src/core/tcp_out.c():                  |           0              |        8319              |
-../Core/Src/tim.c():                                                   |          72              |         174              |
+../Core/Src/tim.c():                                                   |          72              |         150              |
 ../Middlewares/Third_Party/LwIP/src/core/timeouts.c():                 |          12              |         893              |
 ../Middlewares/Third_Party/LwIP/src/core/udp.c():                      |           6              |        1879              |
 ../Core/Src/usart.c():                                                 |         144              |         418              |
@@ -350,15 +345,15 @@ startup_stm32f407xx.s():                                               |        
 [memory print mode]: 0
 LR_IROM1
         RAM 1             [0x20000000 | 0x0001C000 (114688)]
-                [zi start] 1   [zi end] 16
-                RW_IRAM1  [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ__________________________________| (  36.2 KB / 112.0 KB )  32.3%  
+                [zi start] 1   [zi end] 19
+                RW_IRAM1  [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_______________________________| (  43.4 KB / 112.0 KB )  38.8%  
  
         FLASH 1           [0x08000000 | 0x00100000 (1048576)]
-                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö_____________________________________________| ( 122.5 KB /   1.0 MB )  12.0%  
+                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö_____________________________________________| ( 113.8 KB /   1.0 MB )  11.1%  
  
 [htm file path] D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\Objects\stm32f407zgt6-gataway.htm
-Maximum Stack Usage =        952 bytes + Unknown(Cycles, Untraceable Function Pointers)
+Maximum Stack Usage =        896 bytes + Unknown(Cycles, Untraceable Function Pointers)
  
 =============================================================================================================================
 
-run time: 0.254 s
+run time: 0.215 s

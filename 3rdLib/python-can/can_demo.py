@@ -1,177 +1,203 @@
 # -*- coding: utf-8 -*-
 """
-CAN 收发演示 v3
-完全基于官方 SDK（usb_device.py + usb2can.py），不自定义结构体。
+CANopen 主站测试工具
+用于测试 STM32 网关（作为 CANopen 从站，Node ID = 10）
 
-目录结构：
-    python-can/
-        can_demo.py       ← 本文件
-        usb_device.py     ← 官方SDK
-        usb2can.py        ← 官方SDK
-        libs/             ← 官方SDK libs文件夹
-            windows/
-                x86_64/
-                    libusb-1.0.dll
-                    USB2XXX.dll
-
-运行前：关闭 SW CanLinProSw 上位机软件
+测试流程 (Phase 1)：
+1. 监听心跳帧 (ID=0x70A)
+2. 发送 NMT 启动命令 (ID=0x000, Data=[0x01, 0x0A])，使节点进入 Operational 状态
+3. 发送 SDO 读请求 (读 0x1000 0x00 Device Type)，接收响应 (ID=0x58A)
+4. 接收 PDO 数据
 """
 
 from ctypes import *
-from time import sleep
+from time import sleep, time
 from usb_device import *
 from usb2can import *
 
 # ─────────────────────────────────────────────
-# 通道配置 — 根据实际接线修改
+# 配置
 # ─────────────────────────────────────────────
-CAN_CHANNEL = 2      # 0=CAN1, 1=CAN2，根据你接的通道改这里
-BITRATE     = 500000 # 波特率，和开发板一致
+CAN_CHANNEL = 1      # 根据实际接线改
+STM32_NODE_ID = 10   # STM32 网关的节点 ID
 
+# 主站发送的 SDO 帧 ID (发送给 STM32)
+SDO_TX_ID = 0x600 + STM32_NODE_ID  # 0x60A
+# STM32 回复的 SDO 帧 ID
+SDO_RX_ID = 0x580 + STM32_NODE_ID  # 0x58A
+
+# STM32 的心跳帧 ID
+HB_RX_ID  = 0x700 + STM32_NODE_ID  # 0x70A
+
+# SDO 命令字 (主站发读请求)
+SDO_CMD_READ_REQ = 0x40
+
+# NMT 命令
+NMT_ID = 0x000
+NMT_CMD_START = 0x01
 
 # ─────────────────────────────────────────────
-# 设备初始化
+# 设备 + CAN 初始化
 # ─────────────────────────────────────────────
 def init_device():
-    """扫描并打开设备，返回 DevHandle"""
     DevHandles = (c_uint * 20)()
-
     ret = USB_ScanDevice(byref(DevHandles))
     if ret == 0:
-        raise RuntimeError("未找到 USB2XXX 设备，请检查连接")
-    print(f"[USB2XXX] 发现 {ret} 个设备")
-
-    if not bool(USB_OpenDevice(DevHandles[0])):
-        raise RuntimeError("USB_OpenDevice 失败")
-
-    # 打印设备信息
-    info     = DEVICE_INFO()
-    func_str = (c_char * 256)()
-    if bool(DEV_GetDeviceInfo(DevHandles[0], byref(info), byref(func_str))):
-        fw = info.FirmwareVersion
-        hw = info.HardwareVersion
-        print(f"[USB2XXX] 固件: {bytes(info.FirmwareName).decode(errors='ignore').strip()}")
-        print(f"[USB2XXX] FwVer: v{(fw>>24)&0xFF}.{(fw>>16)&0xFF}.{fw&0xFFFF}"
-              f"  HwVer: v{(hw>>24)&0xFF}.{(hw>>16)&0xFF}.{hw&0xFFFF}")
-        print(f"[USB2XXX] 日期: {bytes(info.BuildDate).decode(errors='ignore').strip()}")
-
+        raise RuntimeError("未找到 USB2XXX 设备")
+    USB_OpenDevice(DevHandles[0])
+    print(f"[USB2XXX] 设备已打开")
     return DevHandles[0]
 
 
-# ─────────────────────────────────────────────
-# CAN 初始化
-# ─────────────────────────────────────────────
-def init_can(handle, channel, bitrate=500000):
+def init_can(handle, channel):
     cfg = CAN_INIT_CONFIG()
-    cfg.CAN_BRP_CFG3 = 6    # ← 正确值
+    cfg.CAN_BRP_CFG3 = 6
     cfg.CAN_SJW      = 1
-    cfg.CAN_BS1_CFG1 = 11   # ← 正确值
-    cfg.CAN_BS2_CFG2 = 4    # ← 正确值
+    cfg.CAN_BS1_CFG1 = 11
+    cfg.CAN_BS2_CFG2 = 4
     cfg.CAN_Mode     = 0
     cfg.CAN_ABOM     = 0
     cfg.CAN_NART     = 1
     cfg.CAN_RFLM     = 0
     cfg.CAN_TXFP     = 1
-
     CAN_Init(handle, channel, byref(cfg))
 
-    can_filter = CAN_FILTER_CONFIG()
-    can_filter.Enable       = 1
-    can_filter.ExtFrame     = 0
-    can_filter.FilterIndex  = 0
-    can_filter.FilterMode   = 0
-    can_filter.MASK_IDE     = 0
-    can_filter.MASK_RTR     = 0
-    can_filter.MASK_Std_Ext = 0
-    CAN_Filter_Init(handle, channel, byref(can_filter))
+    # Filter 0: accept standard frames (ExtFrame=0)
+    f = CAN_FILTER_CONFIG()
+    f.Enable       = 1
+    f.FilterIndex  = 0
+    f.FilterMode   = 0
+    f.ExtFrame     = 0      # 接收标准帧
+    f.ID_Std_Ext   = 0
+    f.ID_IDE       = 0
+    f.ID_RTR       = 0
+    f.MASK_Std_Ext = 0
+    f.MASK_IDE     = 0
+    f.MASK_RTR     = 0
+    CAN_Filter_Init(handle, channel, byref(f))
 
-    CAN_StartGetMsg(handle, channel)
     print(f"[CAN] 通道 {channel} 初始化完成 ✓")
-# ```
-
-# 另外注意：例程里 `CAN_Mode = 0x80` 是自发自收，我们要用 `0` 正常模式，还有波特率参数 `BRP=4, BS1=16, BS2=4` 算出来是：
-# ```
-# 100MHz / 4 / (1+16+4) = 100M / 4 / 21 ≈ 1.19MHz  ← 不对！
 
 
 # ─────────────────────────────────────────────
-# 发送一帧
+# CAN 收发
 # ─────────────────────────────────────────────
-def send_frame(handle, channel, arb_id, data,
-               is_ext=False, is_remote=False):
-    if len(data) > 8:
-        raise ValueError("CAN 数据最多 8 字节")
-
+def send_frame(handle, channel, arb_id, data):
     msg            = CAN_MSG()
     msg.ID         = arb_id
-    msg.ExternFlag = 1 if is_ext    else 0
-    msg.RemoteFlag = 1 if is_remote else 0
-    msg.DataLen    = len(data)   # 官方SDK字段名是 DataLen，不是 Len
+    msg.ExternFlag = 0
+    msg.RemoteFlag = 0
+    msg.DataLen    = len(data)
     for i, b in enumerate(data):
         msg.Data[i] = b
-
-    ret = CAN_SendMsg(handle, channel, byref(msg), 1)
-    return ret >= 0
+    CAN_SendMsg(handle, channel, byref(msg), 1)
 
 
-# ─────────────────────────────────────────────
-# 接收帧
-# ─────────────────────────────────────────────
-def recv_frames(handle, channel, max_num=1024):
-    buf   = (CAN_MSG * max_num)()
+def recv_frames(handle, channel):
+    buf   = (CAN_MSG * 64)()
     count = CAN_GetMsg(handle, channel, byref(buf))
-    print(f"  [DEBUG] CAN_GetMsg 返回: {count}")   # ← 加这行
     if count <= 0:
         return []
-
-    results = []
+    result = []
     for i in range(count):
         f = buf[i]
-        results.append({
-            "id":        f.ID,
-            "data":      list(f.Data[:f.DataLen]),  # 用 DataLen
-            "len":       f.DataLen,
-            "is_ext":    bool(f.ExternFlag),
-            "is_remote": bool(f.RemoteFlag),
-            "timestamp": f.TimeStamp,
+        result.append({
+            "id":   f.ID,
+            "data": list(f.Data[:f.DataLen]),
+            "len":  f.DataLen,
+            "is_ext": bool(f.ExternFlag),
         })
-    return results
+    return result
 
+
+# ─────────────────────────────────────────────
+# 测试动作
+# ─────────────────────────────────────────────
+def send_nmt_start(handle, channel, node_id):
+    """发送 NMT Start 命令"""
+    data = [NMT_CMD_START, node_id]
+    send_frame(handle, channel, NMT_ID, data)
+    print(f"[TX] 发送 NMT Start 命令给节点 {node_id}")
+
+def send_sdo_read_device_type(handle, channel):
+    """发送 SDO 读取 Device Type (0x1000 0x00)"""
+    index = 0x1000
+    subindex = 0x00
+    data = [
+        SDO_CMD_READ_REQ,
+        index & 0xFF, (index >> 8) & 0xFF,
+        subindex,
+        0x00, 0x00, 0x00, 0x00
+    ]
+    send_frame(handle, channel, SDO_TX_ID, data)
+    print(f"[TX] 发送 SDO 读请求: 0x{index:04X} sub {subindex:02X}")
 
 # ─────────────────────────────────────────────
 # 主程序
 # ─────────────────────────────────────────────
 if __name__ == "__main__":
 
-    handle = init_device()
-
-    # 同时初始化两个通道
-    init_can(handle, 0, BITRATE)
-    init_can(handle, 1, BITRATE)
-    CAN_ClearMsg(handle, 0)
-    CAN_ClearMsg(handle, 1)
-
-    print("\n=== 扫描两个通道，看哪个能收到 0x123 ===\n")
-
     try:
-        while True:
-            for ch in [0, 1]:
-                buf   = (CAN_MSG * 64)()
-                count = CAN_GetMsg(handle, ch, byref(buf))
-                if count > 0:
-                    for i in range(count):
-                        f = buf[i]
-                        data_str = " ".join(f"{f.Data[j]:02X}" for j in range(f.DataLen))
-                        print(f"CH{ch+1} RX  id=0x{f.ID:03X}  len={f.DataLen}  data=[{data_str}]")
-                else:
-                    print(f"CH{ch+1} count={count}")
-            sleep(0.5)
+        handle = init_device()
+        init_can(handle, CAN_CHANNEL)
+        CAN_ClearMsg(handle, CAN_CHANNEL)
 
+        print(f"""
+╔══════════════════════════════════════════╗
+║   CANopen 主站测试工具 (测试 STM32 Node 10) 
+║   SDO 发送 ID = 0x{SDO_TX_ID:03X}               
+║   SDO 接收 ID = 0x{SDO_RX_ID:03X}               
+║   心跳接收 ID = 0x{HB_RX_ID:03X}               
+╚══════════════════════════════════════════╝
+""")
+
+        # 启动测试流程
+        sleep(1)
+        send_nmt_start(handle, CAN_CHANNEL, STM32_NODE_ID)
+        sleep(0.5)
+        send_sdo_read_device_type(handle, CAN_CHANNEL)
+
+        while True:
+            # 接收并处理帧
+            for frame in recv_frames(handle, CAN_CHANNEL):
+                fid  = frame["id"]
+                data = frame["data"]
+                is_ext = frame.get("is_ext", False)
+                
+                # 扩展帧ID需要屏蔽高位，还原出实际11位CAN ID
+                effective_id = fid & 0x7FF if is_ext else fid
+
+                data_str = " ".join(f"{b:02X}" for b in data)
+
+                if effective_id == HB_RX_ID:
+                    state = data[0] if len(data) > 0 else 0
+                    state_str = "Operational" if state == 5 else ("Pre-Op" if state == 127 else str(state))
+                    print(f"[RX] STM32 心跳帧: 状态 = {state_str}")
+
+                elif effective_id == SDO_RX_ID:
+                    print(f"[RX] STM32 SDO响应: [{data_str}]")
+                    # 如果是成功响应，解析数据
+                    if data[0] in [0x43, 0x4B, 0x4F]:
+                        val = data[4] | (data[5]<<8) | (data[6]<<16) | (data[7]<<24)
+                        print(f"     -> 读取到的值 = 0x{val:08X}")
+                    elif data[0] == 0x80:
+                        print("     -> 收到 SDO 中止响应 (Abort)")
+
+                elif effective_id >= 0x180 and effective_id <= 0x500: # PDO 范围
+                    print(f"[RX] STM32 PDO数据 ID=0x{effective_id:03X} [{data_str}]")
+                else:
+                    print(f"[RX] 其他帧 ID=0x{effective_id:03X} [{data_str}]")
+
+            sleep(0.01)  # 10ms 轮询间隔
+
+    except Exception as e:
+        print(f"异常: {e}")
     except KeyboardInterrupt:
         print("\n已停止")
-
     finally:
-        CAN_StopGetMsg(handle, 0)
-        CAN_StopGetMsg(handle, 1)
-        USB_CloseDevice(handle)
-        print("[USB2XXX] 设备已关闭")
+        try:
+            CAN_StopGetMsg(handle, CAN_CHANNEL)
+            USB_CloseDevice(handle)
+            print("[USB2XXX] 已关闭")
+        except:
+            pass
