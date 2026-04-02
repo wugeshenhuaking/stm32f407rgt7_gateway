@@ -1,14 +1,13 @@
-/**
+Ôªø/**
  * @file app_CAN.c
- * @brief CANopen SDO example - Query Device Type from node 1 (non-blocking)
+ * @brief CANopen NMT master demo application
  */
 #include "app_CAN.h"
 #include "CO_app_STM32.h"
-#include "301/CO_SDOclient.h"
-#include <string.h>
 #include <stdio.h>
 
-/* SDO client handle */
+/* Handles owned by the CANopen stack and exposed to the application layer. */
+static CO_NMT_t *NMT_master = NULL;
 static CO_SDOclient_t *SDO_C = NULL;
 
 /**
@@ -17,89 +16,47 @@ static CO_SDOclient_t *SDO_C = NULL;
  */
 void APP_CAN_Init(void)
 {
-    SDO_C = canopenNodeSTM32->canOpenStack->SDOclient;
-    printf("APP_CAN_Init: SDO_C = %p\r\n", (void*)SDO_C);
+    CO_t *co = canopenNodeSTM32->canOpenStack;
 
+    if (co == NULL) {
+        printf("APP_CAN_Init: CANopen stack not ready\r\n");
+        return;
+    }
+
+    NMT_master = co->NMT;
+    SDO_C = co->SDOclient;
+
+    printf("APP_CAN_Init: NMT=%p, SDO_C=%p, nodeId=%u\r\n",
+           (void*)NMT_master,
+           (void*)SDO_C,
+           (unsigned)canopenNodeSTM32->activeNodeID);
 }
 
 /**
- * @brief Periodic task - call from main loop (non-blocking state machine).
- *        Queries node 1 every 5 seconds.
+ * @brief Periodic task - call from main loop.
+ *        Broadcasts "Start Remote Node" every 2 seconds.
  */
 void APP_CAN_Process(void)
 {
-    typedef enum { SDO_IDLE, SDO_UPLOADING } SdoState_t;
-    static SdoState_t state = SDO_IDLE;
-    static uint32_t lastQuery = 0;
-    static uint32_t lastTick  = 0;
-
     uint32_t now = HAL_GetTick();
+    static uint32_t lastNmtBroadcast = 0U;
+    CO_ReturnError_t err;
 
-//    switch (state) {
-//        case SDO_IDLE:
-//            if ((now - lastQuery) > 5000U) {
-//                // °˚ º”’‚––
-//                printf("SDO_IDLE: send request, SDO_C=%p\r\n", (void*)SDO_C);
-//                if (SDO_C == NULL) {
-//                    lastQuery = now;
-//                    break;
-//                }
-//        
-//                CO_SDO_return_t ret;
-//                ret = CO_SDOclient_setup(SDO_C,
-//                                         CO_CAN_ID_SDO_CLI + 1,
-//                                         CO_CAN_ID_SDO_SRV + 1,
-//                                         1);
-//                printf("CO_SDOclient_setup ret=%d\r\n", ret);  // °˚ º”’‚––
+    if (NMT_master == NULL) {
+        return;
+    }
 
-//                if (ret != CO_SDO_RT_ok_communicationEnd) {
-//                    lastQuery = now;
-//                    break;
-//                }
-//                ret = CO_SDOclientUploadInitiate(SDO_C, 0x1000, 0x00, 1000, false);
-//                printf("UploadInitiate ret=%d\r\n", ret);  // °˚ º”’‚––
+    if ((now - lastNmtBroadcast) < 2000U) {
+        return;
+    }
 
-//                if (ret != CO_SDO_RT_ok_communicationEnd) {
-//                    CO_SDOclientClose(SDO_C);
-//                    lastQuery = now;
-//                    break;
-//                }
-//                lastTick = now;
-//                printf("in SDO_UPLOADING status\r\n");  // °˚ º”’‚––
+    lastNmtBroadcast = now;
 
-//                state = SDO_UPLOADING;
-//            }
-//            break;
-
-//        case SDO_UPLOADING: {
-//            CO_SDO_abortCode_t abortCode = CO_SDO_AB_NONE;
-//            size_t sizeIndicated = 0, sizeTransferred = 0;
-//            uint32_t timeDiff_us = (now - lastTick) * 1000U;
-//            lastTick = now;
-
-//            CO_SDO_return_t ret = CO_SDOclientUpload(SDO_C,
-//                                                      timeDiff_us,
-//                                                      false,
-//                                                      &abortCode,
-//                                                      &sizeIndicated,
-//                                                      &sizeTransferred,
-//                                                      NULL);
-//            if (ret == CO_SDO_RT_waitingResponse) {
-//                break; /* still in progress, come back next cycle */
-//            }
-
-//            /* transfer finished (success or error) */
-//            if (ret == CO_SDO_RT_ok_communicationEnd) {
-//                uint32_t deviceType = 0;
-//                if (sizeTransferred == sizeof(deviceType)) {
-//                    CO_SDOclientUploadBufRead(SDO_C, (uint8_t *)&deviceType, sizeof(deviceType));
-//                    printf("Node1 DeviceType=0x%08X\r\n", (unsigned)deviceType);
-//                }
-//            }
-//            CO_SDOclientClose(SDO_C);
-//            lastQuery = now;
-//            state = SDO_IDLE;
-//            break;
-//        }
-//    }
+    err = CO_NMT_sendCommand(NMT_master, CO_NMT_ENTER_OPERATIONAL, 0U);
+    if (err == CO_ERROR_NO) {
+        printf("NMT master TX: COB-ID=0x000 DATA=[0x01 0x00] at %lu ms\r\n",
+               (unsigned long)now);
+    } else {
+        printf("NMT master TX failed: err=%d\r\n", (int)err);
+    }
 }

@@ -45,6 +45,8 @@
 #error This STM32 Do not support CAN or FDCAN
 #endif
 
+#define CO_DRIVER_CUSTOM
+
 #undef CO_CONFIG_STORAGE_ENABLE // We don't need Storage option, implement based on your use case and remove this line from here
 
 #ifdef CO_DRIVER_CUSTOM

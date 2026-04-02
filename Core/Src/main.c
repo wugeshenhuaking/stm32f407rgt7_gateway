@@ -155,7 +155,7 @@ int main(void)
   canOpenNodeSTM32.CANHandle = &hcan1;
   canOpenNodeSTM32.HWInitFunction = MX_CAN1_Init;  // CAN已由CubeMX初始化
   canOpenNodeSTM32.timerHandle = NULL;     // canopen心跳定时器,当前选择由systick接管。所以不需要传入定时器示例
-  canOpenNodeSTM32.desiredNodeID = 10;     // 设置当前设备节点ID
+  canOpenNodeSTM32.desiredNodeID = 1;     // 设置当前设备节点ID
   canOpenNodeSTM32.baudrate = 500;         // 500kbps
   canopen_app_init(&canOpenNodeSTM32);
   APP_CAN_Init();
@@ -172,7 +172,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
     #if USE_CANOPEN == ENABLE
     // CANopen polling
-    canopen_app_process();
+    canopen_app_process();    // 1ms polling 
     APP_CAN_Process();
     #endif
 
@@ -199,7 +199,7 @@ int main(void)
     }
     #endif
 
-    HAL_Delay(500);
+    // HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }

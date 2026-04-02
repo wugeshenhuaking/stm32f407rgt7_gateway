@@ -1,13 +1,9 @@
 /**
  * @file    app_CAN.h
- * @brief   CANopen SDO application layer - public interface
+ * @brief   CANopen application layer - NMT master demo
  *
- * Provides functions to initialize the CANopen SDO client and
- * query remote nodes on the CAN bus using the SDO protocol.
- *
- * Usage:
- *   1. Call APP_CAN_Init() once after CANopen stack is started
- *   2. Call APP_CAN_Process() periodically from the main loop
+ * Provides functions to initialize application-level CANopen services
+ * and periodically emit NMT master commands on the CAN bus.
  */
 
 #ifndef APP_CAN_H
@@ -17,35 +13,22 @@
 extern "C" {
 #endif
 
-#include "301/CO_SDOserver.h"
+#include "301/CO_NMT_Heartbeat.h"
+#include "301/CO_SDOclient.h"
 
 /**
  * @brief  Initialize the CANopen application layer.
  *
- * Must be called after the CANopen stack (CANopenNode) has been
- * successfully started. Retrieves the SDO client handle from the
- * global CO object.
+ * Must be called after the CANopen stack is started. Retrieves the
+ * NMT master and SDO client handles from the global CO object.
  */
 void APP_CAN_Init(void);
 
 /**
- * @brief  Query Device Type (object 0x1000) from node 1 via SDO upload.
- *
- * Sends an SDO upload request to node ID 1, reads object index 0x1000
- * subindex 0x00 (Device Type), and waits for the response.
- *
- * @note   This is a blocking call. Do not call from an ISR.
- *
- * @return CO_SDOcli_ok_communicationEnd  on success
- * @return negative value                 on error (see CO_SDOclient_return_t)
- */
-CO_SDO_return_t APP_CAN_QueryNode1(void);
-
-/**
  * @brief  Periodic processing task for the CAN application.
  *
- * Triggers APP_CAN_QueryNode1() every 5 seconds. Call this function
- * from the main loop or a low-priority task.
+ * Periodically sends an NMT master broadcast command, so the bus can
+ * be observed even when no slave node is present.
  */
 void APP_CAN_Process(void);
 
