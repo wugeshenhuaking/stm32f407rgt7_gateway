@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2026 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -56,7 +56,6 @@
 // app CAN init
 #include "app_CAN.h"
 
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,15 +89,15 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 int fputc(int ch, FILE *f)
 {
-    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 1000);
-    return ch;
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 1000);
+  return ch;
 }
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
@@ -131,35 +130,35 @@ int main(void)
   MX_CAN1_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  // LCD Initialize
-//  NT35510_Init();
-//  NT35510_RunAllTests();
+  /*LCD Initialize*/
+  NT35510_Init();
+  //  NT35510_RunAllTests();  // 运行NT35510测试，验证LCD接口和NT35510功能
 
-  // EX-SRAM Initialize
-//  SRAM_RunAllTests();
-  
-  // LCD-Touch Initialize
-//  BSP_Touch_Init();
-//  Touch_RunAllTests();
-  
-  // emWin Initialize
-//  MainTask();
+  /* SRAM Initialize */
+  //  SRAM_RunAllTests();   // 运行SRAM测试，验证FSMC配置和SRAM芯片功能
 
-  // BSP CAN Initialize
-  #if USE_CANOPEN==DISABLE 
-  #define BSP_CAN_TXRX_TEST
+  /* TOUCH Initialize */
+  BSP_Touch_Init();
+  //  Touch_RunAllTests();  // 运行触摸芯片测试，验证触摸屏功能和触摸控制器接口
+
+  /* BSP CAN Initialize*/
+#if USE_CANOPEN == DISABLE
+#define BSP_CAN_TXRX_TEST
   BSP_CAN_Test_RunAll();
   BSP_CAN_Init(BSP_CAN_MODE_NORMAL);
-  #else
+#else
   // CANopen init
   canOpenNodeSTM32.CANHandle = &hcan1;
-  canOpenNodeSTM32.HWInitFunction = MX_CAN1_Init;  // CAN已由CubeMX初始化
-  canOpenNodeSTM32.timerHandle = NULL;     // canopen心跳定时器,当前选择由systick接管。所以不需要传入定时器示例
-  canOpenNodeSTM32.desiredNodeID = 1;     // 设置当前设备节点ID
-  canOpenNodeSTM32.baudrate = 500;         // 500kbps
+  canOpenNodeSTM32.HWInitFunction = MX_CAN1_Init; // CAN已由CubeMX初始化
+  canOpenNodeSTM32.timerHandle = NULL;            // canopen心跳定时器,当前选择由systick接管。所以不需要传入定时器示例
+  canOpenNodeSTM32.desiredNodeID = 1;             // 设置当前设备节点ID
+  canOpenNodeSTM32.baudrate = 500;                // 500kbps
   canopen_app_init(&canOpenNodeSTM32);
   APP_CAN_Init();
-  #endif
+#endif
+
+  /* emWin Initialize*/
+   MainTask();
 
   /* USER CODE END 2 */
 
@@ -167,37 +166,37 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-    #if USE_CANOPEN == ENABLE
+/* USER CODE BEGIN 3 */
+#if USE_CANOPEN == ENABLE
     // CANopen polling
-    canopen_app_process();    // 1ms polling 
+    canopen_app_process(); // 1ms polling
     APP_CAN_Process();
-    #endif
+#endif
 
     // LWIP polling
-//    MX_LWIP_Process();
-    
-    #ifdef BSP_CAN_TXRX_TEST
+    //    MX_LWIP_Process();
+
+#ifdef BSP_CAN_TXRX_TEST
     // BSP can polling test
     /* 发送 */
-    BSP_CAN_Msg_t tx = { .id=0x123, .len=8, .data={1,2,3,4,5,6,7,8} };
+    BSP_CAN_Msg_t tx = {.id = 0x123, .len = 8, .data = {1, 2, 3, 4, 5, 6, 7, 8}};
     BSP_CAN_Send(&tx);
 
     /* 接收 — 用 BufferHasData 轮询，不阻塞 */
     BSP_CAN_Msg_t rx;
     while (BSP_CAN_BufferHasData())
     {
-        if (BSP_CAN_RecvFromBuffer(&rx) == BSP_CAN_OK)
-        {
-            printf("RX id=0x%03X len=%d data=%02X %02X %02X %02X %02X %02X %02X %02X\r\n",
-                   (unsigned)rx.id, rx.len,
-                   rx.data[0], rx.data[1], rx.data[2], rx.data[3],
-                   rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
-        }
+      if (BSP_CAN_RecvFromBuffer(&rx) == BSP_CAN_OK)
+      {
+        printf("RX id=0x%03X len=%d data=%02X %02X %02X %02X %02X %02X %02X %02X\r\n",
+               (unsigned)rx.id, rx.len,
+               rx.data[0], rx.data[1], rx.data[2], rx.data[3],
+               rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
+      }
     }
-    #endif
+#endif
 
     // HAL_Delay(500);
   }
@@ -205,22 +204,22 @@ int main(void)
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-  */
+   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -236,9 +235,8 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
@@ -255,9 +253,9 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -270,12 +268,12 @@ void Error_Handler(void)
 }
 #ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
