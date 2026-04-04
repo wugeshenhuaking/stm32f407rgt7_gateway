@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>1</RunUserProg2>
+            <RunUserProg2>0</RunUserProg2>
             <UserProg1Name>D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\keil-build-viewer.exe</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -943,17 +943,22 @@
             <File>
               <FileName>Application.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\CustomCode\Application.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\Application.c</FilePath>
             </File>
             <File>
               <FileName>Application.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\CustomCode\Application.h</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\Application.h</FilePath>
             </File>
             <File>
               <FileName>ID_SCREEN_00_Slots.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\CustomCode\ID_SCREEN_00_Slots.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_00_Slots.c</FilePath>
+            </File>
+            <File>
+              <FileName>ID_SCREEN_01_Slots.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_01_Slots.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -963,27 +968,37 @@
             <File>
               <FileName>APPWConf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\Generated\APPWConf.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\APPWConf.c</FilePath>
             </File>
             <File>
               <FileName>ID_SCREEN_00.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\Generated\ID_SCREEN_00.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_00.c</FilePath>
             </File>
             <File>
               <FileName>ID_SCREEN_00.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\Generated\ID_SCREEN_00.h</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_00.h</FilePath>
+            </File>
+            <File>
+              <FileName>ID_SCREEN_01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_01.c</FilePath>
+            </File>
+            <File>
+              <FileName>ID_SCREEN_01.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_01.h</FilePath>
             </File>
             <File>
               <FileName>Resource.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\Generated\Resource.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\Resource.c</FilePath>
             </File>
             <File>
               <FileName>Resource.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\Generated\Resource.h</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\Resource.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -991,14 +1006,44 @@
           <GroupName>emwin/Resource</GroupName>
           <Files>
             <File>
-              <FileName>DARK_Button_Down_100x30.c</FileName>
+              <FileName>_24_Normal_EXT_AA4.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Resource\Image\DARK_Button_Down_100x30.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Font\_24_Normal_EXT_AA4.c</FilePath>
             </File>
             <File>
-              <FileName>DARK_Button_Up_100x30.c</FileName>
+              <FileName>bk.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Resource\Image\DARK_Button_Up_100x30.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\bk.c</FilePath>
+            </File>
+            <File>
+              <FileName>net.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\net.c</FilePath>
+            </File>
+            <File>
+              <FileName>APPW_Language_0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Text\APPW_Language_0.c</FilePath>
+            </File>
+            <File>
+              <FileName>APPW_Pattern.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Text\APPW_Pattern.c</FilePath>
+            </File>
+            <File>
+              <FileName>dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>music.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\music.c</FilePath>
+            </File>
+            <File>
+              <FileName>exit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\exit.c</FilePath>
             </File>
           </Files>
         </Group>

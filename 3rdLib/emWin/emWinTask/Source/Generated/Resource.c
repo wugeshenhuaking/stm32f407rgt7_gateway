@@ -39,6 +39,7 @@ Purpose     : Generated file do NOT edit!
 */
 static APPW_ROOT_INFO * _apRootList[] = {
   &ID_SCREEN_00_RootInfo,
+  &ID_SCREEN_01_RootInfo,
 };
 
 /*********************************************************************
@@ -73,6 +74,23 @@ static unsigned _NumScrollers = GUI_COUNTOF(_aScrollerList);
 
 /*********************************************************************
 *
+*       _apLang
+*/
+static GUI_CONST_STORAGE char * _apLang[] = {
+  (GUI_CONST_STORAGE char *)acAPPW_Language_0,
+};
+
+/*********************************************************************
+*
+*       _TextInit
+*/
+static GUI_CONST_STORAGE APPW_TEXT_INIT _TextInit = {
+  _apLang,
+  GUI_COUNTOF(_apLang),
+};
+
+/*********************************************************************
+*
 *       Public code
 *
 **********************************************************************
@@ -82,7 +100,7 @@ static unsigned _NumScrollers = GUI_COUNTOF(_aScrollerList);
 *       APPW__GetTextInit
 */
 void APPW__GetTextInit(GUI_CONST_STORAGE APPW_TEXT_INIT ** ppTextInit) {
-  *ppTextInit = NULL;
+  *ppTextInit = &_TextInit;
 }
 
 /*********************************************************************

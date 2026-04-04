@@ -15,6 +15,8 @@ Purpose     : APPWIZARD application entry point
 */
 
 #include "Generated/Resource.h"
+#include "GUI.h"
+#include "bsp_touch_port.h"
 
 /*********************************************************************
 *
@@ -41,7 +43,10 @@ void MainTask(void) {
   // ...and keep it alive
   //
   while (1) {
+    BSP_Touch_EmWinExec();
+    BSP_Touch_EmWinFlush();
     APPW_Exec();
+    GUI_Exec();
     GUI_X_Delay(5);
   }
 }

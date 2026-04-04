@@ -1,101 +1,231 @@
 /*
 *********************************************************************************************************
 *
-*	??????? : ?????????????????
-*	??????? : bsp_touch_port.c
-*	?    ?? : ?????? BSP_Touch_Xxx() ??????????? GT9XXX_Xxx() ???????????
-*	           ????§à???????????????????????
-*
-*	?????????? :
-*		GT9xxx §à????????????????????????? X=0~799?????? Y=0~479????
-*		??????????????§à????¨¹??????0x8040???????????????
-*		???????????? F407 + NT35510 4.3??/5??????????????
-*		  ??????????: §à? X ?? ??? X??0~479????§à? Y ?? ??? Y??0~799??
-*		  ????????????? BSP_TOUCH_SCREEN_DIR ???????¡¤? coord_convert() ????
+*   Module : Touch panel BSP port layer
+*   File   : bsp_touch_port.c
+*   Notes  :
+*       - Reads raw points from GT9xxx
+*       - Converts them into logical screen coordinates
+*       - Bridges single-touch events into emWin
 *
 *********************************************************************************************************
 */
 
+#include <stdio.h>
+
 #include "bsp_touch_port.h"
+#include "GUI.h"
 
-/* ============================================================
- * ????????‰Í?? BSP_Touch_Scan ???¡ê?
- * ============================================================ */
-static BSP_TouchStateTypeDef s_touch_state;
+#if BSP_TOUCH_EMWIN_DEBUG
+  #define TOUCH_LOG(fmt, ...)  printf("[TOUCH] " fmt "\r\n", ##__VA_ARGS__)
+#else
+  #define TOUCH_LOG(...)       do { } while (0)
+#endif
 
-/* ============================================================
- * ?????????????????????????????
- *
- * GT9xxx §à?????????????????????????????
- * ?????????????????? X/Y ????????
- * ?????????????????????????????¨À?
- * ============================================================ */
-static void coord_convert(uint16_t raw_x, uint16_t raw_y,
-                           uint16_t *out_x, uint16_t *out_y)
+#define BSP_TOUCH_RELEASE_FILTER_COUNT  3U
+
+typedef enum
 {
-#if (BSP_TOUCH_SCREEN_DIR == 0)   /* ???????????? */
-    /*
-     * ???????????? F407 + 4.3?? NT35510 ??????
-     * §à? X ??????? X??0~479????§à? Y ??????? Y??0~799??
-     * GT9xxx ??????????????????????????
-     */
-    *out_x = raw_x;
-    *out_y = raw_y;
+    TOUCH_DOWN = 0,
+    TOUCH_MOVE,
+    TOUCH_RELEASE
+} TOUCH_EVENT_E;
 
-#else   /* ???? */
+static BSP_TouchStateTypeDef s_touch_state;
+static uint16_t              s_raw_x_debug = 0;
+static uint16_t              s_raw_y_debug = 0;
+
+static GUI_PID_STATE         s_pid_state;
+static uint8_t               s_pid_valid = 0;
+static uint8_t               s_touch_ready = 0;
+
+static GUI_PID_STATE         s_pid_pending_state;
+static TOUCH_EVENT_E         s_pid_pending_event = TOUCH_RELEASE;
+static uint8_t               s_pid_pending_valid = 0;
+static uint8_t               s_gui_ready_logged = 0;
+static volatile uint8_t      s_touch_exec_request = 0;
+
+static uint16_t scale_raw_x_to_gui_width(uint16_t raw_x)
+{
+    if (BSP_TOUCH_RAW_WIDTH <= 1U)
+    {
+        return 0;
+    }
+    if (raw_x >= BSP_TOUCH_RAW_WIDTH)
+    {
+        raw_x = (uint16_t)(BSP_TOUCH_RAW_WIDTH - 1U);
+    }
+    return (uint16_t)(((uint32_t)raw_x * (uint32_t)(BSP_TOUCH_GUI_WIDTH - 1U)) /
+                      (uint32_t)(BSP_TOUCH_RAW_WIDTH - 1U));
+}
+
+static uint16_t scale_raw_y_to_gui_height(uint16_t raw_y)
+{
+    if (BSP_TOUCH_RAW_HEIGHT <= 1U)
+    {
+        return 0;
+    }
+    if (raw_y >= BSP_TOUCH_RAW_HEIGHT)
+    {
+        raw_y = (uint16_t)(BSP_TOUCH_RAW_HEIGHT - 1U);
+    }
+    return (uint16_t)(((uint32_t)raw_y * (uint32_t)(BSP_TOUCH_GUI_HEIGHT - 1U)) /
+                      (uint32_t)(BSP_TOUCH_RAW_HEIGHT - 1U));
+}
+
+static uint16_t scale_raw_x_to_gui_height(uint16_t raw_x)
+{
+    if (BSP_TOUCH_RAW_WIDTH <= 1U)
+    {
+        return 0;
+    }
+    if (raw_x >= BSP_TOUCH_RAW_WIDTH)
+    {
+        raw_x = (uint16_t)(BSP_TOUCH_RAW_WIDTH - 1U);
+    }
+    return (uint16_t)(((uint32_t)raw_x * (uint32_t)(BSP_TOUCH_GUI_HEIGHT - 1U)) /
+                      (uint32_t)(BSP_TOUCH_RAW_WIDTH - 1U));
+}
+
+static uint16_t scale_raw_y_to_gui_width(uint16_t raw_y)
+{
+    if (BSP_TOUCH_RAW_HEIGHT <= 1U)
+    {
+        return 0;
+    }
+    if (raw_y >= BSP_TOUCH_RAW_HEIGHT)
+    {
+        raw_y = (uint16_t)(BSP_TOUCH_RAW_HEIGHT - 1U);
+    }
+    return (uint16_t)(((uint32_t)raw_y * (uint32_t)(BSP_TOUCH_GUI_WIDTH - 1U)) /
+                      (uint32_t)(BSP_TOUCH_RAW_HEIGHT - 1U));
+}
+
+static void coord_convert(uint16_t raw_x, uint16_t raw_y,
+                          uint16_t *out_x, uint16_t *out_y)
+{
+    uint16_t x;
+    uint16_t y;
+
     /*
-     * ???????????? F407 + NT35510 4.3????????????
-     * ?¦Ï? gt9xxx_scan() ?? lcddev.id==0x5510 ?????????
-     *   screen_x = lcddev.width  - chip_Y  = WIDTH  - raw_y
-     *   screen_y = chip_X                  = raw_x
-     * raw_x ??¦¶ 0~479??raw_y ??¦¶ 0~799
+     * Touch raw coordinates always come from the physical panel space
+     * (approximately 480 x 800, top-left origin).
+     *
+     * emWin logical coordinates depend on the currently selected LCD
+     * orientation. The display direction and the touch direction must
+     * therefore use the same mirror / reverse rule.
      */
-    *out_x = (raw_y <= (BSP_TOUCH_LCD_WIDTH - 1))
-             ? (BSP_TOUCH_LCD_WIDTH - 1 - raw_y) : 0;
-    *out_y = raw_x;
+    if ((out_x == NULL) || (out_y == NULL))
+    {
+        return;
+    }
+
+    if ((BSP_TOUCH_GUI_WIDTH <= 1U) || (BSP_TOUCH_GUI_HEIGHT <= 1U))
+    {
+        *out_x = 0;
+        *out_y = 0;
+        return;
+    }
+
+#if (NT35510_DIRECTION == NT35510_DIR_PORTRAIT)
+    x = scale_raw_x_to_gui_width(raw_x);
+    y = scale_raw_y_to_gui_height(raw_y);
+    *out_x = x;
+    *out_y = y;
+#elif (NT35510_DIRECTION == NT35510_DIR_PORTRAIT_REV)
+    x = scale_raw_x_to_gui_width(raw_x);
+    y = scale_raw_y_to_gui_height(raw_y);
+    *out_x = (uint16_t)((BSP_TOUCH_GUI_WIDTH  - 1U) - x);
+    *out_y = (uint16_t)((BSP_TOUCH_GUI_HEIGHT - 1U) - y);
+#elif (NT35510_DIRECTION == NT35510_DIR_LANDSCAPE)
+    /*
+     * MADCTL = 0xA0:
+     *   LCD logical x maps to panel long edge (raw_y)
+     *   LCD logical y maps to panel short edge (raw_x), mirrored vertically
+     */
+    x = scale_raw_y_to_gui_width(raw_y);
+    y = scale_raw_x_to_gui_height(raw_x);
+    *out_x = (uint16_t)((BSP_TOUCH_GUI_WIDTH  - 1U) - x);
+    *out_y = y;
+#elif (NT35510_DIRECTION == NT35510_DIR_LANDSCAPE_REV)
+    /*
+     * MADCTL = 0x60:
+     *   LCD logical x maps to panel long edge (raw_y)
+     *   LCD logical y maps to panel short edge (raw_x), mirrored.
+     *
+     * Inverse mapping for touch:
+     *   gui_x <- raw_y
+     *   gui_y <- mirrored raw_x
+     */
+    x = scale_raw_y_to_gui_width(raw_y);
+    y = scale_raw_x_to_gui_height(raw_x);
+    *out_x = x;
+    *out_y = (uint16_t)((BSP_TOUCH_GUI_HEIGHT - 1U) - y);
+#else
+    x = scale_raw_x_to_gui_width(raw_x);
+    y = scale_raw_y_to_gui_height(raw_y);
+    *out_x = x;
+    *out_y = y;
 #endif
 }
 
-/*
-*********************************************************************************************************
-*	?? ?? ??: BSP_Touch_Init
-*	???????: ???????????
-*	          1. ???? GPIO??RST/INT/SCL/SDA??
-*	          2. ??¦Ë GT9xxx §à??????§à? ID ??????????
-*	??    ??: ??
-*	?? ?? ?: 0 = ??????????1 = ????????
-*	          ??????§à??????????? I2C ??????? ID ????????§à?????
-*********************************************************************************************************
-*/
 uint8_t BSP_Touch_Init(void)
 {
     uint8_t ret;
-
-    /* ????????? */
     uint8_t i;
+
     for (i = 0; i < BSP_TOUCH_MAX_POINTS; i++)
     {
         s_touch_state.points[i].x       = 0;
         s_touch_state.points[i].y       = 0;
         s_touch_state.points[i].pressed = 0;
     }
-    s_touch_state.touch_num  = 0;
-    s_touch_state.is_pressed = 0;
+
+    s_touch_state.touch_num      = 0;
+    s_touch_state.is_pressed     = 0;
+    s_pid_state.x                = 0;
+    s_pid_state.y                = 0;
+    s_pid_state.Pressed          = 0;
+    s_pid_valid                  = 0;
+    s_touch_ready                = 0;
+    s_pid_pending_state.x        = 0;
+    s_pid_pending_state.y        = 0;
+    s_pid_pending_state.Pressed  = 0;
+    s_pid_pending_state.Layer    = 0;
+    s_pid_pending_event          = TOUCH_RELEASE;
+    s_pid_pending_valid          = 0;
+    s_gui_ready_logged           = 0;
+    s_touch_exec_request         = 0;
 
     ret = GT9XXX_Init();
+    if (ret == 0)
+    {
+        s_touch_ready = 1;
+        TOUCH_LOG("init ok, dir=%s gui=%ux%u raw=%ux%u",
+#if (NT35510_DIRECTION == NT35510_DIR_PORTRAIT)
+                  "portrait",
+#elif (NT35510_DIRECTION == NT35510_DIR_PORTRAIT_REV)
+                  "portrait_rev",
+#elif (NT35510_DIRECTION == NT35510_DIR_LANDSCAPE)
+                  "landscape",
+#elif (NT35510_DIRECTION == NT35510_DIR_LANDSCAPE_REV)
+                  "landscape_rev",
+#else
+                  "unknown",
+#endif
+                  (unsigned)NT35510_WIDTH,
+                  (unsigned)NT35510_HEIGHT,
+                  (unsigned)BSP_TOUCH_RAW_WIDTH,
+                  (unsigned)BSP_TOUCH_RAW_HEIGHT);
+    }
+    else
+    {
+        TOUCH_LOG("init failed, ret=%u", (unsigned)ret);
+    }
 
     return ret;
 }
 
-/*
-*********************************************************************************************************
-*	?? ?? ??: BSP_Touch_Scan
-*	???????: ??°Ü??????¦²???????????????????
-*	          ?????????? 10~20ms ??¦²????? SysTick ?????????§Ö????
-*	??    ??: ??
-*	?? ?? ?: ?????§¹????????0 = ???????
-*********************************************************************************************************
-*/
 uint8_t BSP_Touch_Scan(void)
 {
     GT9XXX_PointTypeDef raw[GT9XXX_MAX_TOUCH];
@@ -104,9 +234,10 @@ uint8_t BSP_Touch_Scan(void)
 
     num = GT9XXX_Scan(raw, BSP_TOUCH_MAX_POINTS);
 
-    /* ??????? */
     for (i = 0; i < BSP_TOUCH_MAX_POINTS; i++)
     {
+        s_touch_state.points[i].x       = 0;
+        s_touch_state.points[i].y       = 0;
         s_touch_state.points[i].pressed = 0;
     }
 
@@ -114,14 +245,20 @@ uint8_t BSP_Touch_Scan(void)
     {
         s_touch_state.touch_num  = 0;
         s_touch_state.is_pressed = 0;
+        s_raw_x_debug            = 0;
+        s_raw_y_debug            = 0;
         return 0;
     }
 
-    /* ??????????????????????§Õ???????? */
     for (i = 0; i < num && i < BSP_TOUCH_MAX_POINTS; i++)
     {
         if (raw[i].valid)
         {
+            if (i == 0U)
+            {
+                s_raw_x_debug = raw[i].x;
+                s_raw_y_debug = raw[i].y;
+            }
             coord_convert(raw[i].x, raw[i].y,
                           &s_touch_state.points[i].x,
                           &s_touch_state.points[i].y);
@@ -135,70 +272,233 @@ uint8_t BSP_Touch_Scan(void)
     return num;
 }
 
-/*
-*********************************************************************************************************
-*	?? ?? ??: BSP_Touch_GetState
-*	???????: ????????? BSP_Touch_Scan ???????????????
-*	??    ??: state - ??????????????????????§Õ????
-*	?? ?? ?: ??
-*********************************************************************************************************
-*/
 void BSP_Touch_GetState(BSP_TouchStateTypeDef *state)
 {
-    if (state == NULL) return;
+    if (state == NULL)
+    {
+        return;
+    }
+
     *state = s_touch_state;
 }
 
-/*
-*********************************************************************************************************
-*	?? ?? ??: BSP_Touch_GetPoint
-*	???????: ??????????????????
-*	??    ??: index - ??????????0 ?????????????????????????
-*	          x, y  - ??????????NULL ??????????
-*	?? ?? ?: 1 = ???????§¹?????¡ê???0 = ??§¹??¦Ä??????
-*	???    :
-*	          uint16_t tx, ty;
-*	          if (BSP_Touch_GetPoint(0, &tx, &ty)) {
-*	              // ????0??§¹???????? tx, ty
-*	          }
-*********************************************************************************************************
-*/
 uint8_t BSP_Touch_GetPoint(uint8_t index, uint16_t *x, uint16_t *y)
 {
-    if (index >= BSP_TOUCH_MAX_POINTS) return 0;
+    if (index >= BSP_TOUCH_MAX_POINTS)
+    {
+        return 0;
+    }
 
-    if (!s_touch_state.points[index].pressed) return 0;
+    if (!s_touch_state.points[index].pressed)
+    {
+        return 0;
+    }
 
-    if (x) *x = s_touch_state.points[index].x;
-    if (y) *y = s_touch_state.points[index].y;
+    if (x != NULL)
+    {
+        *x = s_touch_state.points[index].x;
+    }
+    if (y != NULL)
+    {
+        *y = s_touch_state.points[index].y;
+    }
 
     return 1;
 }
 
-/*
-*********************************************************************************************************
-*	?? ?? ??: BSP_Touch_IsPressed
-*	???????: ???????????????¡ê??????????????§¹?????? 1??
-*	          ?????? emWin ??????? GUI_TOUCH_Exec() ????§¹???§Ø?
-*	??    ??: ??
-*	?? ?? ?: 1 = ?§Õ?????0 = ?????
-*********************************************************************************************************
-*/
 uint8_t BSP_Touch_IsPressed(void)
 {
     return s_touch_state.is_pressed;
 }
 
-/*
-*********************************************************************************************************
-*	?? ?? ??: BSP_Touch_GetTouchNum
-*	???????: ????????§¹??????
-*	??    ??: ??
-*	?? ?? ?: 0~BSP_TOUCH_MAX_POINTS
-*********************************************************************************************************
-*/
 uint8_t BSP_Touch_GetTouchNum(void)
 {
     return s_touch_state.touch_num;
 }
 
+static void BSP_Touch_QueuePidEvent(TOUCH_EVENT_E event, uint16_t x, uint16_t y)
+{
+    GUI_PID_STATE state;
+
+    state = s_pid_state;
+
+    switch (event)
+    {
+    case TOUCH_DOWN:
+    case TOUCH_MOVE:
+        state.x       = x;
+        state.y       = y;
+        state.Pressed = 1;
+        state.Layer   = 0;
+        break;
+
+    case TOUCH_RELEASE:
+        state.Pressed = 0;
+        state.Layer   = 0;
+        break;
+
+    default:
+        return;
+    }
+
+    s_pid_state         = state;
+    s_pid_valid         = 1;
+    s_pid_pending_state = state;
+    s_pid_pending_event = event;
+    s_pid_pending_valid = 1;
+}
+
+void BSP_Touch_EmWinExec(void)
+{
+    static uint8_t s_release_miss_count = 0;
+    uint16_t x = 0;
+    uint16_t y = 0;
+    uint8_t  pressed;
+
+    if (s_touch_ready == 0)
+    {
+        return;
+    }
+
+    if (s_touch_exec_request == 0U)
+    {
+        return;
+    }
+    s_touch_exec_request = 0U;
+
+    BSP_Touch_Scan();
+    pressed = BSP_Touch_GetPoint(0, &x, &y);
+
+    if (pressed)
+    {
+        s_release_miss_count = 0;
+
+        if ((s_pid_valid == 0) || (s_pid_state.Pressed == 0))
+        {
+            BSP_Touch_QueuePidEvent(TOUCH_DOWN, x, y);
+        }
+        else if ((s_pid_state.x != x) || (s_pid_state.y != y))
+        {
+            BSP_Touch_QueuePidEvent(TOUCH_MOVE, x, y);
+        }
+    }
+    else if ((s_pid_valid != 0) && (s_pid_state.Pressed != 0))
+    {
+        if (++s_release_miss_count >= BSP_TOUCH_RELEASE_FILTER_COUNT)
+        {
+            s_release_miss_count = 0;
+            BSP_Touch_QueuePidEvent(TOUCH_RELEASE, 0, 0);
+        }
+    }
+    else
+    {
+        s_release_miss_count = 0;
+    }
+}
+
+void BSP_Touch_EmWinSchedule(void)
+{
+    if (s_touch_ready == 0U)
+    {
+        return;
+    }
+    s_touch_exec_request = 1U;
+}
+
+void BSP_Touch_EmWinFlush(void)
+{
+    static uint8_t move_log_div = 0;
+
+    if (GUI_IsInitialized() == 0)
+    {
+        return;
+    }
+
+    if (s_gui_ready_logged == 0)
+    {
+        TOUCH_LOG("emWin PID bridge active");
+        s_gui_ready_logged = 1;
+    }
+
+    if (s_pid_pending_valid == 0)
+    {
+        return;
+    }
+
+    GUI_PID_StoreState(&s_pid_pending_state);
+
+    switch (s_pid_pending_event)
+    {
+    case TOUCH_DOWN:
+        TOUCH_LOG("DOWN raw=(%u,%u) gui=(%u,%u) num=%u",
+                  (unsigned)s_raw_x_debug,
+                  (unsigned)s_raw_y_debug,
+                  (unsigned)s_pid_pending_state.x,
+                  (unsigned)s_pid_pending_state.y,
+                  (unsigned)s_touch_state.touch_num);
+        move_log_div = 0;
+        break;
+
+    case TOUCH_MOVE:
+        if (++move_log_div >= BSP_TOUCH_EMWIN_MOVE_LOG_DIV)
+        {
+            move_log_div = 0;
+            TOUCH_LOG("MOVE raw=(%u,%u) gui=(%u,%u)",
+                      (unsigned)s_raw_x_debug,
+                      (unsigned)s_raw_y_debug,
+                      (unsigned)s_pid_pending_state.x,
+                      (unsigned)s_pid_pending_state.y);
+        }
+        break;
+
+    case TOUCH_RELEASE:
+        TOUCH_LOG("RELEASE");
+        move_log_div = 0;
+        break;
+
+    default:
+        break;
+    }
+
+    s_pid_pending_valid = 0;
+}
+
+/*
+ * emWin compatibility hooks
+ *
+ * The linked touch driver module expects these low-level analog-touch
+ * symbols to exist, even though this project uses a controller-driven
+ * capacitive panel and feeds events through GUI_TOUCH_StoreState().
+ *
+ * We provide lightweight shims here so the linker is satisfied and, if
+ * emWin ever polls them, it still sees the latest cached raw coordinates.
+ */
+void GUI_TOUCH_X_ActivateX(void)
+{
+}
+
+void GUI_TOUCH_X_ActivateY(void)
+{
+}
+
+void GUI_TOUCH_X_Disable(void)
+{
+}
+
+int GUI_TOUCH_X_MeasureX(void)
+{
+    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
+    {
+        return (int)s_raw_x_debug;
+    }
+    return -1;
+}
+
+int GUI_TOUCH_X_MeasureY(void)
+{
+    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
+    {
+        return (int)s_raw_y_debug;
+    }
+    return -1;
+}

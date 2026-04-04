@@ -143,22 +143,22 @@ int main(void)
 
   /* BSP CAN Initialize*/
 #if USE_CANOPEN == DISABLE
-#define BSP_CAN_TXRX_TEST
+  #define BSP_CAN_TXRX_TEST
   BSP_CAN_Test_RunAll();
   BSP_CAN_Init(BSP_CAN_MODE_NORMAL);
 #else
   // CANopen init
-  canOpenNodeSTM32.CANHandle = &hcan1;
-  canOpenNodeSTM32.HWInitFunction = MX_CAN1_Init; // CAN已由CubeMX初始化
-  canOpenNodeSTM32.timerHandle = NULL;            // canopen心跳定时器,当前选择由systick接管。所以不需要传入定时器示例
-  canOpenNodeSTM32.desiredNodeID = 1;             // 设置当前设备节点ID
-  canOpenNodeSTM32.baudrate = 500;                // 500kbps
-  canopen_app_init(&canOpenNodeSTM32);
-  APP_CAN_Init();
+//  canOpenNodeSTM32.CANHandle = &hcan1;
+//  canOpenNodeSTM32.HWInitFunction = MX_CAN1_Init; // CAN已由CubeMX初始化
+//  canOpenNodeSTM32.timerHandle = NULL;            // canopen心跳定时器,当前选择由systick接管。所以不需要传入定时器示例
+//  canOpenNodeSTM32.desiredNodeID = 1;             // 设置当前设备节点ID
+//  canOpenNodeSTM32.baudrate = 500;                // 500kbps
+//  canopen_app_init(&canOpenNodeSTM32);
+//  APP_CAN_Init();
 #endif
 
   /* emWin Initialize*/
-   MainTask();
+  MainTask();
 
   /* USER CODE END 2 */
 

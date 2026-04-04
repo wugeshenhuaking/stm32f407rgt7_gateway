@@ -1,46 +1,48 @@
 /*
 *********************************************************************************************************
 *
-*   模块名称 : 软件定时器模块
-*   文件名称 : bsp_timer.c
-*   说    明 : 基于 SysTick 实现多路软件定时器，精度 1ms。
+*   Module Name : Soft Timer Module
+*   File Name   : bsp_timer.c
+*   Description : Multi-channel software timer implementation based on SysTick, precision 1ms.
 *
-*   关键设计 :
-*       SysTick_Handler (stm32f4xx_it.c) 中：
-*           HAL_IncTick();          // HAL 计时，保持原有
-*           bsp_SysTick_ISR();      // 驱动本模块
+*   Key Design :
+*       In SysTick_Handler (stm32f4xx_it.c):
+*           HAL_IncTick();          // Keep original HAL tick
+*           bsp_SysTick_ISR();      // Driver for this module
 *
-*       bsp_SysTick_ISR() 每 1ms：
-*           - 所有软件定时器 Count 减 1
-*           - g_iRunTime 加 1
-*           - 每 1ms  调用 bsp_RunPer1ms()  （用户实现，可为空）
-*           - 每 10ms 调用 bsp_RunPer10ms() （用户实现，可为空）
+*       bsp_SysTick_ISR() runs every 1ms:
+*           - Decrement Count for all software timers
+*           - Increment g_iRunTime by 1
+*           - Call bsp_RunPer1ms()  every 1ms  (user-implemented, can be empty)
+*           - Call bsp_RunPer10ms() every 10ms (user-implemented, can be empty)
 *
 *********************************************************************************************************
 */
 
 #include "bsp_timer.h"
+#include "bsp_touch_port.h"
 
 /* ============================================================
- * 内部变量
+ * Internal Variables
  * ============================================================ */
 static SOFT_TMR s_tTmr[TMR_COUNT];
 
-/* 用于 bsp_DelayMS() */
+/* Used for bsp_DelayMS() */
 static volatile uint32_t s_uiDelayCount  = 0;
 static volatile uint8_t  s_ucTimeOutFlag = 0;
 
-/* 系统运行时间，单位 ms，最大 24.85 天 */
+/* System runtime, unit: ms, max ~24.85 days */
 static volatile uint32_t g_iRunTime = 0;
 
 /* ============================================================
- * 用户周期回调（在 bsp_timer.c 末尾弱定义，用户可在其他文件覆盖）
+ * User Periodic Callbacks
+ * (Weak defined at the end of bsp_timer.c, user can override in other files)
  * ============================================================ */
 __weak void bsp_RunPer1ms(void)  { }
-__weak void bsp_RunPer10ms(void) { }
+__weak void bsp_RunPer10ms(void) { BSP_Touch_EmWinSchedule(); }
 
 /* ============================================================
- * 内部：软件定时器单步递减
+ * Internal: Decrement software timer single step
  * ============================================================ */
 static void bsp_SoftTimerDec(SOFT_TMR *_tmr)
 {
@@ -51,17 +53,18 @@ static void bsp_SoftTimerDec(SOFT_TMR *_tmr)
         _tmr->Flag = 1;
         if (_tmr->Mode == TMR_AUTO_MODE)
         {
-            _tmr->Count = _tmr->PreLoad;    /* 自动重装 */
+            _tmr->Count = _tmr->PreLoad;    /* Auto reload */
         }
     }
 }
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_InitTimer
-*   功能说明: 初始化所有软件定时器（清零），在 main() 最前面调用一次
-*   形    参: 无
-*   返 回 值: 无
+*   Function Name : bsp_InitTimer
+*   Description   : Initialize all software timers (clear to 0),
+*                   call once at the beginning of main()
+*   Arguments     : None
+*   Return Value  : None
 *********************************************************************************************************
 */
 void bsp_InitTimer(void)
@@ -79,11 +82,13 @@ void bsp_InitTimer(void)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_SysTick_ISR
-*   功能说明: 每 1ms 被 SysTick_Handler 调用一次，驱动所有软件定时器
-*   形    参: 无
-*   返 回 值: 无
-*   注    意: 本函数在中断上下文执行，不要在这里做耗时操作
+*   Function Name : bsp_SysTick_ISR
+*   Description   : Called by SysTick_Handler every 1ms,
+*                   drives all software timers
+*   Arguments     : None
+*   Return Value  : None
+*   Note          : This function runs in interrupt context,
+*                   do not perform time-consuming operations here
 *********************************************************************************************************
 */
 void bsp_SysTick_ISR(void)
@@ -91,7 +96,7 @@ void bsp_SysTick_ISR(void)
     static uint8_t s_10ms = 0;
     uint8_t i;
 
-    /* 延时计数器 */
+    /* Delay counter */
     if (s_uiDelayCount > 0)
     {
         if (--s_uiDelayCount == 0)
@@ -100,19 +105,19 @@ void bsp_SysTick_ISR(void)
         }
     }
 
-    /* 软件定时器递减 */
+    /* Decrement software timers */
     for (i = 0; i < TMR_COUNT; i++)
     {
         bsp_SoftTimerDec(&s_tTmr[i]);
     }
 
-    /* 系统运行时间：uint32_t 溢出后自然归零，无需手动处理 */
+    /* System runtime, auto wrap around after uint32_t overflow, no manual handling needed */
     g_iRunTime++;
 
-    /* 用户 1ms 回调 */
+    /* User 1ms callback */
     bsp_RunPer1ms();
 
-    /* 用户 10ms 回调 */
+    /* User 10ms callback */
     if (++s_10ms >= 10)
     {
         s_10ms = 0;
@@ -122,11 +127,12 @@ void bsp_SysTick_ISR(void)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_StartTimer
-*   功能说明: 启动单次定时器。到期后 Flag=1，不会自动重装。
-*   形    参: _id  定时器编号 [0, TMR_COUNT-1]
-*             _ms  定时时长，单位 ms
-*   返 回 值: 无
+*   Function Name : bsp_StartTimer
+*   Description   : Start one-shot timer.
+*                   Flag = 1 when timeout, no auto reload.
+*   Arguments     : _id  - Timer index [0, TMR_COUNT-1]
+*                   _ms  - Timer duration, unit: ms
+*   Return Value  : None
 *********************************************************************************************************
 */
 void bsp_StartTimer(uint8_t _id, uint32_t _ms)
@@ -143,11 +149,12 @@ void bsp_StartTimer(uint8_t _id, uint32_t _ms)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_StartAutoTimer
-*   功能说明: 启动自动重装定时器。到期后 Flag=1 并自动重新开始计时。
-*   形    参: _id  定时器编号 [0, TMR_COUNT-1]
-*             _ms  定时周期，单位 ms
-*   返 回 值: 无
+*   Function Name : bsp_StartAutoTimer
+*   Description   : Start auto-reload timer.
+*                   Flag = 1 when timeout and automatically restart counting.
+*   Arguments     : _id  - Timer index [0, TMR_COUNT-1]
+*                   _ms  - Timer period, unit: ms
+*   Return Value  : None
 *********************************************************************************************************
 */
 void bsp_StartAutoTimer(uint8_t _id, uint32_t _ms)
@@ -164,10 +171,10 @@ void bsp_StartAutoTimer(uint8_t _id, uint32_t _ms)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_StopTimer
-*   功能说明: 停止定时器
-*   形    参: _id  定时器编号
-*   返 回 值: 无
+*   Function Name : bsp_StopTimer
+*   Description   : Stop a software timer
+*   Arguments     : _id - Timer index
+*   Return Value  : None
 *********************************************************************************************************
 */
 void bsp_StopTimer(uint8_t _id)
@@ -182,11 +189,12 @@ void bsp_StopTimer(uint8_t _id)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_CheckTimer
-*   功能说明: 检测定时器是否到期。到期后自动清除 Flag（读清）。
-*   形    参: _id  定时器编号
-*   返 回 值: 1 = 已到期；0 = 未到期
-*   用    法:
+*   Function Name : bsp_CheckTimer
+*   Description   : Check if timer has expired.
+*                   Automatically clear Flag (read-clear) after timeout.
+*   Arguments     : _id - Timer index
+*   Return Value  : 1 = expired; 0 = not expired
+*   Usage Example :
 *       if (bsp_CheckTimer(TMR_TOUCH)) { BSP_Touch_Scan(); }
 *********************************************************************************************************
 */
@@ -196,7 +204,7 @@ uint8_t bsp_CheckTimer(uint8_t _id)
 
     if (s_tTmr[_id].Flag)
     {
-        s_tTmr[_id].Flag = 0;   /* 读清标志 */
+        s_tTmr[_id].Flag = 0;   /* Read-clear flag */
         return 1;
     }
     return 0;
@@ -204,17 +212,18 @@ uint8_t bsp_CheckTimer(uint8_t _id)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_DelayMS
-*   功能说明: ms 级阻塞延时，精度 ±1ms
-*             注意：延时期间 CPU 停在此函数，不要在中断中调用
-*   形    参: _ms  延时长度，单位 ms，建议 >= 2
-*   返 回 值: 无
+*   Function Name : bsp_DelayMS
+*   Description   : Blocking delay in ms, precision ±1ms
+*                   Note: CPU blocks in this function during delay,
+*                   do NOT call in interrupt service routine
+*   Arguments     : _ms - Delay duration, unit: ms, recommend >= 2
+*   Return Value  : None
 *********************************************************************************************************
 */
 void bsp_DelayMS(uint32_t _ms)
 {
     if (_ms == 0) return;
-    if (_ms == 1) _ms = 2;  /* 最小 2ms，避免精度问题 */
+    if (_ms == 1) _ms = 2;  /* Min 2ms to avoid precision issue */
 
     __disable_irq();
     s_uiDelayCount  = _ms;
@@ -223,17 +232,17 @@ void bsp_DelayMS(uint32_t _ms)
 
     while (!s_ucTimeOutFlag)
     {
-        /* 等待超时，可在此加入 __WFI() 低功耗等待 */
+        /* Wait for timeout, can add __WFI() for low-power waiting */
     }
 }
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_DelayUS
-*   功能说明: us 级延时，直接读 SysTick->VAL 计数，精度约 ±1us
-*             必须在 SysTick 启动后调用
-*   形    参: _us  延时长度，单位 us
-*   返 回 值: 无
+*   Function Name : bsp_DelayUS
+*   Description   : Delay in us, directly read SysTick->VAL counter, precision ~±1us
+*                   Must be called AFTER SysTick is enabled
+*   Arguments     : _us - Delay duration, unit: us
+*   Return Value  : None
 *********************************************************************************************************
 */
 void bsp_DelayUS(uint32_t _us)
@@ -248,7 +257,7 @@ void bsp_DelayUS(uint32_t _us)
         uint32_t tnow = SysTick->VAL;
         if (tnow != told)
         {
-            /* SysTick 是递减计数器 */
+            /* SysTick is a down-counter */
             tcnt += (tnow < told) ? (told - tnow) : (reload - tnow + told);
             told = tnow;
             if (tcnt >= ticks) break;
@@ -258,10 +267,10 @@ void bsp_DelayUS(uint32_t _us)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_GetRunTime
-*   功能说明: 获取系统运行时间，单位 ms
-*   形    参: 无
-*   返 回 值: 运行时间（ms），最大约 24.85 天后归零
+*   Function Name : bsp_GetRunTime
+*   Description   : Get system runtime, unit: ms
+*   Arguments     : None
+*   Return Value  : Runtime (ms), wraps to 0 after ~24.85 days
 *********************************************************************************************************
 */
 uint32_t bsp_GetRunTime(void)
@@ -275,18 +284,19 @@ uint32_t bsp_GetRunTime(void)
 
 /*
 *********************************************************************************************************
-*   函 数 名: bsp_CheckRunTime
-*   功能说明: 计算当前时间与给定时刻的差值，处理了计数器溢出
-*   形    参: _last  起始时刻（由 bsp_GetRunTime() 取得）
-*   返 回 值: 时间差，单位 ms
-*   用    法:
+*   Function Name : bsp_CheckRunTime
+*   Description   : Calculate time difference between current time and given start time,
+*                   handles counter overflow automatically
+*   Arguments     : _last - Start timestamp (obtained by bsp_GetRunTime())
+*   Return Value  : Elapsed time, unit: ms
+*   Usage Example :
 *       int32_t t0 = bsp_GetRunTime();
-*       // ... 一段操作 ...
+*       // ... some operations ...
 *       int32_t elapsed = bsp_CheckRunTime(t0);
 *********************************************************************************************************
 */
 uint32_t bsp_CheckRunTime(uint32_t _last)
 {
-    /* uint32_t 减法在溢出时自动正确（模 2^32 算术），无需特殊处理 */
+    /* uint32_t subtraction works correctly after overflow (mod 2^32 math), no special handling */
     return bsp_GetRunTime() - _last;
 }

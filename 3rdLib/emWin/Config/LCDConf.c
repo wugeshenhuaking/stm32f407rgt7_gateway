@@ -47,10 +47,14 @@ Purpose     : Display controller configuration (single layer)
 */
 // Physical display size
 //
-#define XSIZE_PHYS  800
-#define YSIZE_PHYS  480
-#define VXSIZE_PHYS 800
-#define VYSIZE_PHYS 480
+/*
+ * NT35510 is rotated by the controller itself, so emWin should use the
+ * already-rotated logical size directly.
+ */
+#define XSIZE_PHYS  NT35510_WIDTH
+#define YSIZE_PHYS  NT35510_HEIGHT
+#define VXSIZE_PHYS NT35510_WIDTH
+#define VYSIZE_PHYS NT35510_HEIGHT
 #define LCD_CONTROLLER       8875 
 #define LCD_BITSPERPIXEL       16
 #define LCD_USE_PARALLEL_16     0
@@ -62,17 +66,12 @@ Purpose     : Display controller configuration (single layer)
 // Display driver
 //
 #define DISPLAY_DRIVER  &GUIDRV_Template_API
-//
-// Orientation
-//
-#define DISPLAY_ORIENTATION  GUI_SWAP_XY | GUI_MIRROR_X | GUI_MIRROR_Y
-//
 // Configures touch screen module
 //
 #define GUI_TOUCH_AD_LEFT 	 0
-#define GUI_TOUCH_AD_RIGHT 	 1023
+#define GUI_TOUCH_AD_RIGHT 	 (NT35510_PANEL_WIDTH  - 1)
 #define GUI_TOUCH_AD_TOP 	 0
-#define GUI_TOUCH_AD_BOTTOM  1023
+#define GUI_TOUCH_AD_BOTTOM  (NT35510_PANEL_HEIGHT - 1)
 /*
 **********************************************************************
 *
@@ -167,7 +166,7 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData)
 			// to be adapted by the customer...
 			//
 			// ...
-			//  已经在前面初始化了，这里不再初始化
+			//  瀹歌尙绮￠崷銊ュ闂堛垹鍨垫慨瀣娴滃棴绱濇潻娆撳櫡娑撳秴鍟�閸掓繂顫愰崠?
 			
 			return 0;
 		}

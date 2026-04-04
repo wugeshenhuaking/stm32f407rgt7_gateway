@@ -1,0 +1,509 @@
+version: "4.1"
+name: stm32f407zgt6-gataway
+type: ARM
+deviceName: null
+packDir: null
+srcDirs: []
+virtualFolder:
+  name: <virtual_root>
+  files: []
+  folders:
+    - name: Application
+      files: []
+      folders:
+        - name: MDK-ARM
+          files:
+            - path: startup_stm32f407xx.s
+          folders: []
+        - name: User
+          files: []
+          folders:
+            - name: Core
+              files:
+                - path: ../Core/Src/main.c
+                - path: ../Core/Src/gpio.c
+                - path: ../Core/Src/can.c
+                - path: ../Core/Src/fsmc.c
+                - path: ../Core/Src/tim.c
+                - path: ../Core/Src/usart.c
+                - path: ../Core/Src/stm32f4xx_it.c
+                - path: ../Core/Src/stm32f4xx_hal_msp.c
+              folders: []
+            - name: LWIP
+              files: []
+              folders:
+                - name: Target
+                  files:
+                    - path: ../LWIP/Target/ethernetif.c
+                  folders: []
+                - name: App
+                  files:
+                    - path: ../LWIP/App/lwip.c
+                  folders: []
+    - name: Drivers
+      files: []
+      folders:
+        - name: STM32F4xx_HAL_Driver
+          files:
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nor.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+          folders: []
+        - name: CMSIS
+          files:
+            - path: ../Core/Src/system_stm32f4xx.c
+          folders: []
+        - name: BSP
+          files: []
+          folders:
+            - name: Components
+              files:
+                - path: ../Drivers/BSP/Components/lan8742/lan8742.c
+              folders: []
+    - name: emwin
+      files: []
+      folders:
+        - name: GUI_X
+          files:
+            - path: ../3rdLib/emWin/GUI_X/GUI_X.c
+          folders: []
+        - name: Config
+          files:
+            - path: ../3rdLib/emWin/Config/GUIConf.c
+            - path: ../3rdLib/emWin/Config/GUIConf.h
+            - path: ../3rdLib/emWin/Config/GUIDRV_Template.c
+            - path: ../3rdLib/emWin/Config/GUIDRV_Template.h
+            - path: ../3rdLib/emWin/Config/LCDConf.c
+            - path: ../3rdLib/emWin/Config/LCDConf.h
+          folders: []
+        - name: Demo
+          files:
+            - path: ../3rdLib/emWin/emWinTask/Source/APPW_MainTask.c
+          folders: []
+        - name: Lib
+          files:
+            - path: ../3rdLib/emWin/GUILib/libGUI_v7m_OS0.a
+          folders: []
+        - name: CustomCode
+          files:
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/Application.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/Application.h
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/ID_SCREEN_00_Slots.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/ID_SCREEN_01_Slots.c
+          folders: []
+        - name: Generated
+          files:
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/APPWConf.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_00.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_00.h
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_01.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_01.h
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/Resource.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/Resource.h
+          folders: []
+        - name: Resource
+          files:
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Font/_24_Normal_EXT_AA4.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Image/bk.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Image/net.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Text/APPW_Language_0.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Text/APPW_Pattern.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Image/dac.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Image/music.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Image/exit.c
+          folders: []
+    - name: BSP
+      files: []
+      folders:
+        - name: SRAM
+          files:
+            - path: ../BSP/BSP_SRAM/bsp_sram.c
+            - path: ../BSP/BSP_SRAM/bsp_sram.h
+            - path: ../BSP/BSP_SRAM/bsp_sram_port.c
+            - path: ../BSP/BSP_SRAM/bsp_sram_port.h
+            - path: ../BSP/BSP_SRAM/bsp_sram_test.c
+            - path: ../BSP/BSP_SRAM/bsp_sram_test.h
+          folders: []
+        - name: LCD
+          files:
+            - path: ../BSP/BSP_LCD/bsp_lcd.c
+            - path: ../BSP/BSP_LCD/bsp_lcd.h
+            - path: ../BSP/BSP_LCD/bsp_lcd_port.c
+            - path: ../BSP/BSP_LCD/bsp_lcd_port.h
+            - path: ../BSP/BSP_LCD/bsp_lcd_test.c
+            - path: ../BSP/BSP_LCD/bsp_lcd_test.h
+            - path: ../BSP/BSP_LCD/lcd_nt35510.c
+            - path: ../BSP/BSP_LCD/lcd_nt35510.h
+          folders: []
+        - name: LCDTouch
+          files:
+            - path: ../BSP/BSP_LCDTouch/bsp_touch_port.c
+            - path: ../BSP/BSP_LCDTouch/bsp_touch_port.h
+            - path: ../BSP/BSP_LCDTouch/gt9xxx.c
+            - path: ../BSP/BSP_LCDTouch/gt9xxx.h
+            - path: ../BSP/BSP_LCDTouch/test_bsp_touch.c
+            - path: ../BSP/BSP_LCDTouch/test_bsp_touch.h
+          folders: []
+        - name: Timer
+          files:
+            - path: ../BSP/BSP_Timer/bsp_timer.c
+            - path: ../BSP/BSP_Timer/bsp_timer.h
+          folders: []
+        - name: ETH
+          files:
+            - path: ../BSP/BSP_ETH/app_mqtt.c
+            - path: ../BSP/BSP_ETH/app_mqtt.h
+            - path: ../BSP/BSP_ETH/bsp_eth.c
+          folders: []
+        - name: CAN
+          files:
+            - path: ../BSP/BSP_CAN/bsp_can.c
+            - path: ../BSP/BSP_CAN/bsp_can.h
+            - path: ../BSP/BSP_CAN/bsp_can_port.c
+            - path: ../BSP/BSP_CAN/bsp_can_port.h
+            - path: ../BSP/BSP_CAN/bsp_can_test.c
+            - path: ../BSP/BSP_CAN/bsp_can_test.h
+          folders: []
+    - name: Middlewares
+      files: []
+      folders:
+        - name: LwIP
+          files:
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/auth.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/ccp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/chap_ms.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/chap-md5.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/chap-new.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/demand.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/eap.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/eui64.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/fsm.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/ipcp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/ipv6cp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/lcp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/magic.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/mppe.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/multilink.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/ppp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/pppapi.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/pppcrypt.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/pppoe.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/pppol2tp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/pppos.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/upap.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/utils.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/vj.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/bridgeif.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/bridgeif_fdb.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ethernet.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/lowpan6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/lowpan6_ble.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/lowpan6_common.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/slipif.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/zepif.c
+            - path: ../Middlewares/Third_Party/LwIP/src/netif/ppp/ecp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/api_lib.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/api_msg.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/err.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/if_api.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/netbuf.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/netdb.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/netifapi.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/sockets.c
+            - path: ../Middlewares/Third_Party/LwIP/src/api/tcpip.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/altcp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/altcp_alloc.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/altcp_tcp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/def.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/dns.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/inet_chksum.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/init.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ip.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/mem.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/memp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/netif.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/pbuf.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/raw.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/stats.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/sys.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/tcp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/tcp_in.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/tcp_out.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/timeouts.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/udp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/autoip.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/dhcp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/etharp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/icmp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/igmp.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_addr.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_frag.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/dhcp6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/ethip6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/icmp6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/inet6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/ip6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/ip6_addr.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/ip6_frag.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/mld6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/core/ipv6/nd6.c
+            - path: ../Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c
+          folders: []
+    - name: CANopen
+      files:
+        - path: ../3rdLib/CANopen/CANopenNode/CANopen.c
+      folders:
+        - name: "301"
+          files:
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_Emergency.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_fifo.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_HBconsumer.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_NMT_Heartbeat.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_ODinterface.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_PDO.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_SDOclient.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_SDOserver.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_SYNC.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_TIME.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/crc16-ccitt.c
+            - path: ../3rdLib/CANopen/CANopenNode/301/CO_config.h
+          folders: []
+        - name: "303"
+          files:
+            - path: ../3rdLib/CANopen/CANopenNode/303/CO_LEDs.c
+          folders: []
+        - name: "304"
+          files: []
+          folders: []
+        - name: "305"
+          files:
+            - path: ../3rdLib/CANopen/CANopenNode/305/CO_LSSslave.c
+          folders: []
+        - name: "309"
+          files: []
+          folders: []
+        - name: extra
+          files: []
+          folders: []
+        - name: storage
+          files: []
+          folders: []
+        - name: STM32
+          files:
+            - path: ../3rdLib/CANopen/CANopenNode_STM32/CO_app_STM32.c
+            - path: ../3rdLib/CANopen/CANopenNode_STM32/CO_driver_STM32.c
+            - path: ../3rdLib/CANopen/CANopenNode_STM32/CO_storageBlank.c
+            - path: ../3rdLib/CANopen/CANopenNode_STM32/OD.c
+          folders: []
+    - name: app_CAN
+      files:
+        - path: ../BSP/BSP_CAN/app_CAN.c
+        - path: ../BSP/BSP_CAN/app_CAN.h
+      folders: []
+    - name: ::CMSIS
+      files: []
+      folders: []
+dependenceList: []
+outDir: build
+miscInfo:
+  uid: de3f42550d68cc7d86304e3273a9695b
+targets:
+  stm32f407zgt6-gataway:
+    cppPreprocessAttrs:
+      defineList:
+        - USE_HAL_DRIVER
+        - STM32F407xx
+        - CO_CONFIG_SDO_CLI=3
+        - CO_CONFIG_FIFO=1
+      incList:
+        - ../Core/Inc
+        - ../Drivers/STM32F4xx_HAL_Driver/Inc
+        - ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
+        - ../Drivers/CMSIS/Device/ST/STM32F4xx/Include
+        - ../Drivers/CMSIS/Include
+        - ../3rdLib/emWin/Config
+        - ../3rdLib/emWin/GUI_X
+        - ../3rdLib/emWin/emWinDemo
+        - ../3rdLib/emWin/include
+        - ../3rdLib/emWin/emWinTask
+        - ../3rdLib/emWin/emWinTask/Source
+        - ../BSP/BSP_LCD
+        - ../BSP/BSP_LCDTouch
+        - ../BSP/BSP_SRAM
+        - ../BSP/BSP_Timer
+        - ../LWIP/App
+        - ../LWIP/Target
+        - ../Middlewares/Third_Party/LwIP/src/include
+        - ../Middlewares/Third_Party/LwIP/system
+        - ../Drivers/BSP/Components/lan8742
+        - ../Middlewares/Third_Party/LwIP/src/include/netif/ppp
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip/apps
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip/priv
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip/prot
+        - ../Middlewares/Third_Party/LwIP/src/include/netif
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix/net
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/stdc
+        - ../Middlewares/Third_Party/LwIP/system/arch
+        - ../BSP/BSP_ETH
+        - ../BSP/BSP_CAN
+        - ../3rdLib/CANopen/CANopenNode
+        - ../3rdLib/CANopen/CANopenNode_STM32
+        - .cmsis/include
+        - RTE/_stm32f407zgt6-gataway
+      libList: []
+    excludeList:
+      - <virtual_root>/Middlewares/LwIP/slipif.c
+    settings: {}
+    toolchain: AC6
+    toolchainConfigMap:
+      AC6:
+        archExtensions: ""
+        cpuType: Cortex-M4
+        floatingPointHardware: single
+        options:
+          version: 3
+          afterBuildTasks:
+            - name: "[Copy linker output for Keil User Commands]"
+              abortAfterFailed: true
+              command: mkdir ${KEIL_OUTPUT_DIR} & copy "${OutDir}\${ProjectName}.axf" "${KEIL_OUTPUT_DIR}\${ProjectName}.axf"
+              disable: false
+            - name: D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\keil-build-viewer.exe
+              abortAfterFailed: true
+              command: D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\keil-build-viewer.exe
+              disable: false
+          asm-compiler:
+            $use: asm-auto
+            defines: []
+            misc-controls: ""
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: -fno-short-wchar -fshort-enums
+            C_FLAGS: -fno-short-wchar -fshort-enums
+            language-c: c99
+            language-cpp: c++11
+            link-time-optimization: false
+            one-elf-section-per-function: true
+            optimization: level-0
+            warnings: ac5-like-warnings
+          global:
+            output-debug-info: enable
+            use-microLIB: true
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            misc-controls: --diag_suppress=L6329
+            output-format: elf
+            ro-base: ""
+            rw-base: ""
+            xo-base: ""
+        scatterFilePath: ""
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 3
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x1c000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+            - id: 2
+              isChecked: true
+              mem:
+                size: "0x4000"
+                startAddr: "0x2001c000"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 3
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x100000"
+                startAddr: "0x8000000"
+              tag: IROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: IROM
+        useCustomScatterFile: false
+    uploadConfigMap:
+      JLink:
+        baseAddr: ""
+        bin: ""
+        cpuInfo:
+          cpuName: "null"
+          vendor: "null"
+        otherCmds: ""
+        proType: 1
+        speed: 8000
+    uploader: JLink

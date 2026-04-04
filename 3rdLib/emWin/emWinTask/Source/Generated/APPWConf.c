@@ -27,8 +27,8 @@ Purpose     : Generated file do NOT edit!
 *
 **********************************************************************
 */
-#define XSIZE_PHYS       480
-#define YSIZE_PHYS       800
+#define XSIZE_PHYS       800
+#define YSIZE_PHYS       480
 #define COLOR_CONVERSION GUICC_M565
 #define DISPLAY_DRIVER   GUIDRV_WIN32R
 #define NUM_BUFFERS      2
@@ -47,6 +47,12 @@ static U8 _MultibufEnable = 0;
 
 /*********************************************************************
 *
+*       _ShowMissingCharacters
+*/
+static U8 _ShowMissingCharacters = 1;
+
+/*********************************************************************
+*
 *       Static code
 *
 **********************************************************************
@@ -61,6 +67,7 @@ static void _InitText(void) {
   APPW__GetTextInit(&pTextInit);
   GUI_UC_EnableBIDI(1);
   GUI_UC_EnableThai(1);
+  APPW_TextInitMem(pTextInit);
 }
 
 /*********************************************************************
@@ -99,6 +106,7 @@ void APPW_X_Setup(void) {
   WM_SetCreateFlags(CreateFlags);
   APPW_SetData(ppRootInfo, NumScreens, paVarList, NumVars, paScrollerDef, NumScrollers, ppDrawingList, NumDrawings);
   APPW_SetSupportScroller(1);
+  GUI_ShowMissingCharacters(_ShowMissingCharacters);
 }
 
 /*********************************************************************

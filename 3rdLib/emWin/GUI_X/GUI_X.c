@@ -53,7 +53,7 @@ Purpose     : Config / System dependent externals for GUI
 
 #include "GUI.h"
 
-// 用户导入头文件
+//  add user header file
 #include "main.h"
 #include "bsp_timer.h"
 

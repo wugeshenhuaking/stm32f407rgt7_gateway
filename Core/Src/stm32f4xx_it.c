@@ -194,7 +194,7 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 1 */
   bsp_SysTick_ISR();
   #if USE_CANOPEN == ENABLE
-  canopen_app_interrupt();
+//  canopen_app_interrupt();
   #endif
   /* USER CODE END SysTick_IRQn 1 */
 }

@@ -23,12 +23,24 @@ Purpose     : Generated file do NOT edit!
 *
 *       Text
 */
+#define ID_RTEXT_0 0
+#define ID_RTEXT_1 1
+
 #define APPW_MANAGE_TEXT APPW_MANAGE_TEXT_EXT
+extern GUI_CONST_STORAGE unsigned char acAPPW_Language_0[];
+
+/*********************************************************************
+*
+*       Fonts
+*/
+extern GUI_CONST_STORAGE unsigned char ac_24_Normal_EXT_AA4[];
 
 /*********************************************************************
 *
 *       Images
 */
+extern GUI_CONST_STORAGE unsigned char acbk[];
+extern GUI_CONST_STORAGE unsigned char acnet[];
 extern GUI_CONST_STORAGE unsigned char acDARK_Button_Up_100x30[];
 extern GUI_CONST_STORAGE unsigned char acDARK_Button_Down_100x30[];
 
@@ -37,8 +49,10 @@ extern GUI_CONST_STORAGE unsigned char acDARK_Button_Down_100x30[];
 *       Screens
 */
 #define ID_SCREEN_00 (GUI_ID_USER + 4096)
+#define ID_SCREEN_01 (GUI_ID_USER + 4097)
 
 extern APPW_ROOT_INFO ID_SCREEN_00_RootInfo;
+extern APPW_ROOT_INFO ID_SCREEN_01_RootInfo;
 
 #define APPW_INITIAL_SCREEN &ID_SCREEN_00_RootInfo
 

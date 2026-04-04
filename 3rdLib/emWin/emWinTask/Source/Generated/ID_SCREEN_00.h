@@ -23,14 +23,14 @@ Purpose     : Generated file do NOT edit!
 *
 *       Objects
 */
-#define ID_BOX_00    (GUI_ID_USER + 1)
+#define ID_IMAGE_00  (GUI_ID_USER + 1)
 #define ID_BUTTON_00 (GUI_ID_USER + 2)
-#define ID_BUTTON_01 (GUI_ID_USER + 3)
 
 /*********************************************************************
 *
 *       Slots
 */
+void ID_SCREEN_00__ID_BUTTON_00__WM_NOTIFICATION_CLICKED(APPW_ACTION_ITEM * pAction, WM_HWIN hScreen, WM_MESSAGE * pMsg, int * pResult);
 
 /*********************************************************************
 *
