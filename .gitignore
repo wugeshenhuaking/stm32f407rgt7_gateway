@@ -75,3 +75,4 @@
 /.cmsis
 /tmp_codex_test.txt
 /*.clang-format
+/build
