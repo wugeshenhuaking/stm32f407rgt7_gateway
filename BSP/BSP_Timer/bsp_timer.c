@@ -20,8 +20,6 @@
 */
 
 #include "bsp_timer.h"
-#include "bsp_touch_port.h"
-
 /* ============================================================
  * Internal Variables
  * ============================================================ */
@@ -39,7 +37,7 @@ static volatile uint32_t g_iRunTime = 0;
  * (Weak defined at the end of bsp_timer.c, user can override in other files)
  * ============================================================ */
 __weak void bsp_RunPer1ms(void)  { }
-__weak void bsp_RunPer10ms(void) { BSP_Touch_EmWinSchedule(); }
+__weak void bsp_RunPer10ms(void) { }
 
 /* ============================================================
  * Internal: Decrement software timer single step

@@ -51,9 +51,11 @@ Purpose     : Display controller initialization
   ******************************************************************************
   */
 
-#include "GUI.h"
-//#include "bsp.h"
+#include <stdio.h>
 
+#include "GUI.h"
+#include "bsp_sram.h"
+#include "malloc.h"
 /*********************************************************************
 *
 *       Defines
@@ -63,10 +65,10 @@ Purpose     : Display controller initialization
 //
 // Define the available number of bytes available for the GUI
 //
-#define EX_SRAM   0/*1 used extern sram, 0 used internal sram */
+#define EX_SRAM   1/*1 used extern sram, 0 used internal sram */
 
 #if EX_SRAM
-#define GUI_NUMBYTES  (1024*1024*2)
+#define GUI_NUMBYTES  (50*1024)
 #else
 #define GUI_NUMBYTES  (50*1024)
 #endif
@@ -74,6 +76,18 @@ Purpose     : Display controller initialization
 /* Define the average block size */
 #define GUI_BLOCKSIZE 0x80
 
+static void _EmWinOnShortOfRAM(void)
+{
+    printf("[emWin] short of RAM: used=%ld free=%ld peak=%ld\r\n",
+           (long)GUI_ALLOC_GetNumUsedBytes(),
+           (long)GUI_ALLOC_GetNumFreeBytes(),
+           (long)GUI_ALLOC_GetMaxUsedBytes());
+}
+
+static void _EmWinOnError(const char *s)
+{
+    printf("[emWin] error: %s\r\n", (s != NULL) ? s : "(null)");
+}
 
 
 /*********************************************************************
@@ -95,17 +109,36 @@ void GUI_X_Config(void)
 #if EX_SRAM
     static U32 *aMemory;
     aMemory = (U32 *)EXT_SRAM_ADDR;
-
+    /*  if use yourself malloc memory to emWin */
+//    void*  aMemory = mymalloc(SRAMEX, GUI_NUMBYTES);
+  
     /*  Assign memory to emWin */
     GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
+
     GUI_ALLOC_SetAvBlockSize(GUI_BLOCKSIZE);
+//    GUI_SetDefaultFont(GUI_FONT_6X8);
+
+//    GUI_ALLOC_SetShortOfRAM(_EmWinOnShortOfRAM);
+//    GUI_SetOnErrorFunc(_EmWinOnError);
+//    printf("[emWin] alloc pool ext-sram base=0x%08lX size=%lu block=0x%02X\r\n",
+//           (unsigned long)EXT_SRAM_ADDR,
+//           (unsigned long)GUI_NUMBYTES,
+//           (unsigned)GUI_BLOCKSIZE);
 #else
     /* 32 bit aligned memory area */
     static U32 aMemory[GUI_NUMBYTES / 4];
 
     /*  Assign memory to emWin */
     GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
+     GUI_SetDefaultFont(GUI_FONT_6X8);
+
     GUI_ALLOC_SetAvBlockSize(GUI_BLOCKSIZE);
+    GUI_ALLOC_SetShortOfRAM(_EmWinOnShortOfRAM);
+    GUI_SetOnErrorFunc(_EmWinOnError);
+    printf("[emWin] alloc pool internal base=%p size=%lu block=0x%02X\r\n",
+           (void *)aMemory,
+           (unsigned long)GUI_NUMBYTES,
+           (unsigned)GUI_BLOCKSIZE);
 #endif
 }
 

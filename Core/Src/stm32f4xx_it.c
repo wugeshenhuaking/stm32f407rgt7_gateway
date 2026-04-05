@@ -25,7 +25,9 @@
 #include "bsp_timer.h"
 #include "CO_app_STM32.h"
 #include "can.h"
+#include "usart.h"
 #include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +57,40 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static void Fault_Print(const char *s)
+{
+  if (s == NULL)
+  {
+    return;
+  }
+  HAL_UART_Transmit(&huart1, (uint8_t *)s, (uint16_t)strlen(s), 1000);
+}
+
+static void Fault_Dump(const char *name)
+{
+  static uint8_t s_dumped = 0;
+  char buf[192];
+
+  if (s_dumped != 0U)
+  {
+    return;
+  }
+  s_dumped = 1U;
+
+  snprintf(buf, sizeof(buf),
+           "\r\n[FAULT] %s\r\n"
+           "HFSR=0x%08lX CFSR=0x%08lX DFSR=0x%08lX AFSR=0x%08lX\r\n"
+           "MMFAR=0x%08lX BFAR=0x%08lX SHCSR=0x%08lX\r\n",
+           (name != NULL) ? name : "Unknown",
+           (unsigned long)SCB->HFSR,
+           (unsigned long)SCB->CFSR,
+           (unsigned long)SCB->DFSR,
+           (unsigned long)SCB->AFSR,
+           (unsigned long)SCB->MMFAR,
+           (unsigned long)SCB->BFAR,
+           (unsigned long)SCB->SHCSR);
+  Fault_Print(buf);
+}
 
 /* USER CODE END 0 */
 
@@ -89,6 +125,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
+  Fault_Dump("HardFault");
 
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
@@ -104,6 +141,7 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
+  Fault_Dump("MemManage");
 
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
@@ -119,6 +157,7 @@ void MemManage_Handler(void)
 void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
+  Fault_Dump("BusFault");
 
   /* USER CODE END BusFault_IRQn 0 */
   while (1)
@@ -134,6 +173,7 @@ void BusFault_Handler(void)
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
+  Fault_Dump("UsageFault");
 
   /* USER CODE END UsageFault_IRQn 0 */
   while (1)

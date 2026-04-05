@@ -1,0 +1,613 @@
+/*
+*********************************************************************************************************
+*
+*	模块名称 : 示波器主界面的初始化
+*	文件名称 : DSO_Init.c
+*	版    本 : V1.0
+*	说    明 : 示波器初始化
+*	修改记录 :
+*		版本号    日期          作者           说明
+*		V1.0    2018-01-06     Eric2013        首发
+*
+*	Copyright (C), 2018-2028, 安富莱电子 www.armfly.com
+*
+*********************************************************************************************************
+*/
+#include "includes.h"
+#include "MainTask.h"
+
+
+
+/*
+*********************************************************************************************************
+*	                                  变量
+*********************************************************************************************************
+*/
+WM_HWIN hDlgAmp;         /* 用于显示幅度的窗口句柄 */
+WM_HWIN hDlgStatus1;     /* 用于显示平均值，峰峰值，最大值和最小值窗口句柄 */
+WM_HWIN hDlgStatus2;     /* 用于显示频率和RMS窗口句柄 */
+WM_HWIN hDlgScale;       /* 用于显示采样率窗口句柄 */
+WM_HWIN hDlgSysInfo;     /* 用于显示系统信息窗口句柄 */
+
+BUTTON_Handle hButton0;  /* 5个按钮句柄 */
+BUTTON_Handle hButton1;
+BUTTON_Handle hButton2;
+BUTTON_Handle hButton3;
+BUTTON_Handle hButton4;
+BUTTON_Handle hButton5;
+BUTTON_Handle hButton6;
+BUTTON_Handle hButton7;
+BUTTON_Handle hButton8;
+
+CHECKBOX_Handle hCheckbox0;
+CHECKBOX_Handle hCheckbox1;
+CHECKBOX_Handle hCheckbox2;
+CHECKBOX_Handle hCheckbox3;
+
+CHECKBOX_Handle hCheckbox4;
+CHECKBOX_Handle hCheckbox5;
+CHECKBOX_Handle hCheckbox6;
+CHECKBOX_Handle hCheckbox7;
+
+CHECKBOX_Handle hRADIO0;
+
+/*
+*********************************************************************************************************
+*	函 数 名: _cbButton
+*	功能说明: 按钮回调函数
+*	形    参: pMsg  消息指针
+*	返 回 值: 无
+*********************************************************************************************************
+*/
+static void _cbButton(WM_MESSAGE * pMsg)
+{
+    WM_HWIN  hWin;
+    GUI_RECT Rect;
+    char buf[20];
+
+    hWin  = pMsg->hWin;
+
+    switch (pMsg->MsgId)
+    {
+    case WM_PAINT:
+        WM_GetClientRect(&Rect);
+        if (BUTTON_IsPressed(hWin))
+        {
+            GUI_SetColor(GUI_STCOLOR_LIGHTBLUE);
+            GUI_AA_FillRoundedRect(Rect.x0, Rect.y0, Rect.x1, Rect.y1, 10);
+
+            GUI_SetColor(0XEBCD9E);
+            GUI_SetPenSize(2);
+            GUI_AA_DrawRoundedRect(Rect.x0, Rect.y0, Rect.x1, Rect.y1, 10);
+
+            GUI_SetBkColor(GUI_STCOLOR_LIGHTBLUE);
+            GUI_SetColor(GUI_BLACK);
+        }
+        else
+        {
+            GUI_SetColor(GUI_DARKGRAY);
+            GUI_AA_FillRoundedRect(Rect.x0, Rect.y0, Rect.x1, Rect.y1, 10);
+            GUI_SetBkColor(GUI_DARKGRAY);
+            GUI_SetColor(GUI_WHITE);
+        }
+
+        BUTTON_GetText(hWin, buf, sizeof(buf));
+        GUI_SetFont(&GUI_Fontkaifont);
+        GUI_DispStringInRect(buf, &Rect, GUI_TA_HCENTER | GUI_TA_VCENTER);
+        break;
+
+    default:
+        BUTTON_Callback(pMsg);
+    }
+}
+
+static void _cbButton1(WM_MESSAGE * pMsg)
+{
+    WM_HWIN  hWin;
+    GUI_RECT Rect;
+    char buf[20];
+
+    hWin  = pMsg->hWin;
+
+    switch (pMsg->MsgId)
+    {
+    case WM_PAINT:
+        WM_GetClientRect(&Rect);
+        if (BUTTON_IsPressed(hWin))
+        {
+            GUI_SetColor(GUI_STCOLOR_LIGHTBLUE);
+            GUI_AA_FillRoundedRect(Rect.x0, Rect.y0, Rect.x1, Rect.y1, 10);
+
+            GUI_SetColor(0XEBCD9E);
+            GUI_SetPenSize(2);
+            GUI_AA_DrawRoundedRect(Rect.x0, Rect.y0, Rect.x1, Rect.y1, 10);
+
+            GUI_SetBkColor(GUI_STCOLOR_LIGHTBLUE);
+            GUI_SetColor(GUI_BLACK);
+        }
+        else
+        {
+            GUI_SetColor(GUI_RED);
+            GUI_AA_FillRoundedRect(Rect.x0, Rect.y0, Rect.x1, Rect.y1, 10);
+            GUI_SetBkColor(GUI_RED);
+            GUI_SetColor(GUI_WHITE);
+        }
+
+        BUTTON_GetText(hWin, buf, sizeof(buf));
+        GUI_SetFont(&GUI_Fontkaifont);
+        GUI_DispStringInRect(buf, &Rect, GUI_TA_HCENTER | GUI_TA_VCENTER);
+        break;
+
+    default:
+        BUTTON_Callback(pMsg);
+    }
+}
+
+/*
+*********************************************************************************************************
+*	函 数 名: DSO_Init
+*	功能说明: 示波器主界面初始化
+*	形    参: ucCreateFlag  1:表示需要创建按键和窗口等。
+*                           0:不需要创建。
+*	返 回 值: 无
+*********************************************************************************************************
+*/
+#define BkColor 0x0A0A0A
+void DSO_Init(uint8_t ucCreateFlag)
+{
+    char buf[10];
+    uint32_t ulTrigPos;
+
+
+    /* 第1步：刷新背景*********************************************************************/
+//	GUI_SetBkColor(0x905040);
+    GUI_SetBkColor(BkColor);
+    GUI_Clear();
+
+    GUI_MEMDEV_WriteAt(hMemDSO, 40, 40);
+
+    /* 第2步：显示基本的信息***************************************************************/
+    GUI_SetBkColor(BkColor);
+    GUI_SetColor(GUI_WHITE);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_DispStringInRect("DSO3.0", &rClient, GUI_TA_HCENTER | GUI_TA_VCENTER);
+
+    /* 自动触发模式 */
+    if(TriggerFlag == 0)
+    {
+        /* 按键K2 :设置波形显示运行或暂停 */
+        if(g_Flag->hWinRunStop == 0)
+        {
+            GUI_DispStringInRect("Run", &rRunMode, GUI_TA_HCENTER | GUI_TA_VCENTER);
+        }
+        else
+        {
+            GUI_DispStringInRect("Stop", &rRunMode, GUI_TA_HCENTER | GUI_TA_VCENTER);
+        }
+    }
+    /* 普通触发模式 */
+    else
+    {
+        /* 按键K2 :设置波形显示运行或暂停 */
+        if(g_Flag->ucTrig == 0)
+        {
+            GUI_DispStringInRect("Run", &rRunMode, GUI_TA_HCENTER | GUI_TA_VCENTER);
+        }
+        else
+        {
+            GUI_DispStringInRect("Stop", &rRunMode, GUI_TA_HCENTER | GUI_TA_VCENTER);;
+        }
+    }
+
+    /* 按键K3 :设置普通触发方式或自动触发 */
+    if(TriggerFlag == 0)
+    {
+        GUI_DispStringInRect("Auto", &rTrigMode, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else
+    {
+        GUI_DispStringInRect("Trig", &rTrigMode, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+
+    /* 第3步：显示自动触发的触发电压**********************************************************/
+    g_TrigVol->ufTrigValue = 240 - g_TrigVol->usPos;
+    g_TrigVol->ufTrigValue = g_TrigVol->ufTrigValue * g_AttTable[Ch1AmpId][1] / 50000;
+    sprintf(buf, "%6.4fV", g_TrigVol->ufTrigValue);
+
+    GUI_DispStringInRect(buf, &rTrigValue, GUI_TA_HCENTER | GUI_TA_VCENTER);
+
+    /* 显示上升沿触发的标志 */
+    GUI_DrawHLine(rTrigValue.y1 - 10, rTrigValue.x0 + 10, rTrigValue.x0 + 19);
+    GUI_DrawLine(rTrigValue.x0 + 19, rTrigValue.y1 - 10, rTrigValue.x0 + 30, rTrigValue.y0 + 8);
+    GUI_DrawHLine(rTrigValue.y0 + 8, rTrigValue.x0 + 31, rTrigValue.x0 + 41);
+
+    /* 第4步：设置摇杆按键的调节状态，并将其显示出来******************************************/
+    if(g_Flag->hWinButState == 0)
+    {
+        GUI_DispStringInRect("AdjFreq", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else if(g_Flag->hWinButState == 1)
+    {
+        GUI_DispStringInRect("AdjAmplitude", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else if(g_Flag->hWinButState == 2)
+    {
+        GUI_DispStringInRect("ChangeRefPos", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else if(g_Flag->hWinButState == 3)
+    {
+        GUI_DispStringInRect("ChangeCursorVA", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else if(g_Flag->hWinButState == 4)
+    {
+        GUI_DispStringInRect("ChangeCursorVB", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else if(g_Flag->hWinButState == 5)
+    {
+        GUI_DispStringInRect("ChangeCursorHA", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else if(g_Flag->hWinButState == 6)
+    {
+        GUI_DispStringInRect("ChangeCursorHB", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+    else if(g_Flag->hWinButState == 7)
+    {
+        GUI_DispStringInRect("ChangeTrigger", &rButState, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    }
+
+    /* 第5步：实现波形的放缩***************************************************************/
+    GUI_SetBkColor(GUI_BLACK);
+    GUI_ClearRect(270, 6, 790, 33);
+    GUI_SetColor(GUI_YELLOW);
+    GUI_DrawHLine(20, 280, 280 + 499);
+    GUI_DrawHLine(21, 280, 280 + 499);
+
+    GUI_SetColor(0x0040f0);
+
+    /* 自动触发模式 */
+    if(TriggerFlag == 0)
+    {
+        if((g_DSO1->sCurTriStep + g_DSO1->sCurTriPos) < 0)
+        {
+            ulTrigPos = 0;
+        }
+        else if((g_DSO1->sCurTriStep + g_DSO1->sCurTriPos) > 1448)
+        {
+            ulTrigPos = 1448 * 240;
+        }
+        else
+        {
+            ulTrigPos = (g_DSO1->sCurTriStep + g_DSO1->sCurTriPos) * 240;
+        }
+    }
+    /* 普通触发模式 */
+    else
+    {
+        ulTrigPos = (724 + g_DSO1->sCurTriStep) * 240;
+    }
+
+    /* 根据上面求得数据的触发位置来更新屏上的触发图标位置 */
+    ulTrigPos = ulTrigPos / 2048;
+    GUI_FillPolygon(&aPointsTrigBrowser[0], GUI_COUNTOF(aPointsTrigBrowser), ulTrigPos + 280, 13);
+
+    /* 记录专门的触发位置
+       (2048 - 600) / 2 = 724.
+       724 / 2048 * 240 = 84 + 220 = 304.
+       坐标304作为中间位置。
+    */
+    GUI_SetColor(GUI_RED);
+    GUI_DrawPixel(302, 20);
+    GUI_DrawPixel(302, 21);
+
+    GUI_DrawPixel(303, 20);
+    GUI_DrawPixel(303, 21);
+
+    GUI_DrawPixel(304, 20);
+    GUI_DrawPixel(304, 21);
+
+    GUI_DrawPixel(305, 20);
+    GUI_DrawPixel(305, 21);
+
+    GUI_DrawPixel(306, 20);
+    GUI_DrawPixel(306, 21);
+
+    /* 第6步：波形显示区的边框*************************************************************/
+    GUI_SetColor(0x888888);
+    GUI_DrawRect(DSOSCREEN_STARTX - 1,  /* 左上角X轴位置 */
+                 DSOSCREEN_STARTY - 1,  /* 左上角Y轴位置 */
+                 DSOSCREEN_ENDX + 1,    /* 右下角X轴位置 */
+                 DSOSCREEN_ENDY + 1);   /* 右下角Y轴位置 */
+
+    GUI_SetColor(0x434343);
+    GUI_DrawRect(DSOSCREEN_STARTX - 2,  /* 左上角X轴位置 */
+                 DSOSCREEN_STARTY - 2,  /* 左上角Y轴位置 */
+                 DSOSCREEN_ENDX + 2,    /* 右下角X轴位置 */
+                 DSOSCREEN_ENDY + 2);   /* 右下角Y轴位置 */
+
+    /* 根据需要是否需要重新创建按键和窗口 */
+    if(ucCreateFlag == 1)
+    {
+        /* 第7步：创建状态窗口*************************************************************/
+        hDlgAmp = CreateAmplitudeDlg();
+        hDlgStatus1 = CreateStatus1Dlg();
+        hDlgStatus2 = CreateStatus2Dlg();
+//		hDlgScale = CreateScaleDlg();
+//		hDlgSysInfo = CreateSysInfoDlg();
+//
+//
+//		/* 第6步：创建需要的按钮*************************************************************/
+        hButton0 = BUTTON_Create(1060, 40, 90, 50, GUI_ID_BUTTON0, WM_CF_SHOW);
+        BUTTON_SetText(hButton0, "Measure");
+        WM_SetHasTrans(hButton0);
+        WM_SetCallback(hButton0, _cbButton);
+
+        hButton1 = BUTTON_Create(1170, 40, 90, 50, GUI_ID_BUTTON1, WM_CF_SHOW);
+        BUTTON_SetText(hButton1, "AD7606");
+        WM_SetHasTrans(hButton1);
+        WM_SetCallback(hButton1, _cbButton);
+
+        hButton2 = BUTTON_Create(1060, 100, 90, 50, GUI_ID_BUTTON2, WM_CF_SHOW);
+        BUTTON_SetText(hButton2, "ADS1256");
+        WM_SetHasTrans(hButton2);
+        WM_SetCallback(hButton2, _cbButton);
+
+        hButton3 = BUTTON_Create(1170, 100, 90, 50, GUI_ID_BUTTON3, WM_CF_SHOW);
+        BUTTON_SetText(hButton3, "Filter");
+        WM_SetHasTrans(hButton3);
+        WM_SetCallback(hButton3, _cbButton);
+
+        hButton4 = BUTTON_Create(1060, 160, 90, 50, GUI_ID_BUTTON4, WM_CF_SHOW);
+        BUTTON_SetText(hButton4, "AD9XXX");
+        WM_SetHasTrans(hButton4);
+        WM_SetCallback(hButton4, _cbButton);
+
+        hButton5 = BUTTON_Create(1170, 160, 90, 50, GUI_ID_BUTTON5, WM_CF_SHOW);
+        BUTTON_SetText(hButton5, "Settings");
+        WM_SetHasTrans(hButton5);
+        WM_SetCallback(hButton5, _cbButton);
+
+        hButton6 = BUTTON_Create(1060, 590, 90, 50, GUI_ID_BUTTON6, WM_CF_SHOW);
+        BUTTON_SetText(hButton6, "FFT");
+        WM_SetHasTrans(hButton6);
+        WM_SetCallback(hButton6, _cbButton);
+
+
+        hButton7 = BUTTON_Create(1170, 590, 90, 50, GUI_ID_BUTTON7, WM_CF_SHOW);
+        BUTTON_SetText(hButton7, "BUS");
+        WM_SetHasTrans(hButton7);
+        WM_SetCallback(hButton7, _cbButton);
+
+        hCheckbox0 = CHECKBOX_CreateEx(1060,
+                                       220,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox0);
+
+        CHECKBOX_SetText(hCheckbox0, "CH1");
+
+        CHECKBOX_SetTextColor(hCheckbox0, CHXColor[0]);
+        CHECKBOX_SetFont(hCheckbox0, &GUI_Fontkaifont);
+
+        hCheckbox1 = CHECKBOX_CreateEx(1170,
+                                       220,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox1);
+
+        CHECKBOX_SetText(hCheckbox1, "CH2");
+        CHECKBOX_SetTextColor(hCheckbox1, CHXColor[1]);
+        CHECKBOX_SetFont(hCheckbox1, &GUI_Fontkaifont);
+
+
+        hCheckbox2 = CHECKBOX_CreateEx(1060,
+                                       260,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox2);
+
+        CHECKBOX_SetText(hCheckbox2, "CH3");
+        CHECKBOX_SetTextColor(hCheckbox2, CHXColor[2]);
+        CHECKBOX_SetFont(hCheckbox2, &GUI_Fontkaifont);
+
+        hCheckbox3 = CHECKBOX_CreateEx(1170,
+                                       260,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox3);
+
+        CHECKBOX_SetText(hCheckbox3, "CH4");
+        CHECKBOX_SetTextColor(hCheckbox3, CHXColor[3]);
+        CHECKBOX_SetFont(hCheckbox3, &GUI_Fontkaifont);
+
+        hCheckbox4 = CHECKBOX_CreateEx(1060,
+                                       300,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox4);
+
+        CHECKBOX_SetText(hCheckbox4, "CH5");
+        CHECKBOX_SetTextColor(hCheckbox4, CHXColor[4]);
+        CHECKBOX_SetFont(hCheckbox4, &GUI_Fontkaifont);
+
+        hCheckbox5 = CHECKBOX_CreateEx(1170,
+                                       300,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox5);
+
+        CHECKBOX_SetText(hCheckbox5, "CH6");
+        CHECKBOX_SetTextColor(hCheckbox5, CHXColor[5]);
+        CHECKBOX_SetFont(hCheckbox5, &GUI_Fontkaifont);
+
+        hCheckbox6 = CHECKBOX_CreateEx(1060,
+                                       340,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox6);
+
+        CHECKBOX_SetText(hCheckbox6, "CH7");
+        CHECKBOX_SetTextColor(hCheckbox6, CHXColor[6]);
+        CHECKBOX_SetFont(hCheckbox6, &GUI_Fontkaifont);
+
+        hCheckbox7 = CHECKBOX_CreateEx(1170,
+                                       340,
+                                       100,
+                                       30,
+                                       WM_HBKWIN,
+                                       WM_CF_SHOW,
+                                       0,
+                                       hCheckbox7);
+
+        CHECKBOX_SetText(hCheckbox7, "CH8");
+        CHECKBOX_SetTextColor(hCheckbox7, CHXColor[7]);
+        CHECKBOX_SetFont(hCheckbox7, &GUI_Fontkaifont);
+
+        hRADIO0 = RADIO_CreateEx(
+                      1060,
+                      385,
+                      200,
+                      200,
+                      WM_HBKWIN,
+                      WM_CF_SHOW,
+                      0,
+                      GUI_ID_RADIO0,
+                      8, 30);
+
+        RADIO_SetText(hRADIO0, "AdjFreq", 0);
+        RADIO_SetText(hRADIO0, "AdjAmplitude", 1);
+        RADIO_SetText(hRADIO0, "ChangeRefPos", 2);
+        RADIO_SetText(hRADIO0, "ChangeCursorVA", 3);
+        RADIO_SetText(hRADIO0, "ChangeCursorVB", 4);
+        RADIO_SetText(hRADIO0, "ChangeCursorHA", 5);
+        RADIO_SetText(hRADIO0, "ChangeCursorHB", 6);
+        RADIO_SetText(hRADIO0, "ChangeTrigger", 7);
+
+        RADIO_SetFont(hRADIO0, &GUI_Fontkaifont);
+//		 RADIO_SetSpacing(hRADIO0, 30);
+//		 RADIO_SetBkColor(hRADIO0, 0xFFFF00);
+        RADIO_SetTextColor(hRADIO0, GUI_WHITE);
+
+//			SWITCH_CreateUser(1150,
+//			2,
+//			100,
+//			38,
+//			WM_HBKWIN,
+//			WM_CF_SHOW,
+//			0,
+//			GUI_ID_SWITCH0,
+//			0);
+
+        hButton8 = BUTTON_Create(1150, 4, 32, 32, GUI_ID_BUTTON8, WM_CF_SHOW);
+        BUTTON_SetText(hButton8, "T");
+        WM_SetHasTrans(hButton8);
+        WM_SetCallback(hButton8, _cbButton1);
+    }
+
+    /* 第8步：显示参考坐标*************************************************************/
+    ////////////////11111111//////////////////////
+    GUI_SetColor(CHXColor[0]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, g_DSO1->usRefPos);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('1', 10, g_DSO1->usRefPos - 9);
+
+    ////////////////2222222222///////////////////////
+    GUI_SetColor(CHXColor[1]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, g_DSO2->usRefPos);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('2', 10, g_DSO2->usRefPos - 9);
+
+    /////////////////33333333//////////////////////
+    GUI_SetColor(CHXColor[2]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 340 + 50);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('3', 10, 340 - 9 + 50);
+
+    /////////////////4444444444//////////////////////
+    GUI_SetColor(CHXColor[3]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 340 + 100);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('4', 10, 340 - 9 + 100);
+
+    /////////////////55555555555//////////////////////
+    GUI_SetColor(CHXColor[4]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 340 + 150);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('5', 10, 340 - 9 + 150);
+
+    /////////////////666666666666//////////////////////
+    GUI_SetColor(CHXColor[5]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 340 + 200);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('6', 10, 340 - 9 + 200);
+
+    ///////////////////777777777//////////////////////////////
+    GUI_SetColor(CHXColor[6]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 140 + 50);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('7', 10, 140 - 9 + 50);
+
+
+    ///////////////////88888888888//////////////////////////////
+    GUI_SetColor(CHXColor[7]);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 140 + 100);
+
+    GUI_SetColor(GUI_BLACK);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('8', 10, 140 - 9 + 100);
+
+    ///////////////////////////////////////////////////
+    GUI_SetColor(GUI_BLACK);
+    GUI_FillPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 630);
+    GUI_SetColor(GUI_RED);
+    GUI_DrawPolygon(&aPoints[0], GUI_COUNTOF(aPoints), 5, 630);
+
+    GUI_SetColor(GUI_RED);
+    GUI_SetFont(&GUI_Fontkaifont);
+    GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+    GUI_DispCharAt('M', 9, 630 - 9);
+}
+
+/***************************** 安富莱电子 www.armfly.com (END OF FILE) *********************************/

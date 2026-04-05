@@ -98,7 +98,7 @@ virtualFolder:
           folders: []
         - name: Demo
           files:
-            - path: ../3rdLib/emWin/emWinTask/Source/APPW_MainTask.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/APPW_MainTask.c
           folders: []
         - name: Lib
           files:
@@ -110,6 +110,7 @@ virtualFolder:
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/Application.h
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/ID_SCREEN_00_Slots.c
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/ID_SCREEN_01_Slots.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode/ID_SCREEN_02_Slots.c
           folders: []
         - name: Generated
           files:
@@ -120,6 +121,7 @@ virtualFolder:
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_01.h
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/Resource.c
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/Resource.h
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_02.c
           folders: []
         - name: Resource
           files:
@@ -132,6 +134,30 @@ virtualFolder:
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Image/music.c
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Resource/Image/exit.c
           folders: []
+        - name: DSO_Demo
+          files:
+            - path: ../3rdLib/emWin/emWinTask/DSO_AdcDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_AmplitudeDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_DacDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_DrawBakFrame.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_DrawCursorH.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_DrawCursorV.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_FirFilter_Step1KHz.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_FirFilter_Step10KHz.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_FirFilter_Step100KHz.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_Init.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_MathDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_MeasureDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_MultiMeter.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_ScaleDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_SettingDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_Status1Dlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_Status2Dlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_SysInfoDlg.c
+            - path: ../3rdLib/emWin/emWinTask/DSO_WaveProcess.c
+            - path: ../3rdLib/emWin/emWinTask/DSOV_MainTask.c
+            - path: ../3rdLib/emWin/emWinTask/MainTask.c
+          folders: []
     - name: BSP
       files: []
       folders:
@@ -143,6 +169,10 @@ virtualFolder:
             - path: ../BSP/BSP_SRAM/bsp_sram_port.h
             - path: ../BSP/BSP_SRAM/bsp_sram_test.c
             - path: ../BSP/BSP_SRAM/bsp_sram_test.h
+            - path: ../BSP/BSP_SRAM/malloc.c
+            - path: ../BSP/BSP_SRAM/malloc.h
+            - path: ../BSP/BSP_SRAM/XMRAM.h
+            - path: ../BSP/BSP_SRAM/XMRAM.lib
           folders: []
         - name: LCD
           files:
@@ -346,8 +376,6 @@ targets:
         - ../3rdLib/emWin/GUI_X
         - ../3rdLib/emWin/emWinDemo
         - ../3rdLib/emWin/include
-        - ../3rdLib/emWin/emWinTask
-        - ../3rdLib/emWin/emWinTask/Source
         - ../BSP/BSP_LCD
         - ../BSP/BSP_LCDTouch
         - ../BSP/BSP_SRAM
@@ -373,10 +401,15 @@ targets:
         - ../BSP/BSP_CAN
         - ../3rdLib/CANopen/CANopenNode
         - ../3rdLib/CANopen/CANopenNode_STM32
+        - ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode
+        - ../../../emWin_AppWizard_Proj/V636/gateway/Source
         - .cmsis/include
         - RTE/_stm32f407zgt6-gataway
       libList: []
     excludeList:
+      - <virtual_root>/emwin/DSO_Demo
+      - <virtual_root>/BSP/SRAM/malloc.c
+      - <virtual_root>/BSP/SRAM/XMRAM.lib
       - <virtual_root>/Middlewares/LwIP/slipif.c
     settings: {}
     toolchain: AC6

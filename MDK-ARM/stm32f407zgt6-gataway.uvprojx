@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
+            <RunUserProg2>1</RunUserProg2>
             <UserProg1Name>D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\keil-build-viewer.exe</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -340,7 +340,7 @@
               <MiscControls>-fno-short-wchar -fshort-enums</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,CO_CONFIG_SDO_CLI=3,CO_CONFIG_FIFO=1</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../3rdLib/emWin/Config;../3rdLib/emWin/GUI_X;../3rdLib/emWin/emWinDemo;../3rdLib/emWin/include;../3rdLib/emWin/emWinTask;../3rdLib/emWin/emWinTask/Source;../BSP/BSP_LCD;../BSP/BSP_LCDTouch;../BSP/BSP_SRAM;../BSP/BSP_Timer;../LWIP/App;../LWIP/Target;../Middlewares/Third_Party/LwIP/src/include;../Middlewares/Third_Party/LwIP/system;../Drivers/BSP/Components/lan8742;../Middlewares/Third_Party/LwIP/src/include/netif/ppp;../Middlewares/Third_Party/LwIP/src/include/lwip;../Middlewares/Third_Party/LwIP/src/include/lwip/apps;../Middlewares/Third_Party/LwIP/src/include/lwip/priv;../Middlewares/Third_Party/LwIP/src/include/lwip/prot;../Middlewares/Third_Party/LwIP/src/include/netif;../Middlewares/Third_Party/LwIP/src/include/compat/posix;../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa;../Middlewares/Third_Party/LwIP/src/include/compat/posix/net;../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys;../Middlewares/Third_Party/LwIP/src/include/compat/stdc;../Middlewares/Third_Party/LwIP/system/arch;../BSP/BSP_ETH;../BSP/BSP_CAN;../3rdLib/CANopen/CANopenNode;../3rdLib/CANopen/CANopenNode_STM32</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../3rdLib/emWin/Config;../3rdLib/emWin/GUI_X;../3rdLib/emWin/emWinDemo;../3rdLib/emWin/include;../BSP/BSP_LCD;../BSP/BSP_LCDTouch;../BSP/BSP_SRAM;../BSP/BSP_Timer;../LWIP/App;../LWIP/Target;../Middlewares/Third_Party/LwIP/src/include;../Middlewares/Third_Party/LwIP/system;../Drivers/BSP/Components/lan8742;../Middlewares/Third_Party/LwIP/src/include/netif/ppp;../Middlewares/Third_Party/LwIP/src/include/lwip;../Middlewares/Third_Party/LwIP/src/include/lwip/apps;../Middlewares/Third_Party/LwIP/src/include/lwip/priv;../Middlewares/Third_Party/LwIP/src/include/lwip/prot;../Middlewares/Third_Party/LwIP/src/include/netif;../Middlewares/Third_Party/LwIP/src/include/compat/posix;../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa;../Middlewares/Third_Party/LwIP/src/include/compat/posix/net;../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys;../Middlewares/Third_Party/LwIP/src/include/compat/stdc;../Middlewares/Third_Party/LwIP/system/arch;../BSP/BSP_ETH;../BSP/BSP_CAN;../3rdLib/CANopen/CANopenNode;../3rdLib/CANopen/CANopenNode_STM32;../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode;../../../emWin_AppWizard_Proj/V636/gateway/Source</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -923,7 +923,7 @@
             <File>
               <FileName>APPW_MainTask.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\3rdLib\emWin\emWinTask\Source\APPW_MainTask.c</FilePath>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\APPW_MainTask.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -959,6 +959,11 @@
               <FileName>ID_SCREEN_01_Slots.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_01_Slots.c</FilePath>
+            </File>
+            <File>
+              <FileName>ID_SCREEN_02_Slots.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_02_Slots.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -999,6 +1004,11 @@
               <FileName>Resource.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\Resource.h</FilePath>
+            </File>
+            <File>
+              <FileName>ID_SCREEN_02.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_02.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1048,6 +1058,185 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>emwin/DSO_Demo</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>0</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>DSO_AdcDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_AdcDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_AmplitudeDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_AmplitudeDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_DacDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_DacDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_DrawBakFrame.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_DrawBakFrame.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_DrawCursorH.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_DrawCursorH.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_DrawCursorV.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_DrawCursorV.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_FirFilter_Step1KHz.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_FirFilter_Step1KHz.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_FirFilter_Step10KHz.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_FirFilter_Step10KHz.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_FirFilter_Step100KHz.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_FirFilter_Step100KHz.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_Init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_Init.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_MathDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_MathDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_MeasureDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_MeasureDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_MultiMeter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_MultiMeter.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_ScaleDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_ScaleDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_SettingDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_SettingDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_Status1Dlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_Status1Dlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_Status2Dlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_Status2Dlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_SysInfoDlg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_SysInfoDlg.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSO_WaveProcess.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSO_WaveProcess.c</FilePath>
+            </File>
+            <File>
+              <FileName>DSOV_MainTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\DSOV_MainTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>MainTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3rdLib\emWin\emWinTask\MainTask.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>BSP/SRAM</GroupName>
           <Files>
             <File>
@@ -1079,6 +1268,96 @@
               <FileName>bsp_sram_test.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\BSP\BSP_SRAM\bsp_sram_test.h</FilePath>
+            </File>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\BSP_SRAM\malloc.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>malloc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\BSP_SRAM\malloc.h</FilePath>
+            </File>
+            <File>
+              <FileName>XMRAM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\BSP_SRAM\XMRAM.h</FilePath>
+            </File>
+            <File>
+              <FileName>XMRAM.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\BSP\BSP_SRAM\XMRAM.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>

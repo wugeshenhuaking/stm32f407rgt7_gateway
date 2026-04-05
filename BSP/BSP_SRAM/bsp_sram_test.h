@@ -14,6 +14,10 @@
 *       Test2  Block        256 字节块读写，验证连续访问正确性
 *       Test3  AllZeroOne   全 0x00 / 全 0xFF 写入，检测数据线短路
 *       Test4  Boundary     首末地址边界读写
+*       Test5  Word16Range  连续 16 位访问测试
+*       Test6  Word32Range  连续 32 位访问测试
+*       Test7  ByteLane     低/高字节选通信号测试
+*       Test8  MixedWidth   8/16/32 位混合访问一致性测试
 *
 *   使用方法 :
 *       MX_FSMC_Init();        // CubeMX 生成，main() 中已调用
@@ -28,6 +32,11 @@ uint8_t SRAM_Test_SingleByte(void);
 uint8_t SRAM_Test_Block(void);
 uint8_t SRAM_Test_AllZeroAllOne(void);
 uint8_t SRAM_Test_Boundary(void);
+uint8_t SRAM_Test_Word16Range(uint32_t addr, uint32_t len);
+uint8_t SRAM_Test_Word32Range(uint32_t addr, uint32_t len);
+uint8_t SRAM_Test_ByteLaneRange(uint32_t addr, uint32_t len);
+uint8_t SRAM_Test_MixedWidthAccess(uint32_t addr, uint32_t len);
+void    SRAM_Test_EmWinPoolRange(uint32_t len);
 void    SRAM_RunAllTests(void);
 
 #endif /* __BSP_SRAM_TEST_H */

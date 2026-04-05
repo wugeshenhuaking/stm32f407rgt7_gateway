@@ -20,25 +20,24 @@
 
 /*
  * Touch/emWin debug switch
- *   1 = print touch bridge logs on USART
- *   0 = silent mode for formal UI running
- *
- * Typical usage:
- *   debug build   -> keep 1
- *   formal build  -> change to 0
+ *   1 = print simple touch logs on USART
+ *   0 = silent mode
  */
 #ifndef BSP_TOUCH_EMWIN_DEBUG
   #define BSP_TOUCH_EMWIN_DEBUG 1
 #endif
 
+/* GT9xxx typical report rate is around 50~100Hz, keep polling aligned to that */
+#ifndef BSP_TOUCH_SCAN_PERIOD_MS
+  #define BSP_TOUCH_SCAN_PERIOD_MS 20U
+#endif
+
 /*
- * Limit MOVE log frequency in debug mode to avoid flooding the UART.
- * Example:
- *   1 -> print every MOVE
- *   4 -> print one log for every 4 MOVE events
+ * Software timer slot used by the non-interrupt touch task.
+ * Override this macro if timer id 0 is already occupied elsewhere.
  */
-#ifndef BSP_TOUCH_EMWIN_MOVE_LOG_DIV
-  #define BSP_TOUCH_EMWIN_MOVE_LOG_DIV 4U
+#ifndef BSP_TOUCH_TIMER_ID
+  #define BSP_TOUCH_TIMER_ID 0U
 #endif
 
 /* Maximum concurrent touch points reported by the controller */
@@ -97,23 +96,21 @@ uint8_t BSP_Touch_GetPoint(uint8_t index, uint16_t *x, uint16_t *y);
 uint8_t BSP_Touch_IsPressed(void);
 uint8_t BSP_Touch_GetTouchNum(void);
 
-/*
- * Called periodically from the timer tick. This function scans the touch
- * controller and caches the latest DOWN / MOVE / RELEASE event for emWin.
- */
+/* Legacy compatibility hooks kept only for source compatibility */
 void BSP_Touch_EmWinExec(void);
-
-/*
- * Called from the 10 ms timer hook. This only schedules one touch scan
- * request; the actual GT9xxx I2C transaction is executed later in the
- * GUI task context by BSP_Touch_EmWinExec().
- */
 void BSP_Touch_EmWinSchedule(void);
+void BSP_Touch_EmWinFlush(void);
 
 /*
- * Called from the GUI main loop. This function flushes cached touch events
- * to emWin and can safely print debug traces via printf / USART1.
+ * Non-interrupt touch task entry.
+ * Call BSP_Touch_TaskInit() once after BSP_Touch_Init(), then call
+ * BSP_Touch_Task20ms() repeatedly from main loop / GUI idle / other task.
  */
-void BSP_Touch_EmWinFlush(void);
+void BSP_Touch_TaskInit(void);
+void BSP_Touch_Task20ms(void);
+
+/* Compatibility alias, same behavior as BSP_Touch_Task20ms() */
+void PID_X_Exec(void);
+
 
 #endif /* __BSP_TOUCH_PORT_H */

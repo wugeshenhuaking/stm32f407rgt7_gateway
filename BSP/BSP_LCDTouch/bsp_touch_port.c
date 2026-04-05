@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 #include "bsp_touch_port.h"
+#include "bsp_timer.h"
 #include "GUI.h"
 
 #if BSP_TOUCH_EMWIN_DEBUG
@@ -21,8 +22,6 @@
 #else
   #define TOUCH_LOG(...)       do { } while (0)
 #endif
-
-#define BSP_TOUCH_RELEASE_FILTER_COUNT  3U
 
 typedef enum
 {
@@ -34,16 +33,12 @@ typedef enum
 static BSP_TouchStateTypeDef s_touch_state;
 static uint16_t              s_raw_x_debug = 0;
 static uint16_t              s_raw_y_debug = 0;
-
-static GUI_PID_STATE         s_pid_state;
-static uint8_t               s_pid_valid = 0;
+static GUI_PID_STATE         s_gui_pid_state;
 static uint8_t               s_touch_ready = 0;
-
-static GUI_PID_STATE         s_pid_pending_state;
-static TOUCH_EVENT_E         s_pid_pending_event = TOUCH_RELEASE;
-static uint8_t               s_pid_pending_valid = 0;
-static uint8_t               s_gui_ready_logged = 0;
-static volatile uint8_t      s_touch_exec_request = 0;
+static uint8_t               s_touch_down  = 0;
+static uint16_t              s_last_x      = 0;
+static uint16_t              s_last_y      = 0;
+static uint8_t               s_touch_task_timer_started = 0;
 
 static uint16_t scale_raw_x_to_gui_width(uint16_t raw_x)
 {
@@ -183,24 +178,21 @@ uint8_t BSP_Touch_Init(void)
 
     s_touch_state.touch_num      = 0;
     s_touch_state.is_pressed     = 0;
-    s_pid_state.x                = 0;
-    s_pid_state.y                = 0;
-    s_pid_state.Pressed          = 0;
-    s_pid_valid                  = 0;
+    s_gui_pid_state.x            = 0;
+    s_gui_pid_state.y            = 0;
+    s_gui_pid_state.Pressed      = 0;
+    s_gui_pid_state.Layer        = 0;
     s_touch_ready                = 0;
-    s_pid_pending_state.x        = 0;
-    s_pid_pending_state.y        = 0;
-    s_pid_pending_state.Pressed  = 0;
-    s_pid_pending_state.Layer    = 0;
-    s_pid_pending_event          = TOUCH_RELEASE;
-    s_pid_pending_valid          = 0;
-    s_gui_ready_logged           = 0;
-    s_touch_exec_request         = 0;
+    s_touch_down                 = 0;
+    s_last_x                     = 0;
+    s_last_y                     = 0;
+    s_touch_task_timer_started   = 0;
 
     ret = GT9XXX_Init();
     if (ret == 0)
     {
         s_touch_ready = 1;
+        BSP_Touch_TaskInit();
         TOUCH_LOG("init ok, dir=%s gui=%ux%u raw=%ux%u",
 #if (NT35510_DIRECTION == NT35510_DIR_PORTRAIT)
                   "portrait",
@@ -316,151 +308,138 @@ uint8_t BSP_Touch_GetTouchNum(void)
     return s_touch_state.touch_num;
 }
 
-static void BSP_Touch_QueuePidEvent(TOUCH_EVENT_E event, uint16_t x, uint16_t y)
+static void TOUCH_PutKey(TOUCH_EVENT_E event, uint16_t x, uint16_t y)
 {
-    GUI_PID_STATE state;
-
-    state = s_pid_state;
+    if (GUI_IsInitialized() == 0U)
+    {
+        return;
+    }
 
     switch (event)
     {
     case TOUCH_DOWN:
     case TOUCH_MOVE:
-        state.x       = x;
-        state.y       = y;
-        state.Pressed = 1;
-        state.Layer   = 0;
+        s_gui_pid_state.x       = x;
+        s_gui_pid_state.y       = y;
+        s_gui_pid_state.Pressed = 1;
+        s_gui_pid_state.Layer   = 0;
+        GUI_TOUCH_StoreStateEx(&s_gui_pid_state);
+#if BSP_TOUCH_EMWIN_DEBUG
+        if (event == TOUCH_DOWN)
+        {
+            TOUCH_LOG("DOWN raw=(%u,%u) gui=(%u,%u)",
+                      (unsigned)s_raw_x_debug,
+                      (unsigned)s_raw_y_debug,
+                      (unsigned)x,
+                      (unsigned)y);
+        }
+#endif
         break;
 
     case TOUCH_RELEASE:
-        state.Pressed = 0;
-        state.Layer   = 0;
+        s_gui_pid_state.Pressed = 0;
+        s_gui_pid_state.Layer   = 0;
+        GUI_TOUCH_StoreStateEx(&s_gui_pid_state);
+#if BSP_TOUCH_EMWIN_DEBUG
+        TOUCH_LOG("RELEASE");
+#endif
         break;
 
     default:
         return;
     }
+}
 
-    s_pid_state         = state;
-    s_pid_valid         = 1;
-    s_pid_pending_state = state;
-    s_pid_pending_event = event;
-    s_pid_pending_valid = 1;
+static void TOUCH_CapScan(void)
+{
+    uint16_t x = 0;
+    uint16_t y = 0;
+    uint8_t  touched;
+
+    if (s_touch_ready == 0U)
+    {
+        return;
+    }
+
+    BSP_Touch_Scan();
+    touched = BSP_Touch_GetPoint(0, &x, &y);
+
+    if (touched != 0U)
+    {
+        if (s_touch_down == 0U)
+        {
+            s_touch_down = 1U;
+            s_last_x = x;
+            s_last_y = y;
+            TOUCH_PutKey(TOUCH_DOWN, x, y);
+        }
+        else
+        {
+            s_last_x = x;
+            s_last_y = y;
+            TOUCH_PutKey(TOUCH_MOVE, x, y);
+        }
+    }
+    else if (s_touch_down != 0U)
+    {
+        s_touch_down = 0U;
+        TOUCH_PutKey(TOUCH_RELEASE, s_last_x, s_last_y);
+    }
 }
 
 void BSP_Touch_EmWinExec(void)
 {
-    static uint8_t s_release_miss_count = 0;
-    uint16_t x = 0;
-    uint16_t y = 0;
-    uint8_t  pressed;
-
-    if (s_touch_ready == 0)
-    {
-        return;
-    }
-
-    if (s_touch_exec_request == 0U)
-    {
-        return;
-    }
-    s_touch_exec_request = 0U;
-
-    BSP_Touch_Scan();
-    pressed = BSP_Touch_GetPoint(0, &x, &y);
-
-    if (pressed)
-    {
-        s_release_miss_count = 0;
-
-        if ((s_pid_valid == 0) || (s_pid_state.Pressed == 0))
-        {
-            BSP_Touch_QueuePidEvent(TOUCH_DOWN, x, y);
-        }
-        else if ((s_pid_state.x != x) || (s_pid_state.y != y))
-        {
-            BSP_Touch_QueuePidEvent(TOUCH_MOVE, x, y);
-        }
-    }
-    else if ((s_pid_valid != 0) && (s_pid_state.Pressed != 0))
-    {
-        if (++s_release_miss_count >= BSP_TOUCH_RELEASE_FILTER_COUNT)
-        {
-            s_release_miss_count = 0;
-            BSP_Touch_QueuePidEvent(TOUCH_RELEASE, 0, 0);
-        }
-    }
-    else
-    {
-        s_release_miss_count = 0;
-    }
+    /* Legacy compatibility hook, no longer used */
 }
 
 void BSP_Touch_EmWinSchedule(void)
+{
+    /* Legacy compatibility hook, no longer used */
+}
+
+void BSP_Touch_EmWinFlush(void)
+{
+    /* Legacy compatibility hook, no longer used */
+}
+
+void BSP_Touch_TaskInit(void)
 {
     if (s_touch_ready == 0U)
     {
         return;
     }
-    s_touch_exec_request = 1U;
+
+    bsp_StartAutoTimer(BSP_TOUCH_TIMER_ID, BSP_TOUCH_SCAN_PERIOD_MS);
+    s_touch_task_timer_started = 1U;
 }
 
-void BSP_Touch_EmWinFlush(void)
+void BSP_Touch_Task20ms(void)
 {
-    static uint8_t move_log_div = 0;
-
-    if (GUI_IsInitialized() == 0)
+    if (s_touch_ready == 0U)
     {
         return;
     }
 
-    if (s_gui_ready_logged == 0)
+    if (s_touch_task_timer_started == 0U)
     {
-        TOUCH_LOG("emWin PID bridge active");
-        s_gui_ready_logged = 1;
-    }
-
-    if (s_pid_pending_valid == 0)
-    {
-        return;
-    }
-
-    GUI_PID_StoreState(&s_pid_pending_state);
-
-    switch (s_pid_pending_event)
-    {
-    case TOUCH_DOWN:
-        TOUCH_LOG("DOWN raw=(%u,%u) gui=(%u,%u) num=%u",
-                  (unsigned)s_raw_x_debug,
-                  (unsigned)s_raw_y_debug,
-                  (unsigned)s_pid_pending_state.x,
-                  (unsigned)s_pid_pending_state.y,
-                  (unsigned)s_touch_state.touch_num);
-        move_log_div = 0;
-        break;
-
-    case TOUCH_MOVE:
-        if (++move_log_div >= BSP_TOUCH_EMWIN_MOVE_LOG_DIV)
+        BSP_Touch_TaskInit();
+        if (s_touch_task_timer_started == 0U)
         {
-            move_log_div = 0;
-            TOUCH_LOG("MOVE raw=(%u,%u) gui=(%u,%u)",
-                      (unsigned)s_raw_x_debug,
-                      (unsigned)s_raw_y_debug,
-                      (unsigned)s_pid_pending_state.x,
-                      (unsigned)s_pid_pending_state.y);
+            return;
         }
-        break;
-
-    case TOUCH_RELEASE:
-        TOUCH_LOG("RELEASE");
-        move_log_div = 0;
-        break;
-
-    default:
-        break;
     }
 
-    s_pid_pending_valid = 0;
+    if (bsp_CheckTimer(BSP_TOUCH_TIMER_ID) == 0U)
+    {
+        return;
+    }
+
+    TOUCH_CapScan();
+}
+
+void PID_X_Exec(void)
+{
+    BSP_Touch_Task20ms();
 }
 
 /*
@@ -487,18 +466,56 @@ void GUI_TOUCH_X_Disable(void)
 
 int GUI_TOUCH_X_MeasureX(void)
 {
-    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
-    {
-        return (int)s_raw_x_debug;
-    }
-    return -1;
+//    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
+//    {
+//        return (int)s_raw_x_debug;
+//    }
+    return 0;
 }
 
 int GUI_TOUCH_X_MeasureY(void)
 {
-    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
-    {
-        return (int)s_raw_y_debug;
-    }
-    return -1;
+//    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
+//    {
+//        return (int)s_raw_y_debug;
+//    }
+    return 0;
 }
+
+
+/*********************************************************************
+*
+*       PID_X_Exec
+*/
+//static void PID_X_Exec(void) {
+//  static TOUCH_STATE   TouchState;
+//  static GUI_PID_STATE StatePID;
+//  static int           IsTouched;
+
+//  if (_IsInitialized) {
+//    StatePID.Layer = _LayerIndex;
+//    _GetTouchState(&TouchState);
+
+
+//    if (TouchState.NumTouch > 0) {
+//      IsTouched        = 1;
+//      StatePID.Pressed = 1;
+//      StatePID.x       = TouchState.x;
+//      StatePID.y       = TouchState.y;
+//      //
+//      // Pass information to emWin
+//      //
+//      GUI_TOUCH_StoreStateEx(&StatePID);
+//    } else {
+//      if (IsTouched == 1) {
+//        //
+//        // Since StatePID is declared as static we use the x/y coordinate
+//        // from the down event to create an up event.
+//        //
+//        IsTouched        = 0;
+//        StatePID.Pressed = 0;
+//        GUI_TOUCH_StoreStateEx(&StatePID);
+//      }
+//    }
+//  }
+//}
