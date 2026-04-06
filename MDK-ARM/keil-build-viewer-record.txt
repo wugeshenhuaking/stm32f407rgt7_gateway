@@ -6,8 +6,8 @@
        168          0          0          1          1          0   appwconf.o
          0          0      29435          0          0          0   bk.o
        278          0          0          4          0          0   bsp_lcd_port.o
-       452          0          0          0        106          0   bsp_timer.o
-      1522          0        147          0         55          0   bsp_touch_port.o
+       566          0          0          0        106          0   bsp_timer.o
+      1412          0          0          0         55          0   bsp_touch_port.o
        244          0          0          0         40          0   can.o
       2250          0          0          0          0          0   canopen.o
        786          0        439          0         17          0   co_app_stm32.o
@@ -29,19 +29,19 @@
        466          0        114          0          0          0   ethernet.o
       1654          0         94         20      19408          0   ethernetif.o
          0          0       3089          0          0          0   exit.o
-       552          0          0          0        164          0   fsmc.o
+       534          0          0          0        164          0   fsmc.o
        388          0          0          0          0          0   gpio.o
       1912          0         20          1          0          0   gt9xxx.o
         52          0          0          0          0          0   gui_x.o
-        34          0          0          0          4          0   guiconf.o
+       180          0        138          0      51200          0   guiconf.o
       3548          0         52          0          0          0   guidrv_template.o
        940          0        200          0          0          0   icmp.o
          0          0       2680        556          0          0   id_screen_00.o
-        36          0          0          0          0          0   id_screen_00_slots.o
+       142          0         54          0          0          0   id_screen_00_slots.o
          0          0        580        348          0          0   id_screen_01.o
-      1300          0         13          0          4          0   id_screen_01_slots.o
+      5722          0        284         12       2412          0   id_screen_01_slots.o
          0          0        820        556          0          0   id_screen_02.o
-        22          0          0          0          0          0   id_screen_02_slots.o
+       114          0          7          0          0          0   id_screen_02_slots.o
         44          0          0          0          0          0   init.o
          0          0          0          0         24          0   ip.o
       1594          0        109          0          2          0   ip4.o
@@ -51,7 +51,7 @@
       5122          0          0          0          0          0   lcd_nt35510.o
        176          0          0          0          0          0   lcdconf.o
        356          0          0          0         76          0   lwip.o
-       358          0          0          0         24          0   main.o
+       390          0          0          0         24          0   main.o
       2580          0        538          0       1631          0   mem.o
        692          0        333          0      12003          0   memp.o
          0          0      15569          0          0          0   music.o
@@ -73,7 +73,7 @@
        576          0          0          0          0          0   stm32f4xx_hal_tim.o
        290          0          0          0          0          0   stm32f4xx_hal_tim_ex.o
       2868          0          0          0          0          0   stm32f4xx_hal_uart.o
-       360          0        158          0          1          0   stm32f4xx_it.o
+       382          0        170          0          1          0   stm32f4xx_it.o
        360          0          0          0          0          0   stm32f4xx_ll_fsmc.o
         18          0         24          4          0          0   system_stm32f4xx.o
       7362          0       1897          6         23          0   tcp.o
@@ -83,17 +83,17 @@
        684          0        209          0         12          0   timeouts.o
       1088          0        789          2          4          0   udp.o
        418          0          0          0        144          0   usart.o
-    195428          0      84573        644      12330          0   libGUI_v7m_OS0.a
+    195992          0      94373        644      12334          0   libGUI_v7m_OS0.a
 Object Totals
 
 Memory Map of the image
 
 	Load Region LR_IROM1 
 
-		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000D7880, Max: 0x00100000, END)
+		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000DB548, Max: 0x00100000, END)
 
-		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x0000E6B0, Max: 0x0001C000, END)
+		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x00019C20, Max: 0x0001C000, END)
 
-		Execution Region RW_IRAM2 (Exec base: 0x2001C000, Size: 0x00000000, Max: 0x00004000, END)
+		Execution Region RW_IRAM2 (Exec base: 0x2001C000, Size: 0x00001C10, Max: 0x00004000, END)
 
 Image component sizes

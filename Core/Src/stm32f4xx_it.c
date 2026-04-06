@@ -80,7 +80,7 @@ static void Fault_Dump(const char *name)
   snprintf(buf, sizeof(buf),
            "\r\n[FAULT] %s\r\n"
            "HFSR=0x%08lX CFSR=0x%08lX DFSR=0x%08lX AFSR=0x%08lX\r\n"
-           "MMFAR=0x%08lX BFAR=0x%08lX SHCSR=0x%08lX\r\n",
+           "MMFAR=0x%08lX BFAR=0x%08lX SHCSR=0x%08lX CCR=0x%08lX\r\n",
            (name != NULL) ? name : "Unknown",
            (unsigned long)SCB->HFSR,
            (unsigned long)SCB->CFSR,
@@ -88,7 +88,8 @@ static void Fault_Dump(const char *name)
            (unsigned long)SCB->AFSR,
            (unsigned long)SCB->MMFAR,
            (unsigned long)SCB->BFAR,
-           (unsigned long)SCB->SHCSR);
+           (unsigned long)SCB->SHCSR,
+           (unsigned long)SCB->CCR);
   Fault_Print(buf);
 }
 

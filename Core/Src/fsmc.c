@@ -62,16 +62,16 @@ void MX_FSMC_Init(void)
   hsram3.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
   hsram3.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
-  Timing.AddressSetupTime = 2;
+  Timing.AddressSetupTime = 0;
   Timing.AddressHoldTime = 15;
-  Timing.DataSetupTime = 8;
+  Timing.DataSetupTime = 6;
   Timing.BusTurnAroundDuration = 0;
   Timing.CLKDivision = 16;
   Timing.DataLatency = 17;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
 
-  if (HAL_SRAM_Init(&hsram3, &Timing, NULL) != HAL_OK)
+  if (HAL_SRAM_Init(&hsram3, &Timing, &Timing) != HAL_OK)
   {
     Error_Handler( );
   }
@@ -99,7 +99,7 @@ void MX_FSMC_Init(void)
   Timing.AddressSetupTime = 15;
   Timing.AddressHoldTime = 15;
   Timing.DataSetupTime = 60;
-  Timing.BusTurnAroundDuration = 15;
+  Timing.BusTurnAroundDuration = 0;
   Timing.CLKDivision = 16;
   Timing.DataLatency = 17;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
@@ -107,7 +107,7 @@ void MX_FSMC_Init(void)
   ExtTiming.AddressSetupTime = 9;
   ExtTiming.AddressHoldTime = 15;
   ExtTiming.DataSetupTime = 9;
-  ExtTiming.BusTurnAroundDuration = 15;
+  ExtTiming.BusTurnAroundDuration = 9;
   ExtTiming.CLKDivision = 16;
   ExtTiming.DataLatency = 17;
   ExtTiming.AccessMode = FSMC_ACCESS_MODE_A;
@@ -118,6 +118,81 @@ void MX_FSMC_Init(void)
   }
 
   /* USER CODE BEGIN FSMC_Init 2 */
+  
+  
+//  hsram3.Instance = FSMC_NORSRAM_DEVICE;
+//  hsram3.Extended = FSMC_NORSRAM_EXTENDED_DEVICE;
+//  /* hsram3.Init */
+//  hsram3.Init.NSBank = FSMC_NORSRAM_BANK3;
+//  hsram3.Init.DataAddressMux = FSMC_DATA_ADDRESS_MUX_DISABLE;
+//  hsram3.Init.MemoryType = FSMC_MEMORY_TYPE_SRAM;
+//  hsram3.Init.MemoryDataWidth = FSMC_NORSRAM_MEM_BUS_WIDTH_16;
+//  hsram3.Init.BurstAccessMode = FSMC_BURST_ACCESS_MODE_DISABLE;
+//  hsram3.Init.WaitSignalPolarity = FSMC_WAIT_SIGNAL_POLARITY_LOW;
+//  hsram3.Init.WrapMode = FSMC_WRAP_MODE_DISABLE;
+//  hsram3.Init.WaitSignalActive = FSMC_WAIT_TIMING_BEFORE_WS;
+//  hsram3.Init.WriteOperation = FSMC_WRITE_OPERATION_ENABLE;
+//  hsram3.Init.WaitSignal = FSMC_WAIT_SIGNAL_DISABLE;
+//  hsram3.Init.ExtendedMode = FSMC_EXTENDED_MODE_DISABLE;
+//  hsram3.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
+//  hsram3.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
+//  hsram3.Init.PageSize = FSMC_PAGE_SIZE_NONE;
+//  /* Timing */
+//  Timing.AddressSetupTime = 0;
+//  Timing.AddressHoldTime = 0;
+//  Timing.DataSetupTime = 6;
+//  Timing.BusTurnAroundDuration = 0;
+////  Timing.CLKDivision = 16;
+////  Timing.DataLatency = 17;
+//  Timing.AccessMode = FSMC_ACCESS_MODE_A;
+//  /* ExtTiming */
+
+//  if (HAL_SRAM_Init(&hsram3, &Timing, &Timing) != HAL_OK)
+//  {
+//    Error_Handler( );
+//  }
+
+//  /** Perform the SRAM4 memory initialization sequence
+//  */
+//  hsram4.Instance = FSMC_NORSRAM_DEVICE;
+//  hsram4.Extended = FSMC_NORSRAM_EXTENDED_DEVICE;
+//  /* hsram4.Init */
+//  hsram4.Init.NSBank = FSMC_NORSRAM_BANK4;
+//  hsram4.Init.DataAddressMux = FSMC_DATA_ADDRESS_MUX_DISABLE;
+//  hsram4.Init.MemoryType = FSMC_MEMORY_TYPE_SRAM;
+//  hsram4.Init.MemoryDataWidth = FSMC_NORSRAM_MEM_BUS_WIDTH_16;
+//  hsram4.Init.BurstAccessMode = FSMC_BURST_ACCESS_MODE_DISABLE;
+//  hsram4.Init.WaitSignalPolarity = FSMC_WAIT_SIGNAL_POLARITY_LOW;
+//  hsram4.Init.WrapMode = FSMC_WRAP_MODE_DISABLE;
+//  hsram4.Init.WaitSignalActive = FSMC_WAIT_TIMING_BEFORE_WS;
+//  hsram4.Init.WriteOperation = FSMC_WRITE_OPERATION_ENABLE;
+//  hsram4.Init.WaitSignal = FSMC_WAIT_SIGNAL_DISABLE;
+//  hsram4.Init.ExtendedMode = FSMC_EXTENDED_MODE_ENABLE;
+//  hsram4.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
+//  hsram4.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
+//  hsram4.Init.PageSize = FSMC_PAGE_SIZE_NONE;
+//  /* Timing */
+//  Timing.AddressSetupTime = 15;
+//  Timing.AddressHoldTime = 0;
+//  Timing.DataSetupTime = 60;
+//  Timing.BusTurnAroundDuration = 0;
+////  Timing.CLKDivision = 16;
+////  Timing.DataLatency = 17;
+//  Timing.AccessMode = FSMC_ACCESS_MODE_A;
+//  /* ExtTiming */
+//  ExtTiming.AddressSetupTime = 9;
+//  ExtTiming.AddressHoldTime = 0;
+//  ExtTiming.DataSetupTime = 9;
+////  ExtTiming.BusTurnAroundDuration = 9;
+////  ExtTiming.CLKDivision = 16;
+////  ExtTiming.DataLatency = 17;
+//  ExtTiming.AccessMode = FSMC_ACCESS_MODE_A;
+
+//  if (HAL_SRAM_Init(&hsram4, &Timing, &ExtTiming) != HAL_OK)
+//  {
+//    Error_Handler( );
+//  }
+    HAL_Delay(50);
 
   /* USER CODE END FSMC_Init 2 */
 }
@@ -182,21 +257,21 @@ static void HAL_FSMC_MspInit(void){
   */
   /* GPIO_InitStruct */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_12|GPIO_PIN_13
+                          |GPIO_PIN_4|GPIO_PIN_5|LCD_RS_Pin|GPIO_PIN_13
                           |GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF12_FSMC;
 
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
   /* GPIO_InitStruct */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_10|LCD_CS_Pin;
+                          |GPIO_PIN_4|GPIO_PIN_5|SRAM_CS_Pin|LCD_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF12_FSMC;
 
   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
@@ -206,8 +281,8 @@ static void HAL_FSMC_MspInit(void){
                           |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14
                           |GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF12_FSMC;
 
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
@@ -217,8 +292,8 @@ static void HAL_FSMC_MspInit(void){
                           |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15
                           |GPIO_PIN_0|GPIO_PIN_1|LCD_RD_Pin|LCD_WR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF12_FSMC;
 
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
@@ -296,11 +371,11 @@ static void HAL_FSMC_MspDeInit(void){
   */
 
   HAL_GPIO_DeInit(GPIOF, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_12|GPIO_PIN_13
+                          |GPIO_PIN_4|GPIO_PIN_5|LCD_RS_Pin|GPIO_PIN_13
                           |GPIO_PIN_14|GPIO_PIN_15);
 
   HAL_GPIO_DeInit(GPIOG, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_10|LCD_CS_Pin);
+                          |GPIO_PIN_4|GPIO_PIN_5|SRAM_CS_Pin|LCD_CS_Pin);
 
   HAL_GPIO_DeInit(GPIOE, GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10
                           |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14

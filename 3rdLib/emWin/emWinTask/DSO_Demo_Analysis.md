@@ -991,3 +991,621 @@ API 是：
 - 不要把整个示波器问题误解成“堆几个标准控件”
 
 如果下一步继续做代码，我建议先从“在 `ID_SCREEN_01_Slots.c` 对应的 BOX 区域里，按 AppWizard 风格画出网格和单通道波形”开始，这是最稳的第一步。
+
+**能不能局部绘制**
+可以，完全可以，而且 DSO 原工程就是这么干的。
+
+你看 DSO 原工程在拖动参考位置的时候，不是整窗刷新，而是：
+
+- [MainTask.c:1256](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/) WM_InvalidateArea(&rRefPos);
+
+也就是只让“参考位置相关区域”重绘，不让整屏都重画。
+同样，拖动顶部浏览条的时候它只刷：
+
+- [MainTask.c:1289](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/) WM_InvalidateArea(&rTrigPos);
+
+所以答案是：
+
+- 能局部绘制
+- 你现在闪，是因为我这版还没把刷新区域细化
+
+## 18. **别人的 DSO 工程有没有开缓冲，怎么看**
+
+你可以按这几个层次去查。
+
+**1. 先看有没有开“窗口内存设备”**
+搜这个：
+
+- WM_SetCreateFlags(WM_CF_MEMDEV)
+
+在 DSO 原工程里有：
+
+- [MainTask.c:1405](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/)
+
+这表示窗口绘制会优先走 emWin 的窗口内存设备，能明显减轻闪烁。
+
+**2. 再看有没有开“多缓冲”**
+搜这个：
+
+- WM_MULTIBUF_Enable(1)
+
+在 DSO 的 MainTask.c 里，这个函数名字出现在注释说明里：
+
+- [MainTask.c:1417](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/)
+
+它注释里明确说了两件事：
+
+- WM_MULTIBUF_Enable(1) 是多缓冲
+- WM_SetCreateFlags(WM_CF_MEMDEV) 是窗口内存设备
+- 如果都支持，优先多缓冲
+
+注意这里你要分清：
+
+- 代码里“提到这个函数”不代表一定启用了
+- 要看它是不是实际被调用了
+- 还要看 LCDConf.c 是否真的支持多缓冲
+
+**3. 再看有没有开“自定义内存设备缓存”**
+搜：
+
+- GUI_MEMDEV_CreateFixed
+- GUI_MEMDEV_Select
+- GUI_MEMDEV_WriteAt
+
+DSO 原工程明确用了两块：
+
+- [MainTask.c:1437](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/)
+- [MainTask.c:1445](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/)
+
+它的意思是：
+
+- 静态网格背景先画进 memdev
+- 动态波形再画进另一个 memdev
+- 最后一次性贴到屏幕
+
+这也是它不容易闪的重要原因。
+
+**4. 最关键，再去看 LCDConf.c 是否真的支持多缓冲**
+你要搜这些关键词：
+
+- NUM_BUFFERS
+- LCD_X_SHOWBUFFER
+- LCD_DEVFUNC_COPYBUFFER
+- LCD_DEVFUNC_MULTIBUF
+- COPYBUFFER
+- SHOWBUFFER
+
+你当前工程的 [LCDConf.c](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/) 里，我看到的是：
+
+- 有 LCD_X_SHOWBUFFER 这个 case，但只是空壳返回 0
+- 没看到 NUM_BUFFERS
+- 没看到真正的多缓冲切换实现
+- 没看到帧缓冲数组或 buffer index 管理
+
+这基本说明你当前这个工程的 LCD 层，大概率**没有真正把硬件/驱动级多缓冲跑起来**。
+
+**你当前工程现在是什么状态**
+可以这样理解：
+
+**有的**
+
+- emWin 动态内存池，在 [GUIConf.c](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/TommyRIckWu/.vscode/extensions/openai.chatgpt-26.325.31654-win32-x64/webview/) 这一套
+- DSO 原工程里有 WM_CF_MEMDEV 和 GUI_MEMDEV 的使用范例
+- 你当前 AppWizard 页面已经有单独的波形触摸子窗口
+
+**没有真正用上的**
+
+- 你当前这个 AppWizard 页面还没有做局部失效刷新
+- 也没有给这个页面单独做波形 memdev
+- 从当前 LCDConf.c 看，也不像已经真正启用了硬件多缓冲
+
+**所以你现在看到闪烁的直接原因**
+不是“有没有缓冲”这么抽象，而是两个更直接的点：
+
+1. 我现在每次拖动都在 WM_InvalidateWindow(hParent)，导致整页重画。
+2. 整页重画这套自绘内容还没有挂到局部缓存上。
+
+**你去别人 DSO 工程里重点看什么**
+你去看时，按这个顺序查最省时间：
+
+1. 搜 WM_InvalidateArea
+   看它拖动时是局部刷新还是整窗刷新。
+2. 搜 WM_SetCreateFlags(WM_CF_MEMDEV)
+   看它有没有开窗口内存设备。
+3. 搜 GUI_MEMDEV_CreateFixed
+   看它有没有自己给波形区做缓存。
+4. 看 LCDConf.c
+   搜 LCD_X_SHOWBUFFER、NUM_BUFFERS、COPYBUFFER
+   确认是不是驱动层真的支持多缓冲。
+
+好问题！让我为您解释 EMWIN 中的**脏矩阵（Dirty Rectangle）**概念。
+
+## 19. 脏矩阵的定义
+
+**脏矩阵**是指屏幕上需要重新绘制的矩形区域。在 EMWIN 中：
+
+- 当窗口或控件的内容发生变化时，该区域被标记为"脏"（dirty）
+- EMWIN 只会重新绘制这些被标记为脏的区域，而不是整个屏幕
+- 这是一种优化技术，可以提高绘图效率
+
+**工作原理**
+
+Code
+
+```
+未修改区域 → 无需重绘
+已修改区域 → 标记为脏 → 需要重绘
+未修改区域 → 无需重绘
+```
+
+非常好的深层次问题！让我为您详细解释 EMWIN 的脏矩阵机制和内存管理。
+
+### 内存布局
+
+您的理解基本正确。对于 800×480 的单缓冲，16 位色深：
+
+```
+显存/内存: 800 × 480 × 2 bytes = 768 KB
+```
+
+这块内存直接对应屏幕的每个像素。
+
+### 脏矩阵的标记机制
+
+EMWIN **确实隐藏了底层实现**，但原理如下：
+
+```c
+// EMWIN 内部大概这样维护脏矩阵
+typedef struct {
+    int x0, y0;      // 脏矩形的左上角
+    int x1, y1;      // 脏矩形的右下角
+} GUI_RECT;
+
+// 全局脏矩形列表（EMWIN 内部维护）
+static GUI_RECT _aDirtyRects[MAX_DIRTY_RECTS];
+static int _NumDirtyRects = 0;
+```
+
+### 标记过程
+
+当您调用 `GUI_InvalidateRect()` 时：
+
+```c
+void GUI_InvalidateRect(GUI_RECT *pRect) {
+    // 1. 接收需要重绘的矩形
+    // 2. 添加到脏矩形列表中
+    _aDirtyRects[_NumDirtyRects++] = *pRect;
+    
+    // 3. 可能进行矩形合并优化（避免矩形过多）
+    _MergeOverlappingRects();
+}
+```
+
+### 重绘过程
+
+在 `GUI_Exec()` 或事件循环中：
+
+```c
+void GUI_Exec(void) {
+    // 遍历所有脏矩形
+    for(int i = 0; i < _NumDirtyRects; i++) {
+        GUI_RECT *pDirtyRect = &_aDirtyRects[i];
+        
+        // 只重绘这个矩形区域内的窗口
+        _RedrawWindowsInRect(pDirtyRect);
+        
+        // 只清除这个矩形区域内的显存
+        // 实际上是逐行写入像素数据
+        // 对于 (x0,y0) 到 (x1,y1) 的矩形：
+        for(int y = pDirtyRect->y0; y <= pDirtyRect->y1; y++) {
+            // 计算显存地址
+            uint16_t *pPixel = (uint16_t *)pFrameBuffer 
+                              + y * 800 + pDirtyRect->x0;
+            
+            // 写入宽度 = x1 - x0 + 1 个像素
+            memcpy(pPixel, pDrawBuffer, 
+                   (pDirtyRect->x1 - pDirtyRect->x0 + 1) * 2);
+        }
+    }
+    
+    // 清空脏矩形列表
+    _NumDirtyRects = 0;
+}
+```
+
+### 具体数据流示例
+
+假设您的界面是 800×480，单缓冲，16 位色深：
+
+```
+屏幕坐标系:
+0,0 ─────────────────────── 800,0
+│                              │
+│  [脏矩形1]                   │
+│  (100,100)─(200,200)        │
+│                              │
+│        [脏矩形2]             │
+│        (300,50)─(400,100)   ���
+│                              │
+└─────────────────────── 800,480
+
+
+显存地址计算:
+像素 (x, y) 的地址 = pFrameBuffer + (y * 800 + x) * 2
+
+脏矩形1 (100,100)-(200,200):
+  起始像素: y=100, x=100 → offset = (100*800 + 100)*2 = 160200 bytes
+  宽度: 200-100+1 = 101 pixels = 202 bytes
+  高度: 200-100+1 = 101 lines
+  每次处理一行，共处理 101 行
+  总字节数: 101 * 202 = 20402 bytes
+
+脏矩形2 (300,50)-(400,100):
+  起始像素: y=50, x=300 → offset = (50*800 + 300)*2 = 80600 bytes
+  宽度: 400-300+1 = 101 pixels = 202 bytes
+  高度: 100-50+1 = 51 lines
+  总字节数: 51 * 202 = 10302 bytes
+```
+
+### EMWIN 的实现细节
+
+EMWIN 的脏矩阵机制大概如下（伪代码）：
+
+```c
+// 当您调用 GUI_InvalidateRect(pRect) 时
+{
+    // EMWIN 内部的脏矩形管理
+    extern GUI_RECT _ClipRect;
+    extern GUI_RECT _aInvalidRects[GUI_NUM_LAYERS][MAX_INVALID_RECTS];
+    extern int _NumInvalidRects[GUI_NUM_LAYERS];
+    
+    // 添加到脏矩形列表
+    _aInvalidRects[_CurrentLayer][_NumInvalidRects[_CurrentLayer]++] = *pRect;
+}
+
+// 在主循环中
+{
+    while(1) {
+        // 处理窗口消息
+        WM_Exec();
+        
+        // 检查是否有脏矩形
+        if(_NumInvalidRects[_CurrentLayer] > 0) {
+            // 对每个脏矩形，发送 WM_PAINT 消息给相关窗口
+            for(int i = 0; i < _NumInvalidRects[_CurrentLayer]; i++) {
+                WM_SendMessage(hWin, &PaintMsg);
+            }
+            
+            // 清空脏矩形列表
+            _NumInvalidRects[_CurrentLayer] = 0;
+        }
+    }
+}
+```
+
+### 关键点总结
+
+| 方面           | 说明                                             |
+| -------------- | ------------------------------------------------ |
+| **内存**       | 确实是 800×480×2 的显存 + EMWIN 内部的脏矩形列表 |
+| **脏矩形存储** | EMWIN 维护一个矩形数组，记录哪些区域需要重绘     |
+| **标记方式**   | 调用 `GUI_InvalidateRect()` 添加到脏矩形列表     |
+| **重绘触发**   | 在 `GUI_Exec()` 或事件循环中处理脏矩形           |
+| **优化**       | 只更新脏矩形区域的像素，避免全屏重绘             |
+| **隐藏实现**   | EMWIN 把这些细节封装起来，用户只需调用接口       |
+
+### 回到您最初的问题
+
+您在 BOX 上直接调用 EMWIN 库函数看不到显示，原因就是：
+- **该区域没有被标记为脏矩形**
+- EMWIN 的重绘循环不知道需要重画这个区域
+- 解决方案：调用 `GUI_InvalidateRect()` 显式标记需要重绘的区域
+
+非常深刻的理解！您这两个问题触及了示波器的核心工作原理。让我为您详细解释。
+
+## 问题1：示波器的采集和显示是否实时
+
+### 您的理解是完全正确的！
+
+```
+真实信号时间轴:
+|----采集点1----|----采集点2----|----采集点3----|----采集点4----|
+时间: t1        t2             t3             t4
+
+示波器显示时间轴（滞后）:
+                |----显示采集点1----|----显示采集点2----|
+                处理延迟            显示延迟
+
+现实: 信号已经采完，处理完，显示出来时，真实的信号早就过去了
+```
+
+### 采集流程（典型示波器）
+
+```c
+// 实时采集线程/中断处理
+void ADC_ISR(void) {
+    // 1. 采集点被记录到缓冲区（这时候信号已经发生了）
+    uint16_t adcValue = ADC_ReadValue();
+    
+    // 2. 保存到环形缓冲区
+    circularBuffer[writeIndex++] = adcValue;
+    if(writeIndex >= BUFFER_SIZE) writeIndex = 0;
+    
+    // 这时候信号已经过去了！
+    // 中断处理完毕，返回
+}
+
+// 显示线程（CPU 处理的过程）
+void Display_Thread(void) {
+    while(1) {
+        // 1. 从缓冲区读取已采集的数据
+        for(int i = 0; i < DISPLAY_POINTS; i++) {
+            displayBuffer[i] = circularBuffer[readIndex++];
+        }
+        
+        // 2. 处理数据（这会花时间）
+        ProcessData(displayBuffer);
+        
+        // 3. 绘制波形（这也会花时间）
+        DrawWaveform(displayBuffer);
+        
+        // 4. 更新屏幕（这还要花时间）
+        GUI_Invalidate();
+        
+        // 全部完成后，屏幕才显示这些已经采集好很久的数据
+    }
+}
+```
+
+### 实际的时间延迟
+
+```
+对于一个典型的数字示波器（采样率 100 kHz，屏幕 800 像素）:
+
+采集延迟:
+  从模拟信号到 ADC 转换: 微秒级 (ns ~ μs)
+  信号已过去时间: 几微秒
+
+处理延迟（这是主要的）:
+  采集 800 个点: 800 / 100kHz = 8 ms
+  数据处理: 1-5 ms
+  GPU/屏幕刷新: 16-33 ms (60Hz 刷新率)
+  总延迟: 25-50 ms
+  
+最终结果: 屏幕上显示的波形是 25-50 ms 之前发生的信号！
+
+对于高速示波器（采样率 GHz 级）:
+  延迟会更大，因为数据处理需要更长时间
+```
+
+### 您说的"像是实时"的原因
+
+```
+为什么看起来像实时?
+
+1. 人眼刷新率限制
+   └─ 人眼对 60Hz 以上的刷新率无法分辨
+   
+2. 信号本身是周期性的
+   └─ 示波器显示的是一个完整周期（或多个周期）
+   └─ 即使数据滞后 50ms，显示的波形仍然是正确的形状
+   
+3. 连续采集和显示
+   ┌────────────────┬────────────────┬────────────────┐
+   │ 采集周期1      │ 采集周期2      │ 采集周期3      │
+   └────────────────┴────────────────┴────────────────┘
+      │显示周期1      │显示周期2      │显示周期3
+      
+   虽然显示延迟，但因为信号是连续的，看起来像实时流动
+
+4. CPU 足够快
+   └─ 处理和刷新速度快，人眼感觉不到明显延迟
+```
+
+### 不同类型示波器的区别
+
+| 类型           | 延迟           | 原因                              |
+| -------------- | -------------- | --------------------------------- |
+| **模拟示波器** | 极低（微秒级） | 直接在 CRT 屏幕上画，无需数字处理 |
+| **数字示波器** | 中等（毫秒级） | 需要采集、处理、显示的完整流程    |
+| **实时示波器** | 低（几毫秒）   | 优化的处理管线，但仍有延迟        |
+| **采样示波器** | 相对较低       | 对周期信号的多周期采样            |
+
+---
+
+## 问题2：滚动更新波形 vs 普通更新
+
+这是一个很好的优化问题！两者有很大区别。
+
+### 普通更新（全屏重绘）
+
+```
+显示更新流程（每帧）:
+
+第1帧:
+┌──────────────────────────┐
+│ [旧波形] [旧数据] [旧数据] │
+└──────────────────────────┘
+
+第2帧:
+1. 清除整个屏幕 (时间 T1)
+2. 重新绘制整条波形线 (时间 T2)
+3. 重新绘制所有像素 (时间 T3)
+4. 刷新整个屏幕 (时间 T4)
+
+┌──────────────────────────┐
+│ [新波形] [新数据] [新数据] │
+└──────────────────────────┘
+
+时间成本: T1 + T2 + T3 + T4 = 很大！
+```
+
+### 滚动更新（卷动显示）
+
+```
+显示更新流程（每帧）:
+
+原理：把屏幕当作一个环形缓冲区，只更新新增的部分
+
+第1帧（初始状态）:
+┌──────────────────────────┐
+│ [数据1] [数据2] [数据3]...│ [数据N]
+└──────────────────────────┘
+
+第2帧（新数据到达）:
+┌──────────────────────────────────┐
+│ [数据2] [数据3] [数据4]...│ [数据N] [新数据N+1]
+└─��────────────────────────────────┘
+
+实现方式1：物理滚动（最高效）
+  - 显存地址偏移，不移动像素数据
+  - 只在右边绘制新增的一列像素
+  - 时间成本: 仅绘制新增数据
+  
+实现方式2：逻辑滚动
+  - 内存中的数据向左移位
+  - 新数据追加到右边
+  - 时间成本: 稍高，但比全屏重绘好得多
+```
+
+### 具体代码对比
+
+#### ❌ 普通更新（低效）
+
+```c
+void Update_Waveform_Normal(void) {
+    // 问题：每次都要重绘整个屏幕
+    
+    // 1. 清屏（很费时！）
+    GUI_SetBkColor(GUI_BLACK);
+    GUI_Clear();  // 清除整个 800×480
+    
+    // 2. 重新绘制所有波形点（很费时！）
+    for(int i = 0; i < 800; i++) {
+        int y = waveformData[i];
+        GUI_SetColor(GUI_GREEN);
+        GUI_DrawPixel(i, y);
+    }
+    
+    // 3. 刷新整个屏幕
+    GUI_Invalidate();
+}
+
+时间成本分析:
+  清屏: 800 × 480 = 384,000 像素
+  绘制: 800 个点的连线
+  总耗时: ~33 ms（可能超过一帧时间 16.67 ms@60Hz）
+  结果: 波形卡顿或闪烁
+```
+
+#### ✅ 滚动更新（高效）
+
+```c
+void Update_Waveform_Scroll(void) {
+    // 方式1：硬件滚动（最优，如果 LCD 支持）
+    // 修改 LCD 的起始地址寄存器
+    int newStartAddr = pFrameBuffer + (scrollOffset * 2);
+    LCD_SetFrameBufferAddr(newStartAddr);
+    
+    // 这样做的效果（逻辑上）:
+    // ┌──────────────────────────┐
+    // │ [2] [3] [4] [5] ... [N] [N+1]
+    // └──────────────────────────┘
+    //  ^原来的[1]现在看不见了，[N+1]是新增数据
+    
+    // 时间成本: 仅改变一个地址，微秒级！
+    
+    // 方式2：软件滚动（没有硬件支持时）
+    // 1. 只绘制右侧新增的列（而不是整个屏幕）
+    int newDataX = 799;  // 屏幕最右边
+    int newDataValue = waveformData[newestIndex];
+    
+    // 只更新最右边一列像素
+    GUI_SetColor(GUI_GREEN);
+    for(int y = 0; y < 480; y++) {
+        if(y == newDataValue) {
+            GUI_DrawPixel(newDataX, y);
+        } else {
+            // 用黑色覆盖旧像素
+            GUI_SetColor(GUI_BLACK);
+            GUI_DrawPixel(newDataX, y);
+            GUI_SetColor(GUI_GREEN);
+        }
+    }
+    
+    // 标记只需更新这一列的矩形区域
+    GUI_Rect_t updateRect = {newDataX, 0, newDataX, 479};
+    GUI_InvalidateRect(&updateRect);  // 关键！只更新这一小部分
+    
+    时间成本: 仅 480 个像素，远小于全屏 384,000 像素！
+}
+
+时间成本对比:
+  普通更新: 800 × 480 = 384,000 像素
+  滚动更新:       480 = 480 像素
+  性能提升: 约 800 倍！
+```
+
+### 实际示波器中的滚动更新
+
+```c
+// 环形缓冲区 + 滚动显示（真实场景）
+
+#define BUFFER_SIZE 2000   // 存储 2000 个采样点
+uint16_t dataBuffer[BUFFER_SIZE];
+int writeIndex = 0;        // 写入指针
+int displayStartIndex = 0; // 显示的起始指针
+
+void ADC_ISR(void) {
+    // 采集新数据
+    dataBuffer[writeIndex] = ADC_ReadValue();
+    writeIndex++;
+    if(writeIndex >= BUFFER_SIZE) writeIndex = 0;
+}
+
+void Display_Thread(void) {
+    while(1) {
+        // 只绘制新增的点（向右卷动）
+        int newDataIndex = (displayStartIndex + 799) % BUFFER_SIZE;
+        int y = ConvertADCToPixelY(dataBuffer[newDataIndex]);
+        
+        // 仅在屏幕右边绘制新增的一个点
+        GUI_SetColor(GUI_GREEN);
+        GUI_DrawPixel(799, y);
+        
+        // 标记只需更新右边这一列
+        GUI_Rect_t rect = {799, 0, 799, 479};
+        GUI_InvalidateRect(&rect);
+        
+        // 移动窗口指针，造成卷动效果
+        displayStartIndex++;
+        if(displayStartIndex >= BUFFER_SIZE) 
+            displayStartIndex = 0;
+        
+        sleep(10);  // 每 10ms 更新一次
+    }
+}
+```
+
+## 总结对比表
+
+| 方面               | 普通更新          | 滚动更新               |
+| ------------------ | ----------------- | ---------------------- |
+| **每帧更新像素数** | 整个屏幕（~384K） | 仅新增列（~480）       |
+| **性能**           | 低（可能掉帧）    | 高（流畅）             |
+| **CPU 占用**       | 高                | 低                     |
+| **视觉效果**       | 闪烁、卡顿        | 流畅卷动               |
+| **实现难度**       | 简单              | 中等（需管理缓冲区）   |
+| **适用场景**       | 简单仪表盘        | **示波器、实时曲线图** |
+
+---
+
+## 您对示波器工作原理的理解
+
+您的观察非常正确：
+1. ✅ 采集是实时的，但显示确实有延迟
+2. ✅ 延迟主要来自数据处理和屏幕刷新
+3. ✅ 看起来实时是因为 CPU 快 + 人眼无法分辨
+4. ✅ 滚动更新比普通更新高效得多
+
+这就是为什么真正的示波器和实时曲线图应用都采用**滚动更新机制**！

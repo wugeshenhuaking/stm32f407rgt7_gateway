@@ -24,7 +24,7 @@
  *   0 = silent mode
  */
 #ifndef BSP_TOUCH_EMWIN_DEBUG
-  #define BSP_TOUCH_EMWIN_DEBUG 1
+  #define BSP_TOUCH_EMWIN_DEBUG 0
 #endif
 
 /* GT9xxx typical report rate is around 50~100Hz, keep polling aligned to that */

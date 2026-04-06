@@ -36,7 +36,9 @@ uint8_t SRAM_Test_Word16Range(uint32_t addr, uint32_t len);
 uint8_t SRAM_Test_Word32Range(uint32_t addr, uint32_t len);
 uint8_t SRAM_Test_ByteLaneRange(uint32_t addr, uint32_t len);
 uint8_t SRAM_Test_MixedWidthAccess(uint32_t addr, uint32_t len);
+uint8_t SRAM_Test_PointerPatternRange(uint32_t addr, uint32_t len, uint32_t loops);
 void    SRAM_Test_EmWinPoolRange(uint32_t len);
+void    SRAM_Test_EmWinPoolStress(uint32_t addr, uint32_t len, uint32_t loops);
 void    SRAM_RunAllTests(void);
 
 #endif /* __BSP_SRAM_TEST_H */

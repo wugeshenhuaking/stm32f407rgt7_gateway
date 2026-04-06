@@ -635,6 +635,78 @@ uint8_t SRAM_Test_MixedWidthAccess(uint32_t addr, uint32_t len)
     return 0;
 }
 
+uint8_t SRAM_Test_PointerPatternRange(uint32_t addr, uint32_t len, uint32_t loops)
+{
+    static const uint32_t s_masks[] =
+    {
+        0x00000000UL,
+        0xFFFFFFFFUL,
+        0xA5A55A5AUL,
+        0x5A5AA5A5UL
+    };
+    uint32_t words;
+    uint32_t loop;
+    uint32_t phase;
+    uint32_t i;
+    uint32_t expected;
+    uint32_t actual;
+
+    if ((addr & 0x3U) != 0U)
+    {
+        printf("SRAM_Test_PointerPatternRange FAIL: addr=0x%08X not word aligned\r\n",
+               (unsigned int)(SRAM_BASE_ADDR + addr));
+        return 1;
+    }
+
+    words = len / 4U;
+    if ((words == 0U) || (loops == 0U))
+    {
+        printf("SRAM_Test_PointerPatternRange skipped: len=%u loops=%u\r\n",
+               (unsigned int)len,
+               (unsigned int)loops);
+        return 0;
+    }
+
+    printf("\r\n===== Test9: Pointer Pattern Stress =====\r\n");
+    printf("Range: 0x%08X ~ 0x%08X (%u bytes), loops=%u\r\n",
+           (unsigned int)(SRAM_BASE_ADDR + addr),
+           (unsigned int)(SRAM_BASE_ADDR + addr + words * 4U - 1U),
+           (unsigned int)(words * 4U),
+           (unsigned int)loops);
+
+    for (loop = 0; loop < loops; loop++)
+    {
+        for (phase = 0; phase < (sizeof(s_masks) / sizeof(s_masks[0])); phase++)
+        {
+            for (i = 0; i < words; i++)
+            {
+                expected = (SRAM_BASE_ADDR + addr + i * 4U) ^ s_masks[phase];
+                SRAM_Test_Write32(addr + i * 4U, expected);
+            }
+
+            for (i = 0; i < words; i++)
+            {
+                expected = (SRAM_BASE_ADDR + addr + i * 4U) ^ s_masks[phase];
+                actual   = SRAM_Test_Read32(addr + i * 4U);
+                if (actual != expected)
+                {
+                    printf("FAIL loop=%u phase=%u addr=0x%08X write=0x%08X read=0x%08X xor=0x%08X\r\n",
+                           (unsigned int)loop,
+                           (unsigned int)phase,
+                           (unsigned int)(SRAM_BASE_ADDR + addr + i * 4U),
+                           (unsigned int)expected,
+                           (unsigned int)actual,
+                           (unsigned int)(expected ^ actual));
+                    return 1;
+                }
+            }
+        }
+    }
+
+    printf("Test9 PASS! pointer-like 32-bit stress OK\r\n");
+    return 0;
+}
+
 void SRAM_Test_EmWinPoolRange(uint32_t len)
 {
     uint8_t t16;
@@ -664,6 +736,45 @@ void SRAM_Test_EmWinPoolRange(uint32_t len)
     else
     {
         printf("emWin pool area FAILED at least one access-width diagnostic.\r\n");
+    }
+}
+
+void SRAM_Test_EmWinPoolStress(uint32_t addr, uint32_t len, uint32_t loops)
+{
+    uint8_t t16;
+    uint8_t t32;
+    uint8_t tbl;
+    uint8_t tmx;
+    uint8_t tpt;
+    uint32_t mixed_len;
+
+    mixed_len = (len > 256U) ? 256U : len;
+
+    printf("\r\n===== emWin SRAM Exact Region Diagnostic =====\r\n");
+    printf("Pool base : 0x%08X\r\n", (unsigned int)(SRAM_BASE_ADDR + addr));
+    printf("Pool size : %u bytes\r\n", (unsigned int)len);
+    printf("Loops     : %u\r\n", (unsigned int)loops);
+
+    t16 = SRAM_Test_Word16Range(addr, len);
+    t32 = SRAM_Test_Word32Range(addr, len);
+    tbl = SRAM_Test_ByteLaneRange(addr, len);
+    tmx = SRAM_Test_MixedWidthAccess(addr, mixed_len);
+    tpt = SRAM_Test_PointerPatternRange(addr, len, loops);
+
+    printf("\r\n===== emWin Exact Region Summary =====\r\n");
+    printf("16-bit range : %s\r\n", t16 == 0U ? "PASS" : "FAIL");
+    printf("32-bit range : %s\r\n", t32 == 0U ? "PASS" : "FAIL");
+    printf("Byte-lane    : %s\r\n", tbl == 0U ? "PASS" : "FAIL");
+    printf("Mixed width  : %s\r\n", tmx == 0U ? "PASS" : "FAIL");
+    printf("Ptr pattern  : %s\r\n", tpt == 0U ? "PASS" : "FAIL");
+
+    if ((t16 | t32 | tbl | tmx | tpt) == 0U)
+    {
+        printf("Exact emWin pool region looks stable.\r\n");
+    }
+    else
+    {
+        printf("Exact emWin pool region FAILED at least one diagnostic.\r\n");
     }
 }
 

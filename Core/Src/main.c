@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 // GCC lib header file
 #include <stdio.h>
+#include <stdint.h>
 
 // NT35510 lcd ic header file
 #include "bsp_lcd.h"
@@ -43,6 +44,7 @@
 // BSP TOUCH header file
 #include "bsp_touch_port.h"
 #include "test_bsp_touch.h"
+#include "bsp_timer.h"
 
 // emWin header file
 #include "GUI.h"
@@ -67,7 +69,7 @@ CANopenNodeSTM32 canOpenNodeSTM32;
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define EMWIN_SRAM_DIAG_ENABLE     0
-#define EMWIN_SRAM_POOL_TEST_SIZE  (256UL * 1024UL)
+#define EMWIN_SRAM_DIAG_LOOPS      32UL
 
 /* USER CODE END PD */
 
@@ -85,6 +87,8 @@ CANopenNodeSTM32 canOpenNodeSTM32;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+extern uintptr_t BSP_EmWin_GetAllocPoolBase(void);
+extern U32       BSP_EmWin_GetAllocPoolSize(void);
 
 /* USER CODE END PFP */
 
@@ -138,19 +142,39 @@ int main(void)
   MX_CAN1_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  /*LCD Initialize*/
-  NT35510_Init();
-  //  NT35510_RunAllTests();  // 运行NT35510测试，验证LCD接口和NT35510功能
-
-  /* SRAM Initialize */
+    /* SRAM Initialize */
 //  SRAM_RunAllTests();   // 运行SRAM测试，验证FSMC配置和SRAM芯片功能
 //  my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
 //  my_mem_init(SRAMEX);                /* 初始化外部SRAM内存池 */
 //  my_mem_init(SRAMCCM);               /* 初始化内部CCM内存池 */
   
+  bsp_InitTimer();
+  __HAL_RCC_CRC_CLK_ENABLE();
+
+  /*LCD Initialize*/
+  NT35510_Init();
+  //  NT35510_RunAllTests();  // 运行NT35510测试，验证LCD接口和NT35510功能
+
+
+  
   /* TOUCH Initialize */
   #if EMWIN_SRAM_DIAG_ENABLE
-  SRAM_Test_EmWinPoolRange(EMWIN_SRAM_POOL_TEST_SIZE);
+  {
+    uintptr_t emwin_pool_base = BSP_EmWin_GetAllocPoolBase();
+    U32       emwin_pool_size = BSP_EmWin_GetAllocPoolSize();
+
+    if ((emwin_pool_base >= SRAM_BASE_ADDR) &&
+        ((emwin_pool_base + emwin_pool_size) <= (SRAM_BASE_ADDR + SRAM_SIZE)))
+    {
+      SRAM_Test_EmWinPoolStress((uint32_t)(emwin_pool_base - SRAM_BASE_ADDR),
+                                (uint32_t)emwin_pool_size,
+                                EMWIN_SRAM_DIAG_LOOPS);
+    }
+    else
+    {
+      printf("[SRAM] emWin pool is not inside external SRAM, diag skipped\r\n");
+    }
+  }
   #endif
   BSP_Touch_Init();
   //  Touch_RunAllTests();  // 运行触摸芯片测试，验证触摸屏功能和触摸控制器接口

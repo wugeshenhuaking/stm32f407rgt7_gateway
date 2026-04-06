@@ -35,12 +35,13 @@
 
 [region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000D7880 [memory type] 2 [memory ID] 4
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000DB548 [memory type] 2 [memory ID] 4
 
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x0000E6B0 [memory type] 1 [memory ID] 2
-		[ZI block] addr: 0x20000CA0, size: 0x0000DA10 (55824)
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00019C20 [memory type] 1 [memory ID] 2
+		[ZI block] addr: 0x200006E0, size: 0x00019540 (103744)
 
-	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [memory type] 1 [memory ID] 3
+	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00001C10 [memory type] 1 [memory ID] 3
+		[ZI block] addr: 0x2001C5D0, size: 0x00001640 (5696)
 
 
 [object name max length] 29
@@ -310,9 +311,9 @@
 
 [record region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000DC8D0 [type] 2 [ID] 4
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x0000E7C0 [type] 1 [ID] 2
-	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [type] 1 [ID] 3
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000DB548 [type] 2 [ID] 4
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00019C20 [type] 1 [ID] 2
+	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00001C10 [type] 1 [ID] 3
 ---------------------------------------------------------------------------------------------------------------------------------------------
                                         FILE(s)                                       |         RAM (byte)       |       FLASH (byte)       |
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -323,8 +324,8 @@
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\APPWConf.c():             |           2              |         169              |
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\bk.c():                     |           0              |       29435              |
 ..\BSP\BSP_LCD\bsp_lcd_port.c():                                                      |           4              |         282              |
-..\BSP\BSP_Timer\bsp_timer.c():                                                       |         106              |         452              |
-..\BSP\BSP_LCDTouch\bsp_touch_port.c():                                               |          55              |        1669              |
+..\BSP\BSP_Timer\bsp_timer.c():                                                       |         106              |         566              |
+..\BSP\BSP_LCDTouch\bsp_touch_port.c():                                               |          55              |        1412              |
 ../Core/Src/can.c():                                                                  |          40              |         244              |
 ..\3rdLib\CANopen\CANopenNode\CANopen.c():                                            |           0              |        2250              |
 ..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c():                                 |          17              |        1225              |
@@ -346,19 +347,19 @@
 ../Middlewares/Third_Party/LwIP/src/netif/ethernet.c():                               |           0              |         580              |
 ../LWIP/Target/ethernetif.c():                                                        |       19428              |        1768              |
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\exit.c():                   |           0              |        3089              |
-../Core/Src/fsmc.c():                                                                 |         164              |         552              |
+../Core/Src/fsmc.c():                                                                 |         164              |         534              |
 ../Core/Src/gpio.c():                                                                 |           0              |         388              |
 ..\BSP\BSP_LCDTouch\gt9xxx.c():                                                       |           1              |        1933              |
 ..\3rdLib\emWin\GUI_X\GUI_X.c():                                                      |           0              |          52              |
-..\3rdLib\emWin\Config\GUIConf.c():                                                   |           4              |          34              |
+..\3rdLib\emWin\Config\GUIConf.c():                                                   |       51200              |         318              |
 ..\3rdLib\emWin\Config\GUIDRV_Template.c():                                           |           0              |        3600              |
 ../Middlewares/Third_Party/LwIP/src/core/ipv4/icmp.c():                               |           0              |        1140              |
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_00.c():         |         556              |        3236              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_00_Slots.c():  |           0              |          36              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_00_Slots.c():  |           0              |         196              |
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_01.c():         |         348              |         928              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_01_Slots.c():  |           4  [+4]        |        1313  [+1161]     |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_01_Slots.c():  |        2424              |        6018              |
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_02.c():         |         556              |        1376              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_02_Slots.c():  |           0              |          22              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_02_Slots.c():  |           0              |         121              |
 ../Middlewares/Third_Party/LwIP/src/core/init.c():                                    |           0              |          44              |
 ../Middlewares/Third_Party/LwIP/src/core/ip.c():                                      |          24              |           0              |
 ../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4.c():                                |           2              |        1703              |
@@ -368,7 +369,7 @@
 ..\BSP\BSP_LCD\lcd_nt35510.c():                                                       |           0              |        5122              |
 ..\3rdLib\emWin\Config\LCDConf.c():                                                   |           0              |         176              |
 ../LWIP/App/lwip.c():                                                                 |          76              |         356              |
-../Core/Src/main.c():                                                                 |          24              |         358              |
+../Core/Src/main.c():                                                                 |          24              |         390              |
 ../Middlewares/Third_Party/LwIP/src/core/mem.c():                                     |        1631              |        3118              |
 ../Middlewares/Third_Party/LwIP/src/core/memp.c():                                    |       12003              |        1025              |
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\music.c():                  |           0              |       15569              |
@@ -390,7 +391,7 @@ startup_stm32f407xx.s():                                                        
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():                            |           0              |         576              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c():                         |           0              |         290              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c():                           |           0              |        2868              |
-../Core/Src/stm32f4xx_it.c():                                                         |           1              |         518              |
+../Core/Src/stm32f4xx_it.c():                                                         |           1              |         552              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c():                            |           0              |         360              |
 ../Core/Src/system_stm32f4xx.c():                                                     |           4              |          46              |
 ../Middlewares/Third_Party/LwIP/src/core/tcp.c():                                     |          29              |        9265              |
@@ -400,20 +401,23 @@ startup_stm32f407xx.s():                                                        
 ../Middlewares/Third_Party/LwIP/src/core/timeouts.c():                                |          12              |         893              |
 ../Middlewares/Third_Party/LwIP/src/core/udp.c():                                     |           6              |        1879              |
 ../Core/Src/usart.c():                                                                |         144              |         418              |
-..\3rdLib\emWin\GUILib\libGUI_v7m_OS0.a():                                            |       12974  [-273]      |      280645  [-21969]    |
+..\3rdLib\emWin\GUILib\libGUI_v7m_OS0.a():                                            |       12978              |      291009              |
 ---------------------------------------------------------------------------------------------------------------------------------------------
 [memory print mode]: 0
 LR_IROM1
         RAM 1             [0x20000000 | 0x0001C000 (114688)]
-                [zi start] 1   [zi end] 25
-                RW_IRAM1  [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_________________________| (  57.6 KB / 112.0 KB )  51.5%  [-272]
+                [zi start] 1   [zi end] 45
+                RW_IRAM1  [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_____| ( 103.0 KB / 112.0 KB )  92.0%  
+        RAM 2             [0x2001C000 | 0x00004000 (16384)]
+                [zi start] 4   [zi end] 21
+                RW_IRAM2  [0x2001C000]|¡ö¡ö¡ö¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_____________________________| (   7.0 KB /  16.0 KB )  43.8%  
  
         FLASH 1           [0x08000000 | 0x00100000 (1048576)]
-                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö________| ( 862.1 KB /   1.0 MB )  84.2%  [-20560]
+                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö________| ( 877.3 KB /   1.0 MB )  85.7%  
  
 [htm file path] D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\Objects\stm32f407zgt6-gataway.htm
-Maximum Stack Usage =        896 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)
+Maximum Stack Usage =        888 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)
  
 =============================================================================================================================
 
-run time: 1.104 s
+run time: 1.109 s
