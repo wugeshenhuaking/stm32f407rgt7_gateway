@@ -38,6 +38,10 @@ static uint8_t               s_touch_ready = 0;
 static uint8_t               s_touch_down  = 0;
 static uint16_t              s_last_x      = 0;
 static uint16_t              s_last_y      = 0;
+static uint16_t              s_measure_x   = 0;
+static uint16_t              s_measure_y   = 0;
+static uint8_t               s_measure_ok  = 0;
+static uint32_t              s_measure_tick = 0xFFFFFFFFUL;
 static uint8_t               s_touch_task_timer_started = 0;
 
 static uint16_t scale_raw_x_to_gui_width(uint16_t raw_x)
@@ -186,6 +190,10 @@ uint8_t BSP_Touch_Init(void)
     s_touch_down                 = 0;
     s_last_x                     = 0;
     s_last_y                     = 0;
+    s_measure_x                  = 0;
+    s_measure_y                  = 0;
+    s_measure_ok                 = 0;
+    s_measure_tick               = 0xFFFFFFFFUL;
     s_touch_task_timer_started   = 0;
 
     ret = GT9XXX_Init();
@@ -442,6 +450,42 @@ void PID_X_Exec(void)
     BSP_Touch_Task20ms();
 }
 
+static void touch_measure_update(void)
+{
+    uint16_t x = 0;
+    uint16_t y = 0;
+    uint32_t tick;
+
+    if (s_touch_ready == 0U)
+    {
+        s_measure_x    = 0U;
+        s_measure_y    = 0U;
+        s_measure_ok   = 0U;
+        return;
+    }
+
+    tick = HAL_GetTick();
+    if (s_measure_tick == tick)
+    {
+        return;
+    }
+    s_measure_tick = tick;
+
+    BSP_Touch_Scan();
+    if (BSP_Touch_GetPoint(0, &x, &y) != 0U)
+    {
+        s_measure_x  = x;
+        s_measure_y  = y;
+        s_measure_ok = 1U;
+    }
+    else
+    {
+        s_measure_x  = 0U;
+        s_measure_y  = 0U;
+        s_measure_ok = 0U;
+    }
+}
+
 /*
  * emWin compatibility hooks
  *
@@ -466,19 +510,23 @@ void GUI_TOUCH_X_Disable(void)
 
 int GUI_TOUCH_X_MeasureX(void)
 {
-//    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
-//    {
-//        return (int)s_raw_x_debug;
-//    }
+    touch_measure_update();
+
+    if (s_measure_ok != 0U)
+    {
+        return (int)s_measure_x;
+    }
     return 0;
 }
 
 int GUI_TOUCH_X_MeasureY(void)
 {
-//    if ((s_touch_state.is_pressed != 0U) && (s_touch_state.points[0].pressed != 0U))
-//    {
-//        return (int)s_raw_y_debug;
-//    }
+    touch_measure_update();
+
+    if (s_measure_ok != 0U)
+    {
+        return (int)s_measure_y;
+    }
     return 0;
 }
 

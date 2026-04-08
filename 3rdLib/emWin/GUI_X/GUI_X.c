@@ -62,6 +62,7 @@ Purpose     : Config / System dependent externals for GUI
 *       Global data
 */
 volatile GUI_TIMER_TIME OS_TimeMS;
+extern __IO uint32_t uwTick;
 
 /*********************************************************************
 *
@@ -76,13 +77,14 @@ volatile GUI_TIMER_TIME OS_TimeMS;
 
 int GUI_X_GetTime(void)
 {
-  return (int)bsp_GetRunTime();
+//  return (int)bsp_GetRunTime();
+  return HAL_GetTick();
 }
 
 void GUI_X_Delay(int ms)
 {
-  int tEnd = bsp_GetRunTime() + ms;
-  while ((tEnd - bsp_GetRunTime()) > 0);
+  int tEnd = HAL_GetTick() + ms;
+  while ((tEnd - HAL_GetTick()) > 0);
 }
 
 /*********************************************************************

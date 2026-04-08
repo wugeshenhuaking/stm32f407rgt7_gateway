@@ -1117,6 +1117,8 @@ void GUIDEMO_Main(void) {
       _pfDrawBk = _DrawBkSimple;
     }
   while (1) {
+//    extern void PID_X_Exec(void);
+//    PID_X_Exec();
     _Main();
   }
 }

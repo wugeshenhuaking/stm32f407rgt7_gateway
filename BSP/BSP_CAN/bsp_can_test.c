@@ -245,3 +245,4 @@ uint8_t BSP_CAN_Test_RunAll(void)
 
     return fails;
 }
+

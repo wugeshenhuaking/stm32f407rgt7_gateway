@@ -48,6 +48,10 @@
 
 // emWin header file
 #include "GUI.h"
+#ifdef USE_AC5
+#include "GUIDEMO.h"
+#include "WM.h"
+#endif
 
 // BSP CAN header file
 #include "bsp_can_port.h"
@@ -102,6 +106,17 @@ int fputc(int ch, FILE *f)
 //#include "Generated/Resource.h"
 //#include "bsp_touch_port.h"
 //    PID_X_Exec();
+
+void user_app(void)
+{
+    // CANopen polling
+    canopen_app_process(); // 1ms polling
+    APP_CAN_Process();
+  
+    // LWIP polling
+    MX_LWIP_Process();
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -142,19 +157,20 @@ int main(void)
   MX_CAN1_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-    /* SRAM Initialize */
+  
+  /*LCD Initialize*/
+  NT35510_Init();
+//  NT35510_RunAllTests();  // 运行NT35510测试，验证LCD接口和NT35510功能
+
+  /* SRAM Initialize */
 //  SRAM_RunAllTests();   // 运行SRAM测试，验证FSMC配置和SRAM芯片功能
 //  my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
 //  my_mem_init(SRAMEX);                /* 初始化外部SRAM内存池 */
 //  my_mem_init(SRAMCCM);               /* 初始化内部CCM内存池 */
   
+  /* soft timer Initialize */
   bsp_InitTimer();
   __HAL_RCC_CRC_CLK_ENABLE();
-
-  /*LCD Initialize*/
-  NT35510_Init();
-  //  NT35510_RunAllTests();  // 运行NT35510测试，验证LCD接口和NT35510功能
-
 
   
   /* TOUCH Initialize */
@@ -196,8 +212,13 @@ int main(void)
 #endif
 
   /* emWin Initialize*/
+  #ifdef USE_AC5
+  GUI_Init();
+  GUIDEMO_Main();                     /* 运行emwin例程 */
+  #else
   MainTask();
-
+  #endif
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */

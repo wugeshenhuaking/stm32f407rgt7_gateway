@@ -69,9 +69,9 @@ Purpose     : Display controller initialization
 #define EX_SRAM   0/*1 used extern sram, 0 used internal sram */
 
 #if EX_SRAM
-#define GUI_NUMBYTES  (50*1024)
+#define GUI_NUMBYTES  (1024*1024)
 #else
-#define GUI_NUMBYTES  (50*1024)
+#define GUI_NUMBYTES  (20*1024)
 #endif
 
 /* Define the average block size */
@@ -82,12 +82,12 @@ Purpose     : Display controller initialization
  * 0x68000000. This mimics the original reference project more closely and
  * helps us verify whether the low-address SRAM region is the unstable area.
  */
-#define EMWIN_EXT_SRAM_RESERVED_TAIL  (64UL * 1024UL)
-#define EMWIN_EXT_SRAM_POOL_BASE      (EXT_SRAM_ADDR + SRAM_SIZE - EMWIN_EXT_SRAM_RESERVED_TAIL - GUI_NUMBYTES)
+//#define EMWIN_EXT_SRAM_RESERVED_TAIL  (64UL * 1024UL)
+//#define EMWIN_EXT_SRAM_POOL_BASE      (EXT_SRAM_ADDR + SRAM_SIZE - EMWIN_EXT_SRAM_RESERVED_TAIL - GUI_NUMBYTES)
 
-#if EX_SRAM && ((GUI_NUMBYTES + EMWIN_EXT_SRAM_RESERVED_TAIL) > SRAM_SIZE)
-#error "emWin external SRAM pool exceeds available SRAM size"
-#endif
+//#if EX_SRAM && ((GUI_NUMBYTES + EMWIN_EXT_SRAM_RESERVED_TAIL) > SRAM_SIZE)
+//#error "emWin external SRAM pool exceeds available SRAM size"
+//#endif
 
 #if !EX_SRAM
 static U32 s_aMemory[GUI_NUMBYTES / 4];
@@ -124,29 +124,30 @@ static void _EmWinOnError(const char *s)
 void GUI_X_Config(void)
 {
 #if EX_SRAM
-//    static uint32_t *aMemory;
-//    aMemory = (uint32_t *)EXT_SRAM_ADDR;
-    void *aMemory = mymalloc(SRAMEX, GUI_NUMBYTES);
+//    static void *aMemory;
+//    aMemory = (uint16_t *)EXT_SRAM_ADDR;
+//    void *aMemory = mymalloc(SRAMEX, GUI_NUMBYTES);
+
+  static U32 aMemory[GUI_NUMBYTES / 4] 
+    __attribute__((section(".ARM.__at_0x68000000")));
 
     /*  Assign memory to emWin */
     GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
-
-    GUI_ALLOC_SetAvBlockSize(GUI_BLOCKSIZE);
+//    GUI_ALLOC_SetAvBlockSize(GUI_BLOCKSIZE);
     GUI_SetDefaultFont(GUI_FONT_6X8);
-    GUI_ALLOC_SetShortOfRAM(_EmWinOnShortOfRAM);
-    GUI_SetOnErrorFunc(_EmWinOnError);
-    printf("[emWin] alloc pool ext-sram base=0x%08lX end=0x%08lX size=%lu block=0x%02X tail=%lu\r\n",
-           (unsigned long)EMWIN_EXT_SRAM_POOL_BASE,
-           (unsigned long)(EMWIN_EXT_SRAM_POOL_BASE + GUI_NUMBYTES - 1UL),
-           (unsigned long)GUI_NUMBYTES,
-           (unsigned)GUI_BLOCKSIZE,
-           (unsigned long)EMWIN_EXT_SRAM_RESERVED_TAIL);
+//  
+//    GUI_SetOnErrorFunc(_EmWinOnError);
+//    printf("[emWin] alloc pool ext-sram base=0x%08lX end=0x%08lX size=%lu block=0x%02X tail=%lu\r\n",
+//           (unsigned long)EMWIN_EXT_SRAM_POOL_BASE,
+//           (unsigned long)(EMWIN_EXT_SRAM_POOL_BASE + GUI_NUMBYTES - 1UL),
+//           (unsigned long)GUI_NUMBYTES,
+//           (unsigned)GUI_BLOCKSIZE,
+//           (unsigned long)EMWIN_EXT_SRAM_RESERVED_TAIL);
 #else
     /*  Assign memory to emWin */
     GUI_ALLOC_AssignMemory(s_aMemory, GUI_NUMBYTES);
     GUI_SetDefaultFont(GUI_FONT_6X8);
     GUI_ALLOC_SetAvBlockSize(GUI_BLOCKSIZE);
-    GUI_ALLOC_SetShortOfRAM(_EmWinOnShortOfRAM);
     GUI_SetOnErrorFunc(_EmWinOnError);
     printf("[emWin] alloc pool internal base=%p size=%lu block=0x%02X\r\n",
            (void *)s_aMemory,
@@ -155,18 +156,18 @@ void GUI_X_Config(void)
 #endif
 }
 
-uintptr_t BSP_EmWin_GetAllocPoolBase(void)
-{
-#if EX_SRAM
-    return (uintptr_t)EMWIN_EXT_SRAM_POOL_BASE;
-#else
-    return (uintptr_t)s_aMemory;
-#endif
-}
+//uintptr_t BSP_EmWin_GetAllocPoolBase(void)
+//{
+//#if EX_SRAM
+//    return (uintptr_t)EMWIN_EXT_SRAM_POOL_BASE;
+//#else
+//    return (uintptr_t)s_aMemory;
+//#endif
+//}
 
-U32 BSP_EmWin_GetAllocPoolSize(void)
-{
-    return GUI_NUMBYTES;
-}
+//U32 BSP_EmWin_GetAllocPoolSize(void)
+//{
+//    return GUI_NUMBYTES;
+//}
 
 /*************************** End of file ****************************/

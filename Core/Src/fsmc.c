@@ -22,7 +22,8 @@
 #include "fsmc.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "XMRAM.h"
+#include "lcd_nt35510.h"
 /* USER CODE END 0 */
 
 SRAM_HandleTypeDef hsram3;
@@ -39,7 +40,10 @@ void MX_FSMC_Init(void)
   FSMC_NORSRAM_TimingTypeDef ExtTiming = {0};
 
   /* USER CODE BEGIN FSMC_Init 1 */
-
+  #ifdef USE_AC5
+//  XmRamInit();                //初始化XMRAM 20191024
+//  HAL_Delay(10);
+  #endif
   /* USER CODE END FSMC_Init 1 */
 
   /** Perform the SRAM3 memory initialization sequence
@@ -62,12 +66,12 @@ void MX_FSMC_Init(void)
   hsram3.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
   hsram3.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
-  Timing.AddressSetupTime = 0;
-  Timing.AddressHoldTime = 15;
-  Timing.DataSetupTime = 6;
+  Timing.AddressSetupTime = 2;
+  Timing.AddressHoldTime = 1;
+  Timing.DataSetupTime = 3;
   Timing.BusTurnAroundDuration = 0;
-  Timing.CLKDivision = 16;
-  Timing.DataLatency = 17;
+  Timing.CLKDivision = 0;
+  Timing.DataLatency = 0;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
 
@@ -97,19 +101,19 @@ void MX_FSMC_Init(void)
   hsram4.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
   Timing.AddressSetupTime = 15;
-  Timing.AddressHoldTime = 15;
+  Timing.AddressHoldTime = 0;
   Timing.DataSetupTime = 60;
   Timing.BusTurnAroundDuration = 0;
-  Timing.CLKDivision = 16;
-  Timing.DataLatency = 17;
+  Timing.CLKDivision = 0;
+  Timing.DataLatency = 0;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
   ExtTiming.AddressSetupTime = 9;
-  ExtTiming.AddressHoldTime = 15;
-  ExtTiming.DataSetupTime = 9;
-  ExtTiming.BusTurnAroundDuration = 9;
-  ExtTiming.CLKDivision = 16;
-  ExtTiming.DataLatency = 17;
+  ExtTiming.AddressHoldTime = 0;
+  ExtTiming.DataSetupTime = 8;
+  ExtTiming.BusTurnAroundDuration = 0;
+  ExtTiming.CLKDivision = 0;
+  ExtTiming.DataLatency = 0;
   ExtTiming.AccessMode = FSMC_ACCESS_MODE_A;
 
   if (HAL_SRAM_Init(&hsram4, &Timing, &ExtTiming) != HAL_OK)
@@ -118,32 +122,13 @@ void MX_FSMC_Init(void)
   }
 
   /* USER CODE BEGIN FSMC_Init 2 */
-  
-  
-//  hsram3.Instance = FSMC_NORSRAM_DEVICE;
-//  hsram3.Extended = FSMC_NORSRAM_EXTENDED_DEVICE;
-//  /* hsram3.Init */
-//  hsram3.Init.NSBank = FSMC_NORSRAM_BANK3;
-//  hsram3.Init.DataAddressMux = FSMC_DATA_ADDRESS_MUX_DISABLE;
-//  hsram3.Init.MemoryType = FSMC_MEMORY_TYPE_SRAM;
-//  hsram3.Init.MemoryDataWidth = FSMC_NORSRAM_MEM_BUS_WIDTH_16;
-//  hsram3.Init.BurstAccessMode = FSMC_BURST_ACCESS_MODE_DISABLE;
-//  hsram3.Init.WaitSignalPolarity = FSMC_WAIT_SIGNAL_POLARITY_LOW;
-//  hsram3.Init.WrapMode = FSMC_WRAP_MODE_DISABLE;
-//  hsram3.Init.WaitSignalActive = FSMC_WAIT_TIMING_BEFORE_WS;
-//  hsram3.Init.WriteOperation = FSMC_WRITE_OPERATION_ENABLE;
-//  hsram3.Init.WaitSignal = FSMC_WAIT_SIGNAL_DISABLE;
-//  hsram3.Init.ExtendedMode = FSMC_EXTENDED_MODE_DISABLE;
-//  hsram3.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
-//  hsram3.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
-//  hsram3.Init.PageSize = FSMC_PAGE_SIZE_NONE;
-//  /* Timing */
-//  Timing.AddressSetupTime = 0;
+//    /* Timing */
+//  Timing.AddressSetupTime = 2;
 //  Timing.AddressHoldTime = 0;
-//  Timing.DataSetupTime = 6;
+//  Timing.DataSetupTime = 4;
 //  Timing.BusTurnAroundDuration = 0;
-////  Timing.CLKDivision = 16;
-////  Timing.DataLatency = 17;
+//  Timing.CLKDivision = 0;
+//  Timing.DataLatency = 0;
 //  Timing.AccessMode = FSMC_ACCESS_MODE_A;
 //  /* ExtTiming */
 
@@ -151,48 +136,38 @@ void MX_FSMC_Init(void)
 //  {
 //    Error_Handler( );
 //  }
-
-//  /** Perform the SRAM4 memory initialization sequence
-//  */
-//  hsram4.Instance = FSMC_NORSRAM_DEVICE;
-//  hsram4.Extended = FSMC_NORSRAM_EXTENDED_DEVICE;
-//  /* hsram4.Init */
-//  hsram4.Init.NSBank = FSMC_NORSRAM_BANK4;
-//  hsram4.Init.DataAddressMux = FSMC_DATA_ADDRESS_MUX_DISABLE;
-//  hsram4.Init.MemoryType = FSMC_MEMORY_TYPE_SRAM;
-//  hsram4.Init.MemoryDataWidth = FSMC_NORSRAM_MEM_BUS_WIDTH_16;
-//  hsram4.Init.BurstAccessMode = FSMC_BURST_ACCESS_MODE_DISABLE;
-//  hsram4.Init.WaitSignalPolarity = FSMC_WAIT_SIGNAL_POLARITY_LOW;
-//  hsram4.Init.WrapMode = FSMC_WRAP_MODE_DISABLE;
-//  hsram4.Init.WaitSignalActive = FSMC_WAIT_TIMING_BEFORE_WS;
-//  hsram4.Init.WriteOperation = FSMC_WRITE_OPERATION_ENABLE;
-//  hsram4.Init.WaitSignal = FSMC_WAIT_SIGNAL_DISABLE;
-//  hsram4.Init.ExtendedMode = FSMC_EXTENDED_MODE_ENABLE;
-//  hsram4.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
-//  hsram4.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
-//  hsram4.Init.PageSize = FSMC_PAGE_SIZE_NONE;
+//  
 //  /* Timing */
 //  Timing.AddressSetupTime = 15;
 //  Timing.AddressHoldTime = 0;
 //  Timing.DataSetupTime = 60;
 //  Timing.BusTurnAroundDuration = 0;
-////  Timing.CLKDivision = 16;
-////  Timing.DataLatency = 17;
+//  Timing.CLKDivision = 0;
+//  Timing.DataLatency = 0;
 //  Timing.AccessMode = FSMC_ACCESS_MODE_A;
 //  /* ExtTiming */
 //  ExtTiming.AddressSetupTime = 9;
 //  ExtTiming.AddressHoldTime = 0;
-//  ExtTiming.DataSetupTime = 9;
-////  ExtTiming.BusTurnAroundDuration = 9;
-////  ExtTiming.CLKDivision = 16;
-////  ExtTiming.DataLatency = 17;
+//  ExtTiming.DataSetupTime = 8;
+//  ExtTiming.BusTurnAroundDuration = 0;
+//  ExtTiming.CLKDivision = 0;
+//  ExtTiming.DataLatency = 0;
 //  ExtTiming.AccessMode = FSMC_ACCESS_MODE_A;
 
 //  if (HAL_SRAM_Init(&hsram4, &Timing, &ExtTiming) != HAL_OK)
 //  {
 //    Error_Handler( );
 //  }
-    HAL_Delay(50);
+
+//    HAL_Delay(1000);
+//    NT35510_Init();
+        //重新配置写时序控制寄存器的时序   	 							    
+        /* 重新配置写时序控制寄存器的时序 */
+//        ExtTiming.AddressSetupTime = 2; /* 地址建立时间(ADDSET)为2个fsmc_ker_ck=6*2=12ns */
+//        ExtTiming.DataSetupTime = 2;    /* 数据保持时间(DATAST)为2个fsmc_ker_ck=6*2=12ns */
+//        FSMC_NORSRAM_Extended_Timing_Init(hsram4.Extended, &ExtTiming, hsram4.Init.NSBank, hsram4.Init.ExtendedMode);
+//    HAL_Delay(1000);
+
 
   /* USER CODE END FSMC_Init 2 */
 }
