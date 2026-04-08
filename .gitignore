@@ -76,3 +76,5 @@
 /tmp_codex_test.txt
 /*.clang-format
 /build
+/.codex_tmp
+/.codex_backups
