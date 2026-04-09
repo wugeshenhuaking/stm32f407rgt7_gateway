@@ -30,11 +30,11 @@
        466          0        114          0          0          0   ethernet.o
       1880          0         94         20      19408          0   ethernetif.o
          0          0       3089          0          0          0   exit.o
-       512          0          0          0        164          0   fsmc.o
+       508          0          0          0        164          0   fsmc.o
        388          0          0          0          0          0   gpio.o
       1912          0         20          1          0          0   gt9xxx.o
         10          0          0          0          0          0   gui_x.o
-       126          0         87          0      20480          0   guiconf.o
+        32          0          0    1024000          0          0   guiconf.o
       3548          0         52          0          0          0   guidrv_template.o
        940          0        200          0          0          0   icmp.o
          0          0       2680        556          0          0   id_screen_00.o
@@ -85,17 +85,21 @@
        980          0        209          0         12          0   timeouts.o
       1088          0        789          2          4          0   udp.o
        418          0          0          0        144          0   usart.o
-    195992          0      94373        644      12334          0   libGUI_v7m_OS0.a
+    195948          0      94373        644      12330          0   libGUI_v7m_OS0.a
 Object Totals
 
 Memory Map of the image
 
 	Load Region LR_IROM1 
 
-		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000E2978, Max: 0x00100000, END)
+		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000E2890, Max: 0x00100000, END)
 
-		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x00014060, Max: 0x0001C000, END)
+		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x0000F060, Max: 0x0001C000, END)
 
 		Execution Region RW_IRAM2 (Exec base: 0x2001C000, Size: 0x00000000, Max: 0x00004000, END)
+
+	Load Region LR$$.ARM.__at_0x68000000 
+
+		Execution Region ER$$.ARM.__at_0x68000000 (Exec base: 0x68000000, Size: 0x000FA000, Max: 0x000FA000, END)
 
 Image component sizes

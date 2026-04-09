@@ -41,7 +41,7 @@ void MX_FSMC_Init(void)
 
   /* USER CODE BEGIN FSMC_Init 1 */
   #ifdef USE_AC5
-//  XmRamInit();                //³õÊ¼»¯XMRAM 20191024
+//  XmRamInit();                //ï¿½ï¿½Ê¼ï¿½ï¿½XMRAM 20191024
 //  HAL_Delay(10);
   #endif
   /* USER CODE END FSMC_Init 1 */
@@ -67,8 +67,8 @@ void MX_FSMC_Init(void)
   hsram3.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
   Timing.AddressSetupTime = 2;
-  Timing.AddressHoldTime = 1;
-  Timing.DataSetupTime = 3;
+  Timing.AddressHoldTime = 0;
+  Timing.DataSetupTime = 6;
   Timing.BusTurnAroundDuration = 0;
   Timing.CLKDivision = 0;
   Timing.DataLatency = 0;
@@ -100,15 +100,15 @@ void MX_FSMC_Init(void)
   hsram4.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
   hsram4.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
-  Timing.AddressSetupTime = 15;
+  Timing.AddressSetupTime = 13;
   Timing.AddressHoldTime = 0;
-  Timing.DataSetupTime = 60;
+  Timing.DataSetupTime = 52;
   Timing.BusTurnAroundDuration = 0;
   Timing.CLKDivision = 0;
   Timing.DataLatency = 0;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
-  ExtTiming.AddressSetupTime = 9;
+  ExtTiming.AddressSetupTime = 8;
   ExtTiming.AddressHoldTime = 0;
   ExtTiming.DataSetupTime = 8;
   ExtTiming.BusTurnAroundDuration = 0;
@@ -161,10 +161,10 @@ void MX_FSMC_Init(void)
 
 //    HAL_Delay(1000);
 //    NT35510_Init();
-        //ÖØÐÂÅäÖÃÐ´Ê±Ðò¿ØÖÆ¼Ä´æÆ÷µÄÊ±Ðò   	 							    
-        /* ÖØÐÂÅäÖÃÐ´Ê±Ðò¿ØÖÆ¼Ä´æÆ÷µÄÊ±Ðò */
-//        ExtTiming.AddressSetupTime = 2; /* µØÖ·½¨Á¢Ê±¼ä(ADDSET)Îª2¸öfsmc_ker_ck=6*2=12ns */
-//        ExtTiming.DataSetupTime = 2;    /* Êý¾Ý±£³ÖÊ±¼ä(DATAST)Îª2¸öfsmc_ker_ck=6*2=12ns */
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´Ê±ï¿½ï¿½ï¿½ï¿½Æ¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½   	 							    
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´Ê±ï¿½ï¿½ï¿½ï¿½Æ¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ */
+//        ExtTiming.AddressSetupTime = 2; /* ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½(ADDSET)Îª2ï¿½ï¿½fsmc_ker_ck=6*2=12ns */
+//        ExtTiming.DataSetupTime = 2;    /* ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½Ê±ï¿½ï¿½(DATAST)Îª2ï¿½ï¿½fsmc_ker_ck=6*2=12ns */
 //        FSMC_NORSRAM_Extended_Timing_Init(hsram4.Extended, &ExtTiming, hsram4.Init.NSBank, hsram4.Init.ExtendedMode);
 //    HAL_Delay(1000);
 
