@@ -63,6 +63,10 @@
 // app CAN init
 #include "app_CAN.h"
 
+// freemodbus header file
+#include "user_mb_app.h"
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -74,7 +78,7 @@ CANopenNodeSTM32 canOpenNodeSTM32;
 /* USER CODE BEGIN PD */
 #define EMWIN_SRAM_DIAG_ENABLE     0
 #define EMWIN_SRAM_DIAG_LOOPS      32UL
-
+#define MODBUS_SLAVE_ID            1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -105,7 +109,12 @@ int fputc(int ch, FILE *f)
 }
 //#include "Generated/Resource.h"
 //#include "bsp_touch_port.h"
+//   extern void user_app(void)
+//   user_app();
 //    PID_X_Exec();
+
+#define RS485_TASK_TIMEOUT (1000UL)
+static uint32_t rs485_task_timer = 0;
 
 void user_app(void)
 {
@@ -114,7 +123,19 @@ void user_app(void)
     APP_CAN_Process();
   
     // LWIP polling
-    MX_LWIP_Process();
+//    MX_LWIP_Process();
+    
+    // test usart3
+//    if(bsp_CheckRunTime(rs485_task_timer) >= RS485_TASK_TIMEOUT)
+//    {
+//        HAL_GPIO_WritePin(RS485_RE_GPIO_Port,RS485_RE_Pin,1);
+//        HAL_UART_Transmit(&huart3, (uint8_t *)"Hello from USART2\r\n", 20, 1000);
+//        HAL_GPIO_WritePin(RS485_RE_GPIO_Port,RS485_RE_Pin,0);
+//        rs485_task_timer = bsp_GetRunTime();
+//    }
+    // freemodbus slave poll 
+    eMBPoll();          // Must be called continuously
+    
 }
 
 /* USER CODE END 0 */
@@ -210,6 +231,12 @@ int main(void)
   canopen_app_init(&canOpenNodeSTM32);
   APP_CAN_Init();
 #endif
+  /* freemodbus slave Initialize*/
+  
+  /* ABCDEF */ 
+  eMBInit(MB_RTU, MODBUS_SLAVE_ID, 2, 9600, MB_PAR_NONE);   // USART2, 115200
+  eMBEnable();
+
 
   /* emWin Initialize*/
   #ifdef USE_AC5

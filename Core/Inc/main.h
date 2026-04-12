@@ -65,6 +65,8 @@ void Error_Handler(void);
 #define LCD_RS_GPIO_Port GPIOF
 #define LCD_BL_Pin GPIO_PIN_15
 #define LCD_BL_GPIO_Port GPIOB
+#define RS485_RE_Pin GPIO_PIN_8
+#define RS485_RE_GPIO_Port GPIOG
 #define ETH_RESET_Pin GPIO_PIN_3
 #define ETH_RESET_GPIO_Port GPIOD
 #define LCD_RD_Pin GPIO_PIN_4

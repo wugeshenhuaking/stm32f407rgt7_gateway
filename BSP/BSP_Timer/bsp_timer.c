@@ -298,3 +298,5 @@ uint32_t bsp_CheckRunTime(uint32_t _last)
     /* uint32_t subtraction works correctly after overflow (mod 2^32 math), no special handling */
     return bsp_GetRunTime() - _last;
 }
+
+

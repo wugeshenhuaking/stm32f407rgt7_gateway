@@ -66,16 +66,16 @@ void MX_FSMC_Init(void)
   hsram3.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
   hsram3.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
-  Timing.AddressSetupTime = 2;
-  Timing.AddressHoldTime = 0;
+  Timing.AddressSetupTime = 0;
+  Timing.AddressHoldTime = 15;
   Timing.DataSetupTime = 6;
   Timing.BusTurnAroundDuration = 0;
-  Timing.CLKDivision = 0;
-  Timing.DataLatency = 0;
+  Timing.CLKDivision = 16;
+  Timing.DataLatency = 17;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
 
-  if (HAL_SRAM_Init(&hsram3, &Timing, &Timing) != HAL_OK)
+  if (HAL_SRAM_Init(&hsram3, &Timing, NULL) != HAL_OK)
   {
     Error_Handler( );
   }
@@ -100,20 +100,20 @@ void MX_FSMC_Init(void)
   hsram4.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
   hsram4.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
-  Timing.AddressSetupTime = 13;
-  Timing.AddressHoldTime = 0;
-  Timing.DataSetupTime = 52;
+  Timing.AddressSetupTime = 15;
+  Timing.AddressHoldTime = 15;
+  Timing.DataSetupTime = 60;
   Timing.BusTurnAroundDuration = 0;
-  Timing.CLKDivision = 0;
-  Timing.DataLatency = 0;
+  Timing.CLKDivision = 16;
+  Timing.DataLatency = 17;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
-  ExtTiming.AddressSetupTime = 8;
-  ExtTiming.AddressHoldTime = 0;
-  ExtTiming.DataSetupTime = 8;
-  ExtTiming.BusTurnAroundDuration = 0;
-  ExtTiming.CLKDivision = 0;
-  ExtTiming.DataLatency = 0;
+  ExtTiming.AddressSetupTime = 9;
+  ExtTiming.AddressHoldTime = 15;
+  ExtTiming.DataSetupTime = 9;
+  ExtTiming.BusTurnAroundDuration = 9;
+  ExtTiming.CLKDivision = 16;
+  ExtTiming.DataLatency = 17;
   ExtTiming.AccessMode = FSMC_ACCESS_MODE_A;
 
   if (HAL_SRAM_Init(&hsram4, &Timing, &ExtTiming) != HAL_OK)
@@ -122,52 +122,29 @@ void MX_FSMC_Init(void)
   }
 
   /* USER CODE BEGIN FSMC_Init 2 */
-//    /* Timing */
 //  Timing.AddressSetupTime = 2;
 //  Timing.AddressHoldTime = 0;
-//  Timing.DataSetupTime = 4;
+//  Timing.DataSetupTime = 8;
 //  Timing.BusTurnAroundDuration = 0;
-//  Timing.CLKDivision = 0;
-//  Timing.DataLatency = 0;
+//  Timing.CLKDivision = 16;
+//  Timing.DataLatency = 17;
 //  Timing.AccessMode = FSMC_ACCESS_MODE_A;
-//  /* ExtTiming */
 
-//  if (HAL_SRAM_Init(&hsram3, &Timing, &Timing) != HAL_OK)
-//  {
-//    Error_Handler( );
-//  }
-//  
-//  /* Timing */
-//  Timing.AddressSetupTime = 15;
+//  Timing.AddressSetupTime = 13;
 //  Timing.AddressHoldTime = 0;
-//  Timing.DataSetupTime = 60;
+//  Timing.DataSetupTime = 52;
 //  Timing.BusTurnAroundDuration = 0;
-//  Timing.CLKDivision = 0;
-//  Timing.DataLatency = 0;
+//  Timing.CLKDivision = 16;
+//  Timing.DataLatency = 17;
 //  Timing.AccessMode = FSMC_ACCESS_MODE_A;
 //  /* ExtTiming */
-//  ExtTiming.AddressSetupTime = 9;
+//  ExtTiming.AddressSetupTime = 8;
 //  ExtTiming.AddressHoldTime = 0;
 //  ExtTiming.DataSetupTime = 8;
-//  ExtTiming.BusTurnAroundDuration = 0;
-//  ExtTiming.CLKDivision = 0;
-//  ExtTiming.DataLatency = 0;
+//  ExtTiming.BusTurnAroundDuration = 9;
+//  ExtTiming.CLKDivision = 16;
+//  ExtTiming.DataLatency = 17;
 //  ExtTiming.AccessMode = FSMC_ACCESS_MODE_A;
-
-//  if (HAL_SRAM_Init(&hsram4, &Timing, &ExtTiming) != HAL_OK)
-//  {
-//    Error_Handler( );
-//  }
-
-//    HAL_Delay(1000);
-//    NT35510_Init();
-        //��������дʱ����ƼĴ�����ʱ��   	 							    
-        /* ��������дʱ����ƼĴ�����ʱ�� */
-//        ExtTiming.AddressSetupTime = 2; /* ��ַ����ʱ��(ADDSET)Ϊ2��fsmc_ker_ck=6*2=12ns */
-//        ExtTiming.DataSetupTime = 2;    /* ���ݱ���ʱ��(DATAST)Ϊ2��fsmc_ker_ck=6*2=12ns */
-//        FSMC_NORSRAM_Extended_Timing_Init(hsram4.Extended, &ExtTiming, hsram4.Init.NSBank, hsram4.Init.ExtendedMode);
-//    HAL_Delay(1000);
-
 
   /* USER CODE END FSMC_Init 2 */
 }

@@ -128,8 +128,8 @@ void GUI_X_Config(void)
 //    aMemory = (uint16_t *)EXT_SRAM_ADDR;
 //    void *aMemory = mymalloc(SRAMEX, GUI_NUMBYTES);
 
-  static U32 aMemory[GUI_NUMBYTES / 4] 
-    __attribute__((section(".ARM.__at_0x68000000")));
+static U32 aMemory[GUI_NUMBYTES / 4] 
+    __attribute__((section(".bss.ARM.__at_0x68000000")));
 
     /*  Assign memory to emWin */
     GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
