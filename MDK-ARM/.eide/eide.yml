@@ -96,13 +96,14 @@ virtualFolder:
             - path: ../3rdLib/emWin/Config/LCDConf.c
             - path: ../3rdLib/emWin/Config/LCDConf.h
           folders: []
-        - name: Demo
-          files:
-            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/APPW_MainTask.c
-          folders: []
         - name: Lib
           files:
+            - path: ../3rdLib/emWin/GUILib/GUI_CM4F_L.lib
             - path: ../3rdLib/emWin/GUILib/libGUI_v7m_OS0.a
+          folders: []
+        - name: APPwizard_Demo
+          files:
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/APPW_MainTask.c
           folders: []
         - name: CustomCode
           files:
@@ -119,9 +120,10 @@ virtualFolder:
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_00.h
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_01.c
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_01.h
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_02.c
+            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_02.h
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/Resource.c
             - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/Resource.h
-            - path: ../../../emWin_AppWizard_Proj/V636/gateway/Source/Generated/ID_SCREEN_02.c
           folders: []
         - name: Resource
           files:
@@ -157,6 +159,34 @@ virtualFolder:
             - path: ../3rdLib/emWin/emWinTask/DSO_WaveProcess.c
             - path: ../3rdLib/emWin/emWinTask/DSOV_MainTask.c
             - path: ../3rdLib/emWin/emWinTask/MainTask.c
+          folders: []
+        - name: Demo
+          files:
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_AntialiasedText.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Automotive.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_BarGraph.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Bitmap.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_ColorBar.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Conf.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Cursor.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Fading.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Graph.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_IconView.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_ImageFlow.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Intro.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Listview.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_RadialMenu.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Resource.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Skinning.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Speed.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Speedometer.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Start.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_TransparentDialog.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_Treeview.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_VScreen.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_WashingMachine.c
+            - path: ../3rdLib/emWin/emWinDemo/GUIDEMO_ZoomAndRotate.c
           folders: []
     - name: BSP
       files: []
@@ -201,8 +231,6 @@ virtualFolder:
           folders: []
         - name: ETH
           files:
-            - path: ../BSP/BSP_ETH/app_mqtt.c
-            - path: ../BSP/BSP_ETH/app_mqtt.h
             - path: ../BSP/BSP_ETH/bsp_eth.c
           folders: []
         - name: CAN
@@ -213,6 +241,9 @@ virtualFolder:
             - path: ../BSP/BSP_CAN/bsp_can_port.h
             - path: ../BSP/BSP_CAN/bsp_can_test.c
             - path: ../BSP/BSP_CAN/bsp_can_test.h
+          folders: []
+        - name: SPI
+          files: []
           folders: []
     - name: Middlewares
       files: []
@@ -351,6 +382,47 @@ virtualFolder:
         - path: ../BSP/BSP_CAN/app_CAN.c
         - path: ../BSP/BSP_CAN/app_CAN.h
       folders: []
+    - name: app_Network
+      files:
+        - path: ../BSP/BSP_ETH/app_mqtt.c
+        - path: ../BSP/BSP_ETH/app_mqtt.h
+      folders: []
+    - name: freeModbus
+      files: []
+      folders:
+        - name: port
+          files:
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/user_mb_app_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/user_mb_app.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/rtt/port.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/rtt/portevent.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/rtt/portevent_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/rtt/portserial.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/rtt/portserial_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/rtt/porttimer.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port/rtt/porttimer_m.c
+          folders: []
+        - name: Lib
+          files:
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/ascii/mbascii.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfunccoils.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfunccoils_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncdiag.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncdisc.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncdisc_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncholding.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncholding_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncinput.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncinput_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbfuncother.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions/mbutils.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/rtu/mbcrc.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/rtu/mbrtu.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/rtu/mbrtu_m.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/tcp/mbtcp.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/mb.c
+            - path: ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/mb_m.c
+          folders: []
     - name: ::CMSIS
       files: []
       folders: []
@@ -366,6 +438,213 @@ targets:
         - STM32F407xx
         - CO_CONFIG_SDO_CLI=3
         - CO_CONFIG_FIFO=1
+      incList:
+        - ../Core/Inc
+        - ../Drivers/STM32F4xx_HAL_Driver/Inc
+        - ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
+        - ../Drivers/CMSIS/Device/ST/STM32F4xx/Include
+        - ../Drivers/CMSIS/Include
+        - ../3rdLib/emWin/Config
+        - ../3rdLib/emWin/GUI_X
+        - ../3rdLib/emWin/include
+        - ../BSP/BSP_LCD
+        - ../BSP/BSP_LCDTouch
+        - ../BSP/BSP_SRAM
+        - ../BSP/BSP_Timer
+        - ../LWIP/App
+        - ../LWIP/Target
+        - ../Middlewares/Third_Party/LwIP/src/include
+        - ../Middlewares/Third_Party/LwIP/system
+        - ../Drivers/BSP/Components/lan8742
+        - ../Middlewares/Third_Party/LwIP/src/include/netif/ppp
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip/apps
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip/priv
+        - ../Middlewares/Third_Party/LwIP/src/include/lwip/prot
+        - ../Middlewares/Third_Party/LwIP/src/include/netif
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix/net
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys
+        - ../Middlewares/Third_Party/LwIP/src/include/compat/stdc
+        - ../Middlewares/Third_Party/LwIP/system/arch
+        - ../BSP/BSP_ETH
+        - ../BSP/BSP_CAN
+        - ../3rdLib/CANopen/CANopenNode
+        - ../3rdLib/CANopen/CANopenNode_STM32
+        - ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode
+        - ../../../emWin_AppWizard_Proj/V636/gateway/Source
+        - ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/port
+        - ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/include
+        - ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/ascii
+        - ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/functions
+        - ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/rtu
+        - ../3rdLib/FreeModbus_Slave-Master-RTT-STM32/FreeModbus/modbus/tcp
+        - .cmsis/include
+        - RTE/_stm32f407zgt6-gataway
+      libList: []
+    excludeList:
+      - <virtual_root>/emwin/Lib/GUI_CM4F_L.lib
+      - <virtual_root>/emwin/DSO_Demo
+      - <virtual_root>/emwin/Demo
+      - <virtual_root>/BSP/SRAM/malloc.c
+      - <virtual_root>/BSP/SRAM/XMRAM.lib
+      - <virtual_root>/Middlewares/LwIP/slipif.c
+      - <virtual_root>/freeModbus/port/user_mb_app_m.c
+      - <virtual_root>/freeModbus/port/portevent_m.c
+      - <virtual_root>/freeModbus/port/portserial_m.c
+      - <virtual_root>/freeModbus/port/porttimer_m.c
+      - <virtual_root>/freeModbus/Lib/mbfunccoils_m.c
+      - <virtual_root>/freeModbus/Lib/mbfuncdisc_m.c
+      - <virtual_root>/freeModbus/Lib/mbfuncholding_m.c
+      - <virtual_root>/freeModbus/Lib/mbfuncinput_m.c
+      - <virtual_root>/freeModbus/Lib/mbrtu_m.c
+      - <virtual_root>/freeModbus/Lib/mb_m.c
+    settings: {}
+    toolchain: AC6
+    toolchainConfigMap:
+      AC6:
+        archExtensions: ""
+        cpuType: Cortex-M4
+        floatingPointHardware: single
+        options:
+          version: 3
+          afterBuildTasks:
+            - name: "[Copy linker output for Keil User Commands]"
+              abortAfterFailed: true
+              command: mkdir ${KEIL_OUTPUT_DIR} & copy "${OutDir}\${ProjectName}.axf" "${KEIL_OUTPUT_DIR}\${ProjectName}.axf"
+              disable: false
+            - name: D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\keil-build-viewer.exe
+              abortAfterFailed: true
+              command: D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\keil-build-viewer.exe
+              disable: false
+          asm-compiler:
+            $use: asm-auto
+            defines: []
+            misc-controls: ""
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: -Wno-invalid-source-encoding -fno-short-wchar -fshort-enums
+            C_FLAGS: -Wno-invalid-source-encoding -fno-short-wchar -fshort-enums
+            language-c: c11
+            language-cpp: c++11
+            link-time-optimization: false
+            one-elf-section-per-function: true
+            optimization: level-0
+            warnings: ac5-like-warnings
+          global:
+            output-debug-info: enable
+            use-microLIB: true
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            misc-controls: --diag_suppress=L6329
+            output-format: elf
+            ro-base: ""
+            rw-base: ""
+            xo-base: ""
+        scatterFilePath: ""
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 3
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x1c000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+            - id: 2
+              isChecked: true
+              mem:
+                size: "0x4000"
+                startAddr: "0x2001c000"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 3
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x100000"
+                startAddr: "0x8000000"
+              tag: IROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: IROM
+        useCustomScatterFile: false
+    uploadConfigMap:
+      JLink:
+        baseAddr: ""
+        bin: ""
+        cpuInfo:
+          cpuName: "null"
+          vendor: "null"
+        otherCmds: ""
+        proType: 1
+        speed: 8000
+      probe-rs:
+        allowEraseAll: false
+        baseAddr: "0x08000000"
+        bin: ""
+        otherOptions: ""
+        protocol: swd
+        speed: 0
+        target: STM32F103C8
+    uploader: probe-rs
+  use AC5-Complier:
+    cppPreprocessAttrs:
+      defineList:
+        - USE_HAL_DRIVER
+        - STM32F407xx
+        - CO_CONFIG_SDO_CLI=3
+        - CO_CONFIG_FIFO=1
+        - USE_AC5
       incList:
         - ../Core/Inc
         - ../Drivers/STM32F4xx_HAL_Driver/Inc
@@ -401,25 +680,27 @@ targets:
         - ../BSP/BSP_CAN
         - ../3rdLib/CANopen/CANopenNode
         - ../3rdLib/CANopen/CANopenNode_STM32
-        - ../../../emWin_AppWizard_Proj/V636/gateway/Source/CustomCode
-        - ../../../emWin_AppWizard_Proj/V636/gateway/Source
         - .cmsis/include
-        - RTE/_stm32f407zgt6-gataway
+        - RTE/_use AC5-Complier
       libList: []
     excludeList:
+      - <virtual_root>/emwin/Lib/libGUI_v7m_OS0.a
+      - <virtual_root>/emwin/APPwizard_Demo
+      - <virtual_root>/emwin/CustomCode
+      - <virtual_root>/emwin/Generated
+      - <virtual_root>/emwin/Resource
       - <virtual_root>/emwin/DSO_Demo
-      - <virtual_root>/BSP/SRAM/malloc.c
-      - <virtual_root>/BSP/SRAM/XMRAM.lib
       - <virtual_root>/Middlewares/LwIP/slipif.c
-    settings: {}
-    toolchain: AC6
+    settings:
+      debugger: cortex-debug
+    toolchain: AC5
     toolchainConfigMap:
-      AC6:
+      AC5:
         archExtensions: ""
         cpuType: Cortex-M4
         floatingPointHardware: single
         options:
-          version: 3
+          version: 4
           afterBuildTasks:
             - name: "[Copy linker output for Keil User Commands]"
               abortAfterFailed: true
@@ -430,30 +711,105 @@ targets:
               command: D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\keil-build-viewer.exe
               disable: false
           asm-compiler:
-            $use: asm-auto
             defines: []
-            misc-controls: ""
           beforeBuildTasks: []
           c/cpp-compiler:
-            CXX_FLAGS: -fno-short-wchar -fshort-enums
-            C_FLAGS: -fno-short-wchar -fshort-enums
-            language-c: c99
-            language-cpp: c++11
-            link-time-optimization: false
+            CXX_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            C_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            c99-mode: true
             one-elf-section-per-function: true
             optimization: level-0
-            warnings: ac5-like-warnings
+            warnings: all-warnings
           global:
             output-debug-info: enable
             use-microLIB: true
           linker:
             $outputTaskExcludes:
               - .bin
-            misc-controls: --diag_suppress=L6329
             output-format: elf
             ro-base: ""
             rw-base: ""
             xo-base: ""
+        scatterFilePath: ""
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 3
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x1c000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+            - id: 2
+              isChecked: true
+              mem:
+                size: "0x4000"
+                startAddr: "0x2001c000"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 3
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x100000"
+                startAddr: "0x8000000"
+              tag: IROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: IROM
+        useCustomScatterFile: false
+      AC6:
+        archExtensions: ""
+        cpuType: Cortex-M4
+        floatingPointHardware: single
+        options: ""
         scatterFilePath: ""
         storageLayout:
           RAM:

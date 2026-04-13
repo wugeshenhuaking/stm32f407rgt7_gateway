@@ -65,7 +65,8 @@
 
 // freemodbus header file
 #include "user_mb_app.h"
-
+#include "mbport.h"
+#include "mb_stack.h"
 
 /* USER CODE END Includes */
 
@@ -109,12 +110,15 @@ int fputc(int ch, FILE *f)
 }
 //#include "Generated/Resource.h"
 //#include "bsp_touch_port.h"
-//   extern void user_app(void)
+//   extern void user_app(void);
 //   user_app();
 //    PID_X_Exec();
 
 #define RS485_TASK_TIMEOUT (1000UL)
 static uint32_t rs485_task_timer = 0;
+
+MB_StackTypeDef mbStack = NEW_MB_StackTypeDef;
+
 
 void user_app(void)
 {
@@ -123,7 +127,7 @@ void user_app(void)
     APP_CAN_Process();
   
     // LWIP polling
-//    MX_LWIP_Process();
+    MX_LWIP_Process();
     
     // test usart3
 //    if(bsp_CheckRunTime(rs485_task_timer) >= RS485_TASK_TIMEOUT)
@@ -134,8 +138,7 @@ void user_app(void)
 //        rs485_task_timer = bsp_GetRunTime();
 //    }
     // freemodbus slave poll 
-    eMBPoll();          // Must be called continuously
-    
+//    eMBPoll();          // Must be called continuously
 }
 
 /* USER CODE END 0 */
@@ -233,9 +236,35 @@ int main(void)
 #endif
   /* freemodbus slave Initialize*/
   
-  /* ABCDEF */ 
-  eMBInit(MB_RTU, MODBUS_SLAVE_ID, 2, 9600, MB_PAR_NONE);   // USART2, 115200
-  eMBEnable();
+  /* freeModbus RTU slave init */ 
+//    eMBErrorCode eStatus = eMBTCPInit(502);   /* 监听 502 端口 */
+//    
+
+//  
+//  
+//    eMBErrorCode eStatus_RTU_slave = eMBInit(MB_RTU, MODBUS_SLAVE_ID, 3, 9600, MB_PAR_NONE);   // USART2, 115200
+//    if(eStatus_RTU_slave != MB_ENOERR)
+//    {
+//      while(1)
+//      {
+//        printf("init modbus rtu slave failed \n");
+//      }
+//    }
+//    
+//    if (eStatus == MB_ENOERR && eStatus_RTU_slave  == MB_ENOERR)
+//    {
+//        eMBEnable();
+//    } 
+
+    mbStack.hardware.max485.phuart = &huart3;
+    mbStack.hardware.max485.dirPin = RS485_RE_Pin;
+    mbStack.hardware.max485.dirPort = RS485_RE_GPIO_Port;
+    mbStack.hardware.phtim = &htim6;
+    mbStack.hardware.uartIRQn = USART3_IRQn;
+    mbStack.hardware.timIRQn = TIM6_DAC_IRQn;
+    eMBInit(&mbStack, MB_RTU, 0x01, 1,9600, MB_PAR_NONE);
+    eMBEnable(&mbStack);
+  /* freeModbus TCP layer init */
 
 
   /* emWin Initialize*/

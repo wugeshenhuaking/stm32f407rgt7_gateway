@@ -97,7 +97,19 @@
 #define CHECKSUM_CHECK_ICMP6 0
 /*-----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
+/* === Fix for sys_timeout pool empty (MQTT + TCP) === */
+#define MEMP_NUM_SYS_TIMEOUT        20
 
+/* Memory optimization */
+#define MEM_SIZE                    (12*1024)
+#define PBUF_POOL_SIZE              20
+#define MEMP_NUM_PBUF               20
+#define MEMP_NUM_TCP_SEG            16
+#define MEMP_NUM_TCP_PCB            8
+
+/* MQTT settings */
+#define MQTT_OUTPUT_BUFFER_SIZE     512
+#define MQTT_VAR_HEADER_BUFFER_LEN  512
 /* USER CODE END 1 */
 
 #ifdef __cplusplus
