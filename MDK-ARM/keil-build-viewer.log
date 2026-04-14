@@ -35,10 +35,10 @@
 
 [region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000E46E0 [memory type] 2 [memory ID] 4
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000E3078 [memory type] 2 [memory ID] 4
 
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00012B58 [memory type] 1 [memory ID] 2
-		[ZI block] addr: 0x20000D38, size: 0x00011E20 (73248)
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00012808 [memory type] 1 [memory ID] 2
+		[ZI block] addr: 0x20000E00, size: 0x00011A08 (72200)
 
 	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [memory type] 1 [memory ID] 3
 
@@ -48,7 +48,7 @@
 
 
 [object name max length] 29
-[object path max length] 87
+[object path max length] 92
 
 [object in map file]
 [object name] _24_normal_ext_aa4.o           [path] ..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Font\_24_Normal_EXT_AA4.c
@@ -105,16 +105,9 @@
 [object name] lcdconf.o                      [path] ..\3rdLib\emWin\Config\LCDConf.c
 [object name] lwip.o                         [path] ../LWIP/App/lwip.c
 [object name] main.o                         [path] ../Core/Src/main.c
-[object name] mb.o                           [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\mb.c
-[object name] mbcrc.o                        [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\rtu\mbcrc.c
-[object name] mbfunccoils.o                  [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfunccoils.c
-[object name] mbfuncdisc.o                   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncdisc.c
-[object name] mbfuncholding.o                [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncholding.c
-[object name] mbfuncinput.o                  [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncinput.c
-[object name] mbfuncother.o                  [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncother.c
-[object name] mbrtu.o                        [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\rtu\mbrtu.c
-[object name] mbtcp.o                        [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\tcp\mbtcp.c
-[object name] mbutils.o                      [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbutils.c
+[object name] mb.o                           [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\mb.c
+[object name] mbcrc.o                        [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbcrc.c
+[object name] mbrtu.o                        [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbrtu.c
 [object name] mem.o                          [path] ../Middlewares/Third_Party/LwIP/src/core/mem.c
 [object name] memp.o                         [path] ../Middlewares/Third_Party/LwIP/src/core/memp.c
 [object name] mqtt.o                         [path] ../Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c
@@ -123,11 +116,9 @@
 [object name] netif.o                        [path] ../Middlewares/Third_Party/LwIP/src/core/netif.c
 [object name] od.o                           [path] ..\3rdLib\CANopen\CANopenNode_STM32\OD.c
 [object name] pbuf.o                         [path] ../Middlewares/Third_Party/LwIP/src/core/pbuf.c
-[object name] port.o                         [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\port.c
-[object name] portevent.o                    [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portevent.c
-[object name] portserial.o                   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portserial.c
-[object name] porttcp.o                      [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portTCP.c
-[object name] porttimer.o                    [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\porttimer.c
+[object name] portevent.o                    [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portevent.c
+[object name] portserial.o                   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portserial.c
+[object name] porttimer.o                    [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\porttimer.c
 [object name] resource.o                     [path] ..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\Resource.c
 [object name] startup_stm32f407xx.o          [path] startup_stm32f407xx.s
 [object name] stm32f4xx_hal.o                [path] ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
@@ -151,7 +142,6 @@
 [object name] timeouts.o                     [path] ../Middlewares/Third_Party/LwIP/src/core/timeouts.c
 [object name] udp.o                          [path] ../Middlewares/Third_Party/LwIP/src/core/udp.c
 [object name] usart.o                        [path] ../Core/Src/usart.c
-[object name] user_mb_app.o                  [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\user_mb_app.c
 [object name] libGUI_v7m_OS0.a               [path] ..\3rdLib\emWin\GUILib\libGUI_v7m_OS0.a
 
 [file path in keil project]
@@ -328,146 +318,134 @@
 [old name] OD.c                           [type] 1   [path] ..\3rdLib\CANopen\CANopenNode_STM32\OD.c
 [old name] app_CAN.c                      [type] 1   [path] ..\BSP\BSP_CAN\app_CAN.c
 [old name] app_mqtt.c                     [type] 1   [path] ..\BSP\BSP_ETH\app_mqtt.c
-[old name] user_mb_app.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\user_mb_app.c
-[old name] port.c                         [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\port.c
-[old name] portevent.c                    [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portevent.c
-[old name] portserial.c                   [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portserial.c
-[old name] porttimer.c                    [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\porttimer.c
-[old name] portTCP.c                      [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portTCP.c
-[old name] mbascii.c                      [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\ascii\mbascii.c
-[old name] mbfunccoils.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfunccoils.c
-[old name] mbfuncdiag.c                   [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncdiag.c
-[old name] mbfuncdisc.c                   [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncdisc.c
-[old name] mbfuncholding.c                [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncholding.c
-[old name] mbfuncinput.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncinput.c
-[old name] mbfuncother.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncother.c
-[old name] mbutils.c                      [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbutils.c
-[old name] mbcrc.c                        [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\rtu\mbcrc.c
-[old name] mbrtu.c                        [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\rtu\mbrtu.c
-[old name] mbtcp.c                        [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\tcp\mbtcp.c
-[old name] mb.c                           [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\mb.c
+[old name] portevent.c                    [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portevent.c
+[old name] portserial.c                   [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portserial.c
+[old name] porttimer.c                    [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\porttimer.c
+[old name] user_mb_app.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\user_mb_app.c
+[old name] mbascii.c                      [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\ascii\mbascii.c
+[old name] mbfunccoils.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\functions\mbfunccoils.c
+[old name] mbfuncdiag.c                   [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\functions\mbfuncdiag.c
+[old name] mbfuncdisc.c                   [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\functions\mbfuncdisc.c
+[old name] mbfuncholding.c                [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\functions\mbfuncholding.c
+[old name] mbfuncinput.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\functions\mbfuncinput.c
+[old name] mbfuncother.c                  [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\functions\mbfuncother.c
+[old name] mbutils.c                      [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\functions\mbutils.c
+[old name] mbcrc.c                        [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbcrc.c
+[old name] mbrtu.c                        [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbrtu.c
+[old name] mbtcp.c                        [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\tcp\mbtcp.c
+[old name] mb.c                           [type] 1   [path] ..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\mb.c
 
 [record region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000E46DC [type] 2 [ID] 4
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00012B58 [type] 1 [ID] 2
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000E2140 [type] 2 [ID] 4
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x000126C0 [type] 1 [ID] 2
 	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [type] 1 [ID] 3
 [load region] LR$$.bss.ARM.__at_0x68000000
 	[execution region] ER$$.bss.ARM.__at_0x68000000, 0x68000000, 0x000FA000, 0x000FA000 [type] 3 [ID] 1
----------------------------------------------------------------------------------------------------------------------------------------------------
-                                           FILE(s)                                          |         RAM (byte)       |       FLASH (byte)       |
----------------------------------------------------------------------------------------------------------------------------------------------------
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Font\_24_Normal_EXT_AA4.c():            |           0              |      396785              |
-..\BSP\BSP_CAN\app_CAN.c():                                                                 |          12              |         402              |
-..\BSP\BSP_ETH\app_mqtt.c():                                                                |          21              |        1459              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Text\APPW_Language_0.c():               |           0              |          99              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\APPW_MainTask.c():                        |           0              |         112              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\APPWConf.c():                   |           2              |         169              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\bk.c():                           |           0              |       29435              |
-..\BSP\BSP_LCD\bsp_lcd_port.c():                                                            |           4              |         282              |
-..\BSP\BSP_Timer\bsp_timer.c():                                                             |         106              |         542              |
-..\BSP\BSP_LCDTouch\bsp_touch_port.c():                                                     |          64              |        1460              |
-../Core/Src/can.c():                                                                        |          40              |         244              |
-..\3rdLib\CANopen\CANopenNode\CANopen.c():                                                  |           0              |        3374              |
-..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c():                                       |          17              |        1627              |
-..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c():                                    |          56              |        1958              |
-..\3rdLib\CANopen\CANopenNode\301\CO_Emergency.c():                                         |           0              |        2244              |
-..\3rdLib\CANopen\CANopenNode\301\CO_fifo.c():                                              |           0              |          58              |
-..\3rdLib\CANopen\CANopenNode\303\CO_LEDs.c():                                              |           0              |        1030              |
-..\3rdLib\CANopen\CANopenNode\305\CO_LSSslave.c():                                          |           0              |        1934              |
-..\3rdLib\CANopen\CANopenNode\301\CO_NMT_Heartbeat.c():                                     |           0              |        1656              |
-..\3rdLib\CANopen\CANopenNode\301\CO_ODinterface.c():                                       |           0              |        1800              |
-..\3rdLib\CANopen\CANopenNode\301\CO_PDO.c():                                               |           0              |        6530              |
-..\3rdLib\CANopen\CANopenNode\301\CO_SDOclient.c():                                         |           0              |         820              |
-..\3rdLib\CANopen\CANopenNode\301\CO_SDOserver.c():                                         |           0              |        5380              |
-..\3rdLib\CANopen\CANopenNode\301\CO_SYNC.c():                                              |           0              |        1572              |
-..\3rdLib\CANopen\CANopenNode\301\CO_TIME.c():                                              |           0              |        1214              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\dac.c():                          |           0              |       15569              |
-../Middlewares/Third_Party/LwIP/src/core/def.c():                                           |           0              |          48              |
-../Middlewares/Third_Party/LwIP/src/core/ipv4/etharp.c():                                   |         241              |        5009              |
-../Middlewares/Third_Party/LwIP/src/netif/ethernet.c():                                     |           0              |         580              |
-../LWIP/Target/ethernetif.c():                                                              |       19428              |        1994              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\exit.c():                         |           0              |        3089              |
-../Core/Src/fsmc.c():                                                                       |         164              |         526              |
-../Core/Src/gpio.c():                                                                       |           0              |         436              |
-..\BSP\BSP_LCDTouch\gt9xxx.c():                                                             |           1              |        1933              |
-..\3rdLib\emWin\GUI_X\GUI_X.c():                                                            |           0              |          52              |
-..\3rdLib\emWin\Config\GUIConf.c():                                                         |     1024000              |          32              |
-..\3rdLib\emWin\Config\GUIDRV_Template.c():                                                 |           0              |        3600              |
-../Middlewares/Third_Party/LwIP/src/core/ipv4/icmp.c():                                     |           0              |        1140              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_00.c():               |         556              |        3236              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_00_Slots.c():        |           0              |         196              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_01.c():               |         348              |         928              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_01_Slots.c():        |        2424              |        6018              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_02.c():               |         556              |        1376              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_02_Slots.c():        |           0              |         121              |
-../Middlewares/Third_Party/LwIP/src/core/init.c():                                          |           0              |          44              |
-../Middlewares/Third_Party/LwIP/src/core/ip.c():                                            |          24              |           0              |
-../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4.c():                                      |           2              |        1703              |
-../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_addr.c():                                 |          16              |        1149              |
-../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_frag.c():                                 |           6              |        4317              |
-../Drivers/BSP/Components/lan8742/lan8742.c():                                              |           0              |         566              |
-..\BSP\BSP_LCD\lcd_nt35510.c():                                                             |           0              |        5122              |
-..\3rdLib\emWin\Config\LCDConf.c():                                                         |           0              |         176              |
-../LWIP/App/lwip.c():                                                                       |          81              |         660              |
-../Core/Src/main.c():                                                                       |          24              |         527  [+2]        |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\mb.c():                       |         172              |        1237              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\rtu\mbcrc.c():                |           0              |         618              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfunccoils.c():    |           0              |         702              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncdisc.c():     |           0              |         272              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncholding.c():  |           0              |         934              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncinput.c():    |           0              |         236              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbfuncother.c():    |          34              |          52              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\rtu\mbrtu.c():                |         266              |         918              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\tcp\mbtcp.c():                |           0              |         252              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\modbus\functions\mbutils.c():        |           0              |         380              |
-../Middlewares/Third_Party/LwIP/src/core/mem.c():                                           |       12319              |        3196              |
-../Middlewares/Third_Party/LwIP/src/core/memp.c():                                          |       15239              |        1025              |
-../Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c():                                     |           0              |        9352              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\music.c():                        |           0              |       15569              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\net.c():                          |           0              |       15569              |
-../Middlewares/Third_Party/LwIP/src/core/netif.c():                                         |           9              |        2341              |
-..\3rdLib\CANopen\CANopenNode_STM32\OD.c():                                                 |        1024              |        2748              |
-../Middlewares/Third_Party/LwIP/src/core/pbuf.c():                                          |           1              |        5164              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\port.c():                   |           4              |          44              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portevent.c():              |           2              |         120              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portserial.c():             |           1              |         452              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\portTCP.c():                |         267              |         897              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\rtt\porttimer.c():              |           2              |         273              |
-..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\Resource.c():                   |          32              |         216              |
-startup_stm32f407xx.s():                                                                    |        9216              |         428              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c():                                      |           9              |         275              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c():                                  |           0              |        3316              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c():                               |           0              |         600              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c():                                  |           0              |        4352              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c():                                 |           0              |        1042              |
-../Core/Src/stm32f4xx_hal_msp.c():                                                          |           0              |          74              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c():                                  |           0              |        2646              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c():                                 |           0              |         128              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():                                  |           0              |         904              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c():                               |           0              |         290              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c():                                 |           0              |        1142              |
-../Core/Src/stm32f4xx_it.c():                                                               |           1              |         540              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c():                                  |           0              |         360              |
-../Core/Src/system_stm32f4xx.c():                                                           |           4              |          46              |
-../Middlewares/Third_Party/LwIP/src/core/tcp.c():                                           |          29              |       11591              |
-../Middlewares/Third_Party/LwIP/src/core/tcp_in.c():                                        |          52              |       12537              |
-../Middlewares/Third_Party/LwIP/src/core/tcp_out.c():                                       |           0              |       11331              |
-../Core/Src/tim.c():                                                                        |          72              |         152              |
-../Middlewares/Third_Party/LwIP/src/core/timeouts.c():                                      |          12              |        1189              |
-../Middlewares/Third_Party/LwIP/src/core/udp.c():                                           |           6              |        1879              |
-../Core/Src/usart.c():                                                                      |         144              |         418              |
-..\3rdLib\FreeModbus_Slave-Master-RTT-STM32\FreeModbus\port\user_mb_app.c():                |         418              |        1222              |
-..\3rdLib\emWin\GUILib\libGUI_v7m_OS0.a():                                                  |       12974              |      290965              |
----------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+                                             FILE(s)                                             |         RAM (byte)       |       FLASH (byte)       |
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Font\_24_Normal_EXT_AA4.c():                 |           0              |      396785              |
+..\BSP\BSP_CAN\app_CAN.c():                                                                      |          12              |         402              |
+..\BSP\BSP_ETH\app_mqtt.c():                                                                     |          21              |        1459              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Text\APPW_Language_0.c():                    |           0              |          99              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\APPW_MainTask.c():                             |           0              |         112              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\APPWConf.c():                        |           2              |         169              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\bk.c():                                |           0              |       29435              |
+..\BSP\BSP_LCD\bsp_lcd_port.c():                                                                 |           4              |         282              |
+..\BSP\BSP_Timer\bsp_timer.c():                                                                  |         106              |         542              |
+..\BSP\BSP_LCDTouch\bsp_touch_port.c():                                                          |          64              |        1460              |
+../Core/Src/can.c():                                                                             |          40              |         244              |
+..\3rdLib\CANopen\CANopenNode\CANopen.c():                                                       |           0              |        3374              |
+..\3rdLib\CANopen\CANopenNode_STM32\CO_app_STM32.c():                                            |          17              |        1627              |
+..\3rdLib\CANopen\CANopenNode_STM32\CO_driver_STM32.c():                                         |          56              |        1958              |
+..\3rdLib\CANopen\CANopenNode\301\CO_Emergency.c():                                              |           0              |        2244              |
+..\3rdLib\CANopen\CANopenNode\301\CO_fifo.c():                                                   |           0              |          58              |
+..\3rdLib\CANopen\CANopenNode\303\CO_LEDs.c():                                                   |           0              |        1030              |
+..\3rdLib\CANopen\CANopenNode\305\CO_LSSslave.c():                                               |           0              |        1934              |
+..\3rdLib\CANopen\CANopenNode\301\CO_NMT_Heartbeat.c():                                          |           0              |        1656              |
+..\3rdLib\CANopen\CANopenNode\301\CO_ODinterface.c():                                            |           0              |        1800              |
+..\3rdLib\CANopen\CANopenNode\301\CO_PDO.c():                                                    |           0              |        6530              |
+..\3rdLib\CANopen\CANopenNode\301\CO_SDOclient.c():                                              |           0              |         820              |
+..\3rdLib\CANopen\CANopenNode\301\CO_SDOserver.c():                                              |           0              |        5380              |
+..\3rdLib\CANopen\CANopenNode\301\CO_SYNC.c():                                                   |           0              |        1572              |
+..\3rdLib\CANopen\CANopenNode\301\CO_TIME.c():                                                   |           0              |        1214              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\dac.c():                               |           0              |       15569              |
+../Middlewares/Third_Party/LwIP/src/core/def.c():                                                |           0              |          48              |
+../Middlewares/Third_Party/LwIP/src/core/ipv4/etharp.c():                                        |         241              |        5009              |
+../Middlewares/Third_Party/LwIP/src/netif/ethernet.c():                                          |           0              |         580              |
+../LWIP/Target/ethernetif.c():                                                                   |       19428              |        1994              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\exit.c():                              |           0              |        3089              |
+../Core/Src/fsmc.c():                                                                            |         164              |         526              |
+../Core/Src/gpio.c():                                                                            |           0              |         436              |
+..\BSP\BSP_LCDTouch\gt9xxx.c():                                                                  |           1              |        1933              |
+..\3rdLib\emWin\GUI_X\GUI_X.c():                                                                 |           0              |          52              |
+..\3rdLib\emWin\Config\GUIConf.c():                                                              |     1024000              |          32              |
+..\3rdLib\emWin\Config\GUIDRV_Template.c():                                                      |           0              |        3600              |
+../Middlewares/Third_Party/LwIP/src/core/ipv4/icmp.c():                                          |           0              |        1140              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_00.c():                    |         556              |        3236              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_00_Slots.c():             |           0              |         196              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_01.c():                    |         348              |         928              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_01_Slots.c():             |        2424              |        6018              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\ID_SCREEN_02.c():                    |         556              |        1376              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\CustomCode\ID_SCREEN_02_Slots.c():             |           0              |         121              |
+../Middlewares/Third_Party/LwIP/src/core/init.c():                                               |           0              |          44              |
+../Middlewares/Third_Party/LwIP/src/core/ip.c():                                                 |          24              |           0              |
+../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4.c():                                           |           2              |        1703              |
+../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_addr.c():                                      |          16              |        1149              |
+../Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_frag.c():                                      |           6              |        4317              |
+../Drivers/BSP/Components/lan8742/lan8742.c():                                                   |           0              |         566              |
+..\BSP\BSP_LCD\lcd_nt35510.c():                                                                  |           0              |        5122              |
+..\3rdLib\emWin\Config\LCDConf.c():                                                              |           0              |         176              |
+../LWIP/App/lwip.c():                                                                            |          81              |         660              |
+../Core/Src/main.c():                                                                            |         352  [+328]      |         834  [+428]      |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\mb.c():                       |           0  [NEW]       |         358  [NEW]       |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbcrc.c():                |           0  [NEW]       |         618  [NEW]       |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbrtu.c():                |           0  [NEW]       |        1186  [NEW]       |
+../Middlewares/Third_Party/LwIP/src/core/mem.c():                                                |       12319              |        3196              |
+../Middlewares/Third_Party/LwIP/src/core/memp.c():                                               |       15239              |        1025              |
+../Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c():                                          |           0              |        9352              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\music.c():                             |           0              |       15569              |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Resource\Image\net.c():                               |           0              |       15569              |
+../Middlewares/Third_Party/LwIP/src/core/netif.c():                                              |           9              |        2341              |
+..\3rdLib\CANopen\CANopenNode_STM32\OD.c():                                                      |        1024              |        2748              |
+../Middlewares/Third_Party/LwIP/src/core/pbuf.c():                                               |           1              |        5164              |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portevent.c():            |           0  [NEW]       |          56  [NEW]       |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portserial.c():           |           0  [NEW]       |         372  [NEW]       |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\porttimer.c():            |           0  [NEW]       |          96  [NEW]       |
+..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\Resource.c():                        |          32              |         216              |
+startup_stm32f407xx.s():                                                                         |        9216              |         428              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c():                                           |           9              |         275              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c():                                       |           0              |        3316              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c():                                    |           0              |         600              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c():                                       |           0              |        4352              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c():                                      |           0              |        1590  [+548]      |
+../Core/Src/stm32f4xx_hal_msp.c():                                                               |           0              |          74              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c():                                       |           0              |        2646              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c():                                      |           0              |         128              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():                                       |           0              |         904  [+328]      |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c():                                    |           0              |         290              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c():                                      |           0              |        1242  [+100]      |
+../Core/Src/stm32f4xx_it.c():                                                                    |           1              |         540              |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c():                                       |           0              |         360              |
+../Core/Src/system_stm32f4xx.c():                                                                |           4              |          46              |
+../Middlewares/Third_Party/LwIP/src/core/tcp.c():                                                |          29              |       10951              |
+../Middlewares/Third_Party/LwIP/src/core/tcp_in.c():                                             |          52              |       12537              |
+../Middlewares/Third_Party/LwIP/src/core/tcp_out.c():                                            |           0              |       11331              |
+../Core/Src/tim.c():                                                                             |          72              |         152              |
+../Middlewares/Third_Party/LwIP/src/core/timeouts.c():                                           |          12              |        1189              |
+../Middlewares/Third_Party/LwIP/src/core/udp.c():                                                |           6              |        1879              |
+../Core/Src/usart.c():                                                                           |         144              |         532  [+114]      |
+..\3rdLib\emWin\GUILib\libGUI_v7m_OS0.a():                                                       |       12974              |      290965              |
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 [memory print mode]: 0
 LR_IROM1
         RAM 1                                 [0x20000000 | 0x0001C000 (114688)]
                 [zi start] 1   [zi end] 33
-                RW_IRAM1                      [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_________________| (  74.8 KB / 112.0 KB )  66.8%  
+                RW_IRAM1                      [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_________________| (  74.0 KB / 112.0 KB )  66.1%  [+328]
  
         FLASH 1                               [0x08000000 | 0x00100000 (1048576)]
-                ER_IROM1                      [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö______| ( 913.7 KB /   1.0 MB )  89.2%  [+4]
+                ER_IROM1                      [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö______| ( 908.1 KB /   1.0 MB )  88.7%  [+3896]
  
 LR$$.bss.ARM.__at_0x68000000
         UNKNOWN
@@ -475,8 +453,8 @@ LR$$.bss.ARM.__at_0x68000000
                 ER$$.bss.ARM.__at_0x68000000  [0x68000000]|¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ| ( 1000.0 KB / 1000.0 KB ) 100.0%  
  
 [htm file path] D:\Code_Project\Stm32CubeMx_Proj\stm32f407zgt6-gataway\MDK-ARM\Objects\stm32f407zgt6-gataway.htm
-Maximum Stack Usage =        960 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)
+Maximum Stack Usage =        968 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)
  
 =============================================================================================================================
 
-run time: 1.071 s
+run time: 1.006 s
