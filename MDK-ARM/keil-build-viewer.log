@@ -337,8 +337,8 @@
 
 [record region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000E2140 [type] 2 [ID] 4
-	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x000126C0 [type] 1 [ID] 2
+	[execution region] ER_IROM1, 0x08000000, 0x00100000, 0x000E3078 [type] 2 [ID] 4
+	[execution region] RW_IRAM1, 0x20000000, 0x0001C000, 0x00012808 [type] 1 [ID] 2
 	[execution region] RW_IRAM2, 0x2001C000, 0x00004000, 0x00000000 [type] 1 [ID] 3
 [load region] LR$$.bss.ARM.__at_0x68000000
 	[execution region] ER$$.bss.ARM.__at_0x68000000, 0x68000000, 0x000FA000, 0x000FA000 [type] 3 [ID] 1
@@ -398,10 +398,10 @@
 ..\BSP\BSP_LCD\lcd_nt35510.c():                                                                  |           0              |        5122              |
 ..\3rdLib\emWin\Config\LCDConf.c():                                                              |           0              |         176              |
 ../LWIP/App/lwip.c():                                                                            |          81              |         660              |
-../Core/Src/main.c():                                                                            |         352  [+328]      |         834  [+428]      |
-..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\mb.c():                       |           0  [NEW]       |         358  [NEW]       |
-..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbcrc.c():                |           0  [NEW]       |         618  [NEW]       |
-..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbrtu.c():                |           0  [NEW]       |        1186  [NEW]       |
+../Core/Src/main.c():                                                                            |         352              |         834              |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\mb.c():                       |           0              |         358              |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbcrc.c():                |           0              |         618              |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\modbus\rtu\mbrtu.c():                |           0              |        1186              |
 ../Middlewares/Third_Party/LwIP/src/core/mem.c():                                                |       12319              |        3196              |
 ../Middlewares/Third_Party/LwIP/src/core/memp.c():                                               |       15239              |        1025              |
 ../Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c():                                          |           0              |        9352              |
@@ -410,22 +410,22 @@
 ../Middlewares/Third_Party/LwIP/src/core/netif.c():                                              |           9              |        2341              |
 ..\3rdLib\CANopen\CANopenNode_STM32\OD.c():                                                      |        1024              |        2748              |
 ../Middlewares/Third_Party/LwIP/src/core/pbuf.c():                                               |           1              |        5164              |
-..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portevent.c():            |           0  [NEW]       |          56  [NEW]       |
-..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portserial.c():           |           0  [NEW]       |         372  [NEW]       |
-..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\porttimer.c():            |           0  [NEW]       |          96  [NEW]       |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portevent.c():            |           0              |          56              |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\portserial.c():           |           0              |         372              |
+..\3rdLib\FreeModbus_Slave-Master-FreeRTOS-STM32\FreeModbus\port\no_os\porttimer.c():            |           0              |          96              |
 ..\..\..\emWin_AppWizard_Proj\V636\gateway\Source\Generated\Resource.c():                        |          32              |         216              |
 startup_stm32f407xx.s():                                                                         |        9216              |         428              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c():                                           |           9              |         275              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c():                                       |           0              |        3316              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c():                                    |           0              |         600              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c():                                       |           0              |        4352              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c():                                      |           0              |        1590  [+548]      |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c():                                      |           0              |        1590              |
 ../Core/Src/stm32f4xx_hal_msp.c():                                                               |           0              |          74              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c():                                       |           0              |        2646              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c():                                      |           0              |         128              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():                                       |           0              |         904  [+328]      |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c():                                       |           0              |         904              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c():                                    |           0              |         290              |
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c():                                      |           0              |        1242  [+100]      |
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c():                                      |           0              |        1242              |
 ../Core/Src/stm32f4xx_it.c():                                                                    |           1              |         540              |
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c():                                       |           0              |         360              |
 ../Core/Src/system_stm32f4xx.c():                                                                |           4              |          46              |
@@ -435,17 +435,17 @@ startup_stm32f407xx.s():                                                        
 ../Core/Src/tim.c():                                                                             |          72              |         152              |
 ../Middlewares/Third_Party/LwIP/src/core/timeouts.c():                                           |          12              |        1189              |
 ../Middlewares/Third_Party/LwIP/src/core/udp.c():                                                |           6              |        1879              |
-../Core/Src/usart.c():                                                                           |         144              |         532  [+114]      |
+../Core/Src/usart.c():                                                                           |         144              |         532              |
 ..\3rdLib\emWin\GUILib\libGUI_v7m_OS0.a():                                                       |       12974              |      290965              |
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 [memory print mode]: 0
 LR_IROM1
         RAM 1                                 [0x20000000 | 0x0001C000 (114688)]
                 [zi start] 1   [zi end] 33
-                RW_IRAM1                      [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_________________| (  74.0 KB / 112.0 KB )  66.1%  [+328]
+                RW_IRAM1                      [0x20000000]|¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_________________| (  74.0 KB / 112.0 KB )  66.1%  
  
         FLASH 1                               [0x08000000 | 0x00100000 (1048576)]
-                ER_IROM1                      [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö______| ( 908.1 KB /   1.0 MB )  88.7%  [+3896]
+                ER_IROM1                      [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö______| ( 908.1 KB /   1.0 MB )  88.7%  
  
 LR$$.bss.ARM.__at_0x68000000
         UNKNOWN
@@ -457,4 +457,4 @@ Maximum Stack Usage =        968 bytes + Unknown(Functions without stacksize, Cy
  
 =============================================================================================================================
 
-run time: 1.006 s
+run time: 1.007 s
