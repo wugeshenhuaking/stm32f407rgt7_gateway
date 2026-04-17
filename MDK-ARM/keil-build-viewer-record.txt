@@ -1,13 +1,12 @@
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
          0          0     396785          0          0          0   _24_normal_ext_aa4.o
        230          0        172          0         12          0   app_can.o
-       994          0        457          8         13          0   app_mqtt.o
          0          0         99          0          0          0   appw_language_0.o
         62          0         50          0          0          0   appw_maintask.o
        168          0          0          1          1          0   appwconf.o
          0          0      29435          0          0          0   bk.o
        278          0          0          4          0          0   bsp_lcd_port.o
-       542          0          0          0        106          0   bsp_timer.o
+       584          0          0          0        106          0   bsp_timer.o
       1456          0          0          4         60          0   bsp_touch_port.o
        244          0          0          0         40          0   can.o
       3374          0          0          0          0          0   canopen.o
@@ -26,9 +25,10 @@
       1214          0          0          0          0          0   co_time.o
          0          0      15569          0          0          0   dac.o
         48          0          0          0          0          0   def.o
-      4466          0        543          0        241          0   etharp.o
-       466          0        114          0          0          0   ethernet.o
-      1880          0         94         20      19408          0   ethernetif.o
+      8344          0        813          4         59          0   dhcp.o
+      1670          0        128          0       1160          0   dns.o
+       158          0          6          0          0          0   ethernet.o
+      1902          0         80         20      19408          0   ethernetif.o
          0          0       3089          0          0          0   exit.o
        526          0          0          0        164          0   fsmc.o
        436          0          0          0          0          0   gpio.o
@@ -36,60 +36,55 @@
         52          0          0          0          0          0   gui_x.o
         32          0          0          0    1024000          0   guiconf.o
       3548          0         52          0          0          0   guidrv_template.o
-       940          0        200          0          0          0   icmp.o
+       248          0        200          0          0          0   icmp.o
          0          0       2680        556          0          0   id_screen_00.o
-       142          0         54          0          0          0   id_screen_00_slots.o
+       142          0         52          0          0          0   id_screen_00_slots.o
          0          0        580        348          0          0   id_screen_01.o
       5722          0        284         12       2412          0   id_screen_01_slots.o
          0          0        820        556          0          0   id_screen_02.o
        114          0          7          0          0          0   id_screen_02_slots.o
-        44          0          0          0          0          0   init.o
+       538          0          0          0          0          0   inet_chksum.o
+        48          0          0          0          0          0   init.o
          0          0          0          0         24          0   ip.o
-      1594          0        109          0          2          0   ip4.o
-      1078          0         71          0         16          0   ip4_addr.o
-      3844          0        473          0          6          0   ip4_frag.o
+       934          0        109          0          2          0   ip4.o
+       278          0          8          0         16          0   ip4_addr.o
+      1698          0        473          0          6          0   ip4_frag.o
        566          0          0          0          0          0   lan8742.o
       5122          0          0          0          0          0   lcd_nt35510.o
        176          0          0          0          0          0   lcdconf.o
-       610          0         50          0         81          0   lwip.o
-       506          0          0        328         24          0   main.o
-       358          0          0          0          0          0   mb.o
-       106          0        512          0          0          0   mbcrc.o
-      1186          0          0          0          0          0   mbrtu.o
-      2658          0        538          0      12319          0   mem.o
-       692          0        333          0      15239          0   memp.o
-      7492          0       1860          0          0          0   mqtt.o
+       478          0        132          0         76          0   lwip.o
+       406          0          0          0         24          0   main.o
+      2580          0        538          0      12319          0   mem.o
+       692          0        349          0      34078          0   memp.o
          0          0      15569          0          0          0   music.o
          0          0      15569          0          0          0   net.o
-      1844          0        497          0          9          0   netif.o
+      1816          0        497          0          9          0   netif.o
          0          0       1724       1024          0          0   od.o
-      4108          0       1056          0          1          0   pbuf.o
-        56          0          0          0          0          0   portevent.o
-       372          0          0          0          0          0   portserial.o
-        96          0          0          0          0          0   porttimer.o
+      3812          0       1056          0          1          0   pbuf.o
+        94          0          0          0          4          0   raw.o
        156          0         36         24          8          0   resource.o
         36          0        392          0       9216          0   startup_stm32f407xx.o
        270          0          0          5          4          0   stm32f4xx_hal.o
       3316          0          0          0          0          0   stm32f4xx_hal_can.o
        600          0          0          0          0          0   stm32f4xx_hal_cortex.o
       4352          0          0          0          0          0   stm32f4xx_hal_eth.o
-      1590          0          0          0          0          0   stm32f4xx_hal_gpio.o
+      1042          0          0          0          0          0   stm32f4xx_hal_gpio.o
         74          0          0          0          0          0   stm32f4xx_hal_msp.o
       2646          0          0          0          0          0   stm32f4xx_hal_rcc.o
        128          0          0          0          0          0   stm32f4xx_hal_sram.o
-       904          0          0          0          0          0   stm32f4xx_hal_tim.o
-       290          0          0          0          0          0   stm32f4xx_hal_tim_ex.o
-      1242          0          0          0          0          0   stm32f4xx_hal_uart.o
-       370          0        170          0          1          0   stm32f4xx_it.o
+      1154          0          0          0          0          0   stm32f4xx_hal_tim.o
+       306          0          0          0          0          0   stm32f4xx_hal_tim_ex.o
+      1142          0          0          0          0          0   stm32f4xx_hal_uart.o
+       386          0        170          0          1          0   stm32f4xx_it.o
        360          0          0          0          0          0   stm32f4xx_ll_fsmc.o
         18          0         24          4          0          0   system_stm32f4xx.o
-      9060          0       1885          6         23          0   tcp.o
-     11472          0       1065          0         52          0   tcp_in.o
-      9380          0       1951          0          0          0   tcp_out.o
-       152          0          0          0         72          0   tim.o
-       980          0        209          0         12          0   timeouts.o
-      1088          0        789          2          4          0   udp.o
-       532          0          0          0        144          0   usart.o
+      6296          0       1897          2         23          0   tcp.o
+        18          0          0          0          5          0   tcp_in.o
+      5888          0       1951          0          0          0   tcp_out.o
+       172          0          0          0         72          0   tim.o
+       696          0        225          0          8          0   timeouts.o
+      2500          0        789          2          4          0   udp.o
+       418          0          0          0        144          0   usart.o
     195948          0      94373        644      12330          0   libGUI_v7m_OS0.a
 Object Totals
 
@@ -97,9 +92,9 @@ Memory Map of the image
 
 	Load Region LR_IROM1 
 
-		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000E3078, Max: 0x00100000, END)
+		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000DB970, Max: 0x00100000, END)
 
-		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x00012808, Max: 0x0001C000, END)
+		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x000173D8, Max: 0x0001C000, END)
 
 		Execution Region RW_IRAM2 (Exec base: 0x2001C000, Size: 0x00000000, Max: 0x00004000, END)
 

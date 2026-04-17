@@ -28,8 +28,17 @@
 #include "ethernetif.h"
 
 /* USER CODE BEGIN 0 */
-// eth header file
+
+// bsp header file
+#include "bsp_timer.h"
+
+// lwip header file
+#include "lwip/dns.h"
+
+// app net header file
 #include "app_mqtt.h"
+#include "app_ping.h"
+
 /* USER CODE END 0 */
 /* Private function prototypes -----------------------------------------------*/
 static void ethernet_link_status_updated(struct netif *netif);
@@ -37,6 +46,9 @@ static void Ethernet_Link_Periodic_Handle(struct netif *netif);
 /* ETH Variables initialization ----------------------------------------------*/
 void Error_Handler(void);
 
+/* DHCP Variables initialization ---------------------------------------------*/
+uint32_t DHCPfineTimer = 0;
+uint32_t DHCPcoarseTimer = 0;
 /* USER CODE BEGIN 1 */
 
 
@@ -48,9 +60,6 @@ struct netif gnetif;
 ip4_addr_t ipaddr;
 ip4_addr_t netmask;
 ip4_addr_t gw;
-uint8_t IP_ADDRESS[4];
-uint8_t NETMASK_ADDRESS[4];
-uint8_t GATEWAY_ADDRESS[4];
 
 /* USER CODE BEGIN 2 */
 
@@ -61,31 +70,16 @@ uint8_t GATEWAY_ADDRESS[4];
   */
 void MX_LWIP_Init(void)
 {
-  /* IP addresses initialization */
-  IP_ADDRESS[0] = 192;
-  IP_ADDRESS[1] = 168;
-  IP_ADDRESS[2] = 63;
-  IP_ADDRESS[3] = 200;
-  NETMASK_ADDRESS[0] = 255;
-  NETMASK_ADDRESS[1] = 255;
-  NETMASK_ADDRESS[2] = 255;
-  NETMASK_ADDRESS[3] = 0;
-  GATEWAY_ADDRESS[0] = 0;
-  GATEWAY_ADDRESS[1] = 0;
-  GATEWAY_ADDRESS[2] = 0;
-  GATEWAY_ADDRESS[3] = 0;
-
-/* USER CODE BEGIN IP_ADDRESSES */
-/* USER CODE END IP_ADDRESSES */
-
   /* Initialize the LwIP stack without RTOS */
   lwip_init();
 
-  /* IP addresses initialization without DHCP (IPv4) */
-  IP4_ADDR(&ipaddr, IP_ADDRESS[0], IP_ADDRESS[1], IP_ADDRESS[2], IP_ADDRESS[3]);
-  IP4_ADDR(&netmask, NETMASK_ADDRESS[0], NETMASK_ADDRESS[1] , NETMASK_ADDRESS[2], NETMASK_ADDRESS[3]);
-  IP4_ADDR(&gw, GATEWAY_ADDRESS[0], GATEWAY_ADDRESS[1], GATEWAY_ADDRESS[2], GATEWAY_ADDRESS[3]);
-
+  /* IP addresses initialization with DHCP (IPv4) */
+  ipaddr.addr = 0;
+  netmask.addr = 0;
+  gw.addr = 0;
+//IP4_ADDR(&ipaddr,  192, 168, 137, 100);
+//IP4_ADDR(&netmask, 255, 255, 255, 0);
+//IP4_ADDR(&gw,      192, 168, 137, 1);
   /* add the network interface (IPv4/IPv6) without RTOS */
   netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
 
@@ -98,7 +92,34 @@ void MX_LWIP_Init(void)
   /* Set the link callback function, this function is called on change of link status*/
   netif_set_link_callback(&gnetif, ethernet_link_status_updated);
 
+  /* Start DHCP negotiation for a network interface (IPv4) */
+  dhcp_start(&gnetif);
+
 /* USER CODE BEGIN 3 */
+
+/* 在 MX_LWIP_Init() 中 USER CODE BEGIN 3 前面加上 */
+//IP4_ADDR(&ipaddr,  192, 168, 137, 100);
+//IP4_ADDR(&netmask, 255, 255, 255, 0);
+//IP4_ADDR(&gw,      192, 168, 137, 1);
+
+//netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
+  printf("Setting DNS servers...\r\n");
+
+  ip_addr_t dns1, dns2;
+
+  IP4_ADDR(&dns1, 192, 168, 1, 1);           // Google DNS
+//  IP4_ADDR(&dns2, 114, 114, 114, 114);   // 国内 DNS
+
+  dns_setserver(0, &dns1);
+  dns_setserver(1, &dns2);
+
+  printf("DNS Server 1: 8.8.8.8\r\n");
+  printf("DNS Server 2: 114.114.114.114\r\n");
+  
+  
+  /* 初始化时调用一次 */
+//  ping_init();
+
 
 /* USER CODE END 3 */
 }
@@ -172,18 +193,54 @@ void MX_LWIP_Process(void)
 /* USER CODE BEGIN 4_3 */
     static uint8_t mqtt_started = 0;
 
-    if (!mqtt_started && netif_is_up(&gnetif) &&
-        !ip4_addr_isany_val(*netif_ip4_addr(&gnetif)))
+    /* 加这几行调试 */
+    static uint32_t debug_timer = 0;
+    if (bsp_CheckRunTime(debug_timer) >= 2000)
     {
-        printf("ETH Link UP\r\n");
-        printf("IP   : %s\r\n", ip4addr_ntoa(netif_ip4_addr(&gnetif)));
-        printf("GW   : %s\r\n", ip4addr_ntoa(netif_ip4_gw(&gnetif)));
-        printf("MASK : %s\r\n", ip4addr_ntoa(netif_ip4_netmask(&gnetif)));
-        APP_MQTT_Connect();
-        mqtt_started = 1;
+        debug_timer = bsp_GetRunTime();
+        
+        struct dhcp *dhcp = netif_dhcp_data(&gnetif);
+        printf("Link=%d | IP=%s | State=%d | xid=0x%X | tries=%d\r\n",
+            netif_is_up(&gnetif),
+            ip4addr_ntoa(netif_ip4_addr(&gnetif)),
+            dhcp ? dhcp->state : -1,
+            dhcp ? dhcp->xid : 0,
+            dhcp ? dhcp->tries : 0);
     }
 
-    APP_MQTT_Poll();
+  
+//    if (!mqtt_started && netif_is_up(&gnetif) &&
+//        !ip4_addr_isany_val(*netif_ip4_addr(&gnetif)))
+//    {
+//        printf("ETH Link UP\r\n");
+//        printf("IP   : %s\r\n", ip4addr_ntoa(netif_ip4_addr(&gnetif)));
+//        printf("GW   : %s\r\n", ip4addr_ntoa(netif_ip4_gw(&gnetif)));
+//        printf("MASK : %s\r\n", ip4addr_ntoa(netif_ip4_netmask(&gnetif)));
+//      
+//        // 检查一下是否来自dhcp的ip分配
+//        if (dhcp_supplied_address(&gnetif)) {
+//            printf("IP obtained by DHCP \r\n");
+//        } else {
+//            printf("IP is static (not from DHCP)\r\n");
+//        }
+//      
+//        APP_MQTT_Connect();
+//        mqtt_started = 1;
+//    }
+    
+//    static uint32_t rs485_task_timer = 0;
+
+//    
+//    if(bsp_CheckRunTime(rs485_task_timer) >= 3000)
+//    {
+//        ping("www.baidu.com");        
+//        rs485_task_timer = bsp_GetRunTime();
+//    }
+//    
+    /* MX_LWIP_Process 里你已有的定时调用改成 */
+//    ping_send_request("www.baidu.com");
+
+//    APP_MQTT_Poll();
 /* USER CODE END 4_3 */
 }
 

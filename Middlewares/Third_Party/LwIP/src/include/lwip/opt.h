@@ -626,7 +626,7 @@
  * LWIP_ARP==1: Enable ARP functionality.
  */
 #if !defined LWIP_ARP || defined __DOXYGEN__
-#define LWIP_ARP                        1
+#define LWIP_ARP                        0
 #endif
 
 /**

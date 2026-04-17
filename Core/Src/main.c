@@ -48,6 +48,12 @@
 
 // emWin header file
 #include "GUI.h"
+
+#ifdef NO_APPW
+#include "GUIDEMO.h"
+#include "WM.h"
+#endif
+
 #ifdef USE_AC5
 #include "GUIDEMO.h"
 #include "WM.h"
@@ -64,9 +70,11 @@
 #include "app_CAN.h"
 
 // freemodbus header file
+#ifndef USE_AC5
 #include "user_mb_app.h"
 #include "mbport.h"
-#include "mb_stack.h"
+#endif
+// #include "mb_stack.h"
 
 /* USER CODE END Includes */
 
@@ -80,6 +88,7 @@ CANopenNodeSTM32 canOpenNodeSTM32;
 #define EMWIN_SRAM_DIAG_ENABLE     0
 #define EMWIN_SRAM_DIAG_LOOPS      32UL
 #define MODBUS_SLAVE_ID            1
+#define USE_FREEMODBUS             0
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -117,8 +126,9 @@ int fputc(int ch, FILE *f)
 #define RS485_TASK_TIMEOUT (1000UL)
 static uint32_t rs485_task_timer = 0;
 
+#if USE_FREEMODBUS
 MB_StackTypeDef mbStack = NEW_MB_StackTypeDef;
-
+#endif
 
 void user_app(void)
 {
@@ -138,8 +148,31 @@ void user_app(void)
 //        rs485_task_timer = bsp_GetRunTime();
 //    }
     // freemodbus slave poll 
-//    eMBPoll();          // Must be called continuously
+    #if USE_FREEMODBUS
+    eMBPoll(&mbStack);
+    #endif
 }
+
+
+
+//void print_help(void)
+//{
+//    printf("\r\n\r\n");
+//    LOG_I("Now is in bootloader.");
+//    LOG_I("Click KEY2 to print help.");
+//    LOG_I("Click KEY1 to switch modbus demo (master/slave/p2p_update/broadcast_update).");
+//    LOG_I("Click KEY0 to run app.");
+//    LOG_I("Click KEY_UP to erase app flash in p2p_update/broadcast_update mode");
+//    printf("\r\n");
+//    LOG_I("now modbus mode is %s", modbus_mode_str_tab[gbl_attr.modbus_mode]);
+//    printf("\r\n");
+//    for (int i = 0; i < MODBUS_MODE_MAX; i++) {
+//        LOG_I("mode:%18s  total_cnt:%10u  success_cnt:%10u", modbus_mode_str_tab[i],
+//              gbl_attr.modbus_total_cnt[i], gbl_attr.modbus_success_cnt[i]);
+//    }
+//    printf("\r\n\r\n");
+//}
+
 
 /* USER CODE END 0 */
 
@@ -181,7 +214,10 @@ int main(void)
   MX_CAN1_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  
+//  HAL_TIM_Base_Start_IT(&htim6);   // 加上这句
+
+// 测试用
+//__HAL_TIM_ENABLE_IT(&htim6, TIM_IT_UPDATE);
   /*LCD Initialize*/
   NT35510_Init();
 //  NT35510_RunAllTests();  // 运行NT35510测试，验证LCD接口和NT35510功能
@@ -237,6 +273,7 @@ int main(void)
   /* freemodbus slave Initialize*/
   
   /* freeModbus RTU slave init */ 
+  #if USE_FREEMODBUS
 //    eMBErrorCode eStatus = eMBTCPInit(502);   /* 监听 502 端口 */
 //    
 
@@ -256,15 +293,18 @@ int main(void)
 //        eMBEnable();
 //    } 
 
-    mbStack.hardware.max485.phuart = &huart3;
-    mbStack.hardware.max485.dirPin = RS485_RE_Pin;
-    mbStack.hardware.max485.dirPort = RS485_RE_GPIO_Port;
-    mbStack.hardware.phtim = &htim6;
-    mbStack.hardware.uartIRQn = USART3_IRQn;
-    mbStack.hardware.timIRQn = TIM6_DAC_IRQn;
-    eMBInit(&mbStack, MB_RTU, 0x01, 1,9600, MB_PAR_NONE);
-    eMBEnable(&mbStack);
+
+    // new freemodbus lib not succeed
+//    mbStack.hardware.max485.phuart = &huart3;
+//    mbStack.hardware.max485.dirPin = RS485_RE_Pin;
+//    mbStack.hardware.max485.dirPort = RS485_RE_GPIO_Port;
+//    mbStack.hardware.phtim = &htim6;
+//    mbStack.hardware.uartIRQn = USART3_IRQn;
+//    mbStack.hardware.timIRQn = TIM6_DAC_IRQn;
+//    eMBInit(&mbStack, MB_RTU, 0x01, 3,9600, MB_PAR_NONE);
+//    eMBEnable(&mbStack);
   /* freeModbus TCP layer init */
+  #endif
 
 
   /* emWin Initialize*/
@@ -272,7 +312,12 @@ int main(void)
   GUI_Init();
   GUIDEMO_Main();                     /* 运行emwin例程 */
   #else
-  MainTask();
+    #ifndef NO_APPW
+    MainTask();
+    #else
+    GUI_Init();
+    GUIDEMO_Main();                     /* 运行emwin例程 */
+    #endif
   #endif
   
   /* USER CODE END 2 */

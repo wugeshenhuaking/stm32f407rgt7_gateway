@@ -42,19 +42,27 @@
 /*----- WITH_RTOS disabled (Since FREERTOS is not set) -----*/
 #define WITH_RTOS 0
 /*----- CHECKSUM_BY_HARDWARE enabled -----*/
-#define CHECKSUM_BY_HARDWARE 1
+#define CHECKSUM_BY_HARDWARE 0
 /*-----------------------------------------------------------------------------*/
 
 /* LwIP Stack Parameters (modified compared to initialization value in opt.h) -*/
 /* Parameters set in STM32CubeMX LwIP Configuration GUI -*/
+/*----- Value in opt.h for LWIP_DHCP: 0 -----*/
+#define LWIP_DHCP 1
+/*----- Default Value for LWIP_DNS: 0 ---*/
+#define LWIP_DNS 1
 /*----- Value in opt.h for NO_SYS: 0 -----*/
 #define NO_SYS 1
 /*----- Value in opt.h for SYS_LIGHTWEIGHT_PROT: 1 -----*/
 #define SYS_LIGHTWEIGHT_PROT 0
 /*----- Value in opt.h for MEM_ALIGNMENT: 1 -----*/
 #define MEM_ALIGNMENT 4
+/*----- Default Value for MEMP_NUM_SYS_TIMEOUT: 6 ---*/
+#define MEMP_NUM_SYS_TIMEOUT 25
 /*----- Value in opt.h for LWIP_ETHERNET: LWIP_ARP || PPPOE_SUPPORT -*/
 #define LWIP_ETHERNET 1
+/*----- Default Value for LWIP_RAW: 0 ---*/
+#define LWIP_RAW 1
 /*----- Value in opt.h for LWIP_DNS_SECURE: (LWIP_DNS_SECURE_RAND_XID | LWIP_DNS_SECURE_NO_MULTIPLE_OUTSTANDING | LWIP_DNS_SECURE_RAND_SRC_PORT) -*/
 #define LWIP_DNS_SECURE 7
 /*----- Value in opt.h for TCP_SND_QUEUELEN: (4*TCP_SND_BUF + (TCP_MSS - 1))/TCP_MSS -----*/
@@ -76,29 +84,29 @@
 /*----- Value in opt.h for LWIP_STATS: 1 -----*/
 #define LWIP_STATS 0
 /*----- Value in opt.h for CHECKSUM_GEN_IP: 1 -----*/
-#define CHECKSUM_GEN_IP 0
+#define CHECKSUM_GEN_IP 1
 /*----- Value in opt.h for CHECKSUM_GEN_UDP: 1 -----*/
-#define CHECKSUM_GEN_UDP 0
+#define CHECKSUM_GEN_UDP 1
 /*----- Value in opt.h for CHECKSUM_GEN_TCP: 1 -----*/
-#define CHECKSUM_GEN_TCP 0
+#define CHECKSUM_GEN_TCP 1
 /*----- Value in opt.h for CHECKSUM_GEN_ICMP: 1 -----*/
-#define CHECKSUM_GEN_ICMP 0
+#define CHECKSUM_GEN_ICMP 1
 /*----- Value in opt.h for CHECKSUM_GEN_ICMP6: 1 -----*/
-#define CHECKSUM_GEN_ICMP6 0
+#define CHECKSUM_GEN_ICMP6 1
 /*----- Value in opt.h for CHECKSUM_CHECK_IP: 1 -----*/
-#define CHECKSUM_CHECK_IP 0
+#define CHECKSUM_CHECK_IP 1
 /*----- Value in opt.h for CHECKSUM_CHECK_UDP: 1 -----*/
-#define CHECKSUM_CHECK_UDP 0
+#define CHECKSUM_CHECK_UDP 1
 /*----- Value in opt.h for CHECKSUM_CHECK_TCP: 1 -----*/
-#define CHECKSUM_CHECK_TCP 0
+#define CHECKSUM_CHECK_TCP 1
 /*----- Value in opt.h for CHECKSUM_CHECK_ICMP: 1 -----*/
-#define CHECKSUM_CHECK_ICMP 0
+#define CHECKSUM_CHECK_ICMP 1
 /*----- Value in opt.h for CHECKSUM_CHECK_ICMP6: 1 -----*/
-#define CHECKSUM_CHECK_ICMP6 0
+#define CHECKSUM_CHECK_ICMP6 1
 /*-----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
 /* === Fix for sys_timeout pool empty (MQTT + TCP) === */
-#define MEMP_NUM_SYS_TIMEOUT        20
+//#define MEMP_NUM_SYS_TIMEOUT        20
 
 /* Memory optimization */
 #define MEM_SIZE                    (12*1024)
@@ -110,6 +118,25 @@
 /* MQTT settings */
 #define MQTT_OUTPUT_BUFFER_SIZE     512
 #define MQTT_VAR_HEADER_BUFFER_LEN  512
+
+
+#define DHCP_DOES_ARP_CHECK 0   /* 关闭ARP冲突检测 */
+/* PBUF 大小确保能装下最大以太网帧 */
+#define PBUF_POOL_BUFSIZE           1524
+
+/* TCP 窗口和缓冲 */
+#define TCP_MSS                     1460
+#define TCP_WND                     (4 * TCP_MSS)
+#define TCP_SND_BUF                 (4 * TCP_MSS)
+
+/* DHCP 相关 */
+#define DHCP_DOES_ARP_CHECK         0
+#define LWIP_DHCP_MAX_DNS_SERVERS   2
+
+/* ARP */
+#define ARP_QUEUEING                1
+#define ARP_TABLE_SIZE              10
+
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

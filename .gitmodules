@@ -1,3 +1,6 @@
 [submodule "3rdLib/FreeModbus_Slave-Master-RTT-STM32"]
 	path = 3rdLib/FreeModbus_Slave-Master-RTT-STM32
 	url = https://github.com/armink/FreeModbus_Slave-Master-RTT-STM32.git
+[submodule "3rdLib/agile_modbus"]
+	path = 3rdLib/agile_modbus
+	url = https://github.com/loogg/agile_modbus.git
